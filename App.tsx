@@ -1,20 +1,13 @@
 import React from 'react';
-import { SafeAreaView, ScrollView, StatusBar, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { Provider } from 'react-redux';
 import { store } from './src/store';
-import Message from './src/components/Message';
-import Users from './src/components/Users';
-
+import Routes from './src/routes';
 const App = () => {
+  console.log("=== App is running now ===");
   return (
     <Provider store={store}>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView style={styles.container}>
-        <ScrollView contentContainerStyle={styles.container}>
-          <Message />
-          <Users />
-        </ScrollView>
-      </SafeAreaView>
+      <Routes />
     </Provider>
   );
 };
