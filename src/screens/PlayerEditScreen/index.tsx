@@ -6,12 +6,17 @@ import  Icon  from "react-native-vector-icons/Ionicons";
 import MARGIN from '../../theme/margin';
 import EditModal from '../../components/EditModal';
 
+import { RootState } from '../../store';
+import { useDispatch, useSelector } from 'react-redux';
+
 const PlayerEditScreen = () => {
     const navigation = useNavigation<{[x: string]: any}>();
 
     const [listState, setListState] = React.useState<{ id: number; name: string; }[]>([]);
-    const [modalVisibleState, setModalVisibleState] = React.useState(false);
 
+    const { modalState } = useSelector((state: RootState) => state.global);
+
+    console.log(modalState);
     const data = [
         {
            id: 0,
@@ -41,6 +46,7 @@ const PlayerEditScreen = () => {
 
     return (
         <View style={styles.ContentViewContainer}>
+            
             {
                 listState.map((item, index) => (
                     <TouchableOpacity
@@ -55,7 +61,7 @@ const PlayerEditScreen = () => {
                  ))
             }
 
-            <EditModal />
+            <EditModal modalState={modalState} />
         </View>
     )
 };

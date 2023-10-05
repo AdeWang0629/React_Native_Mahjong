@@ -40,7 +40,7 @@ const AppStack = () => {
   return (
     <NavigationContainer>
         <Stack.Navigator>
-          
+
           {/* ホーム画面 */}
           <Stack.Screen 
             name="Home" 

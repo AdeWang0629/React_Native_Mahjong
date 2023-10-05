@@ -1,34 +1,100 @@
 import React, {useState, useEffect} from 'react'
-import { View, Text, Button } from 'react-native'
-import  Modal  from 'react-native-modal'
+import { StyleSheet, View, Text, TextInput, Button, Image } from 'react-native'
+import Modal from 'react-native-modal'
+import { setModalState } from '../store/global'
+import { useDispatch } from 'react-redux'
+import COLORS from '../theme/colors'
+import { 
+    widthPercentageToDP as wp, 
+    heightPercentageToDP as hp 
+} from 'react-native-responsive-screen'
 
 interface IEditModal {
-    modalState ?: boolean
+    modalState ?: boolean | undefined
 }
 
 const EditModal: React.FC<IEditModal> = ({modalState}) => {
-    const [modalVisible, setModalVisible] = React.useState(false);
+    const [modalVisible, setModalVisible] = React.useState<boolean>(modalState !== undefined ? modalState : false);
+    ;
+    const [text, onChangeText] = React.useState('Useless Text');
+
+    const dispatch = useDispatch();
 
     const toggleModal = () => {
         setModalVisible(!modalVisible);
+        dispatch(setModalState(!setModalVisible));
     }
 
     React.useState(()=>{
-        if (modalState) {
-            // setModalVisible(modalState); 
-            console.log(modalState);
-        }
+        setModalVisible(modalState !== undefined ? modalState : false);
     });
+
+    const edit_avatar = require("../../assets/edit_avatar.png");
 
     return (
         <Modal isVisible={modalVisible}>
-            {/* Add your modal content here */}
-            <View style={{ flex: 1, backgroundColor: 'red' }}>
-                <Text>Hello!</Text>
-                <Button title='Hide Modal' onPress={toggleModal}/>
+
+            <View style={styles.modalContainer}>
+                <View style={styles.modalContent}>
+                    <Image source={edit_avatar} style={styles.avatar}/>
+                    <View style={{flex: 1}}>
+                        <View style={{alignItems: 'center'}}>
+                            <Text style={styles.normalText}>編集</Text>
+                            <Text style={styles.text}>   プレイヤー名を入力してください   </Text>
+                        </View>
+                        <TextInput
+                            style={styles.input}
+                            onChangeText={onChangeText}
+                            value={text}
+                        />
+                        <View style={{marginBottom: 10}}>
+                            <Button title='OK' onPress={toggleModal} color={COLORS.PINK}/>
+                        </View>
+                        <View>
+                            <Button title='キャンセル' onPress={toggleModal} color={COLORS.BLACK}/>
+                        </View>
+                    </View>
+                </View>
             </View>
         </Modal>
     )
 }
 
 export default EditModal;
+
+const styles = StyleSheet.create({
+    modalContainer: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modalContent: {
+        height: hp(31), 
+        width: wp(60), 
+        backgroundColor: COLORS.WHITE,
+        alignItems: 'center',
+        borderRadius: 8
+    },
+    normalText: {
+        fontSize: 20,
+        paddingBottom: 5,
+    },
+    text: {
+        fontSize: 13,
+        paddingVertical: 5
+    },
+    input: {
+        height: hp(4),
+        marginVertical: 15,
+        borderWidth: 1,
+        borderRadius: 3,
+        borderColor: '#a428ff'
+    },
+    avatar: {
+        width: wp(12), 
+        height: hp(5), 
+        marginTop: -hp(2),
+        marginBottom: 10
+    }
+})
