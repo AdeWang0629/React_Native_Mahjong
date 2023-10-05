@@ -1,5 +1,5 @@
 import React, { ReactElement, useState } from 'react'
-import { View, Image, Text, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from './style';
 
@@ -59,12 +59,7 @@ const GameEditScreen = () => {
                 </View>
 
                 <View style={styles.SectionContainerContent}>
-                    <Accordion title={'0人選択中'} source={firstSource} right_item='chevron-right'>
-                        <Text style={styles.textSmall}>
-                            React Native lets you create truly native apps and
-                            doesn't compromise your users' experiences. It provides a core set of platform
-                            agnostic native components 
-                        </Text>
+                    <Accordion title={'0人選択中'} source={firstSource} right_item={'chevron-right'} action="PlayerChooseScreen">
                     </Accordion>
                 </View>
 

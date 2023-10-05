@@ -1,13 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 const messageSlice = createSlice({
-  name: 'message',
+  name: 'messageasd',
   initialState: {
-    message: 'Initial message'
+    messageasd111: 'Initial message',
+    messageasd123: 'KangIlBong'
   },
   reducers: {
     setMessage(state, action: PayloadAction<string>) {
-      state.message = action.payload;
+      state.messageasd111 = action.payload;
     }
   }
 });

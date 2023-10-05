@@ -9,7 +9,6 @@ const HomeScreen: React.FC = () => {
 
     const mainAvatar = require('../../../assets/1.png');
     const handlePress = () => {
-        console.log('asdf');
         navigation.navigate('GameEditScreen');
     }
     

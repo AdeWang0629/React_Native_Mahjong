@@ -11,22 +11,25 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import COLORS from '../theme/colors';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import { useNavigation } from '@react-navigation/native';
 
 interface IAccordion{
     children: ReactNode;
-    title: string;
+    title?: string;
     source: ImageSourcePropType;
     right_item?: string;
+    action ?: string;
 }
 
-const Accordion:React.FC<IAccordion> = ({ children,title, source, right_item }) => {
-    console.log('title');
-    console.log(typeof(right_item));
+const Accordion:React.FC<IAccordion> = ({ children, title, source, right_item, action }) => {
     const [ expanded, setExpanded ] = useState(false);
-    const [ rightState, setStated ] = useState(false);
+    const navigation = useNavigation<{[x: string]: any}>();
 
-    function toggleItem() {
-      setExpanded(!expanded);
+    const toggleItem = () => {
+        if(action == 'PlayerChooseScreen'){
+            navigation.navigate(action);
+        }
+        setExpanded(!expanded);
     }
   
     const body = <View style={styles.accordBody}>{ children }</View>;
@@ -82,7 +85,7 @@ const styles = StyleSheet.create({
         paddingLeft: wp(3)
     },
     accordBody: {
-        padding: 12
+        // padding: 12
     },
     avatar: {
         width: 30,

@@ -25,15 +25,15 @@ const Button: React.FC<ButtonProps> = ({ label, onPress, disabled }) => {
 
 const styles = StyleSheet.create({
     button: {
-        backgroundColor: COLORS.RED,
+        backgroundColor: COLORS.BLACK,
         borderRadius: 40,
         height: 50,
-        width: 210,
+        width: wp(70),
         paddingVertical: 5,
         zIndex: 100,
         alignItems: 'center', 
         justifyContent: 'center',
-        marginTop: hp(3)
+        marginTop: hp(3),
     },
     label: {
         color: COLORS.WHITE,
