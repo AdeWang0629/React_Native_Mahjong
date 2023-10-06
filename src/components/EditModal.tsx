@@ -2,21 +2,24 @@ import React, {useState, useEffect} from 'react'
 import { StyleSheet, View, Text, TextInput, Button, Image } from 'react-native'
 import Modal from 'react-native-modal'
 import { setModalState } from '../store/global'
-import { useDispatch } from 'react-redux'
+// import { useDispatch } from 'react-redux'
 import COLORS from '../theme/colors'
 import { 
     widthPercentageToDP as wp, 
     heightPercentageToDP as hp 
 } from 'react-native-responsive-screen'
 
+import { RootState } from '../store';
+import { useDispatch, useSelector } from 'react-redux';
+
 interface IEditModal {
-    modalState ?: boolean | undefined
+    modalState ?: any
 }
 
 const EditModal: React.FC<IEditModal> = ({modalState}) => {
-    const [modalVisible, setModalVisible] = React.useState<boolean>(modalState !== undefined ? modalState : false);
-    ;
-    const [text, onChangeText] = React.useState('Useless Text');
+    const [modalVisible, setModalVisible] = React.useState(modalState);
+
+    const [text, onChangeText] = React.useState('');
 
     const dispatch = useDispatch();
 
@@ -25,8 +28,8 @@ const EditModal: React.FC<IEditModal> = ({modalState}) => {
         dispatch(setModalState(!setModalVisible));
     }
 
-    React.useState(()=>{
-        setModalVisible(modalState !== undefined ? modalState : false);
+    React.useEffect(()=>{
+        setModalVisible(modalState);
     });
 
     const edit_avatar = require("../../assets/edit_avatar.png");
@@ -45,6 +48,7 @@ const EditModal: React.FC<IEditModal> = ({modalState}) => {
                         <TextInput
                             style={styles.input}
                             onChangeText={onChangeText}
+                            placeholder={'プレイヤー名'}
                             value={text}
                         />
                         <View style={{marginBottom: 10}}>
@@ -89,7 +93,8 @@ const styles = StyleSheet.create({
         marginVertical: 15,
         borderWidth: 1,
         borderRadius: 3,
-        borderColor: '#a428ff'
+        borderColor: '#a428ff',
+        paddingLeft: 10
     },
     avatar: {
         width: wp(12), 

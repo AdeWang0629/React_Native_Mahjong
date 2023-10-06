@@ -9,7 +9,7 @@ const PlayerChooseScreen: React.FC = () => {
 
     const mainAvatar = require('../../../assets/people_plus_big.png');
     const handlePress = () => {
-        navigation.navigate('GameEditScreen');
+        navigation.navigate('PlayerEditScreen');
     }
     
     return (

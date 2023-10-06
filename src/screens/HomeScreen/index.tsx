@@ -3,6 +3,7 @@ import { View, Image, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from './style';
 import Button from '../../components/Button';
+import { useGetAlbumsQuery } from '../../api/jsonServerApi';
 
 const HomeScreen: React.FC = () => {
     const navigation = useNavigation<{[x: string]: any}>();
@@ -11,7 +12,11 @@ const HomeScreen: React.FC = () => {
     const handlePress = () => {
         navigation.navigate('GameEditScreen');
     }
-    
+
+    const { data:getAlbums  } = useGetAlbumsQuery(1);
+
+    console.log("getAlbums",getAlbums);
+
     return (
         <View style={styles.ContentViewContainer}>
             <Image source={mainAvatar} />

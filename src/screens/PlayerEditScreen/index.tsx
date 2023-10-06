@@ -13,10 +13,14 @@ const PlayerEditScreen = () => {
     const navigation = useNavigation<{[x: string]: any}>();
 
     const [listState, setListState] = React.useState<{ id: number; name: string; }[]>([]);
+    const [ editModalState, setEditModalState ] = React.useState(false);
 
     const { modalState } = useSelector((state: RootState) => state.global);
 
-    console.log(modalState);
+    React.useEffect(()=>{
+        setEditModalState(modalState);
+    });
+
     const data = [
         {
            id: 0,
@@ -62,6 +66,7 @@ const PlayerEditScreen = () => {
             }
 
             <EditModal modalState={modalState} />
+            {/* <EditModal /> */}
         </View>
     )
 };

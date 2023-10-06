@@ -19,9 +19,10 @@ interface IAccordion{
     source: ImageSourcePropType;
     right_item?: string;
     action ?: string;
+    decimal ?: boolean
 }
 
-const Accordion:React.FC<IAccordion> = ({ children, title, source, right_item, action }) => {
+const Accordion:React.FC<IAccordion> = ({ children, title, source, right_item, action, decimal }) => {
     const [ expanded, setExpanded ] = useState(false);
     const navigation = useNavigation<{[x: string]: any}>();
 
@@ -41,6 +42,11 @@ const Accordion:React.FC<IAccordion> = ({ children, title, source, right_item, a
             <Icon name={expanded ? 'chevron-right' : 'chevron-down'} size={15} color="#bbb" />
         );
     } else if(typeof(right_item)){
+        if (decimal) {
+            item = (
+                <Text style={styles.normalText}>{ right_item  }</Text>
+            );
+        }
         item = (
             <Text style={styles.normalText}>{ right_item }</Text>
         );

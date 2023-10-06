@@ -1,0 +1,13 @@
+{
+    "albums": [
+      { "id": 1, "page": "json-server1", "author": "typicode1" },
+      { "id": 2, "page": "json-server2", "author": "typicode2" },
+      { "id": 3, "page": "json-server3", "author": "typicode3" },
+      { "id": 4, "page": "json-server4", "author": "typicode4" },
+      { "id": 5, "page": "json-server5", "author": "typicode5" }
+    ],
+    "comments": [
+      { "id": 1, "body": "some comment", "postId": 1 }
+    ],
+    "profile": { "name": "typicode" }
+}

@@ -149,7 +149,7 @@ const AppStack = () => {
                   <View style={styles.avatarContainer}>
                     <Icon name="help-circle-outline" size={30} style={MARGIN.marginRight3}></Icon>
                     <TouchableOpacity
-                      onPress={() => dispatch(setModalState(true))}
+                      onPress={() => {dispatch(setModalState(true));}}
                     >
                       <Icon name="add" size={33}></Icon>
                     </TouchableOpacity>
