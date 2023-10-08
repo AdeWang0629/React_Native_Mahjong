@@ -17,7 +17,7 @@ interface IAccordion{
     children: ReactNode;
     title?: string;
     source: ImageSourcePropType;
-    right_item?: string;
+    right_item?: any;
     action ?: string;
     decimal ?: boolean
 }
@@ -36,7 +36,6 @@ const Accordion:React.FC<IAccordion> = ({ children, title, source, right_item, a
     const body = <View style={styles.accordBody}>{ children }</View>;
     
     let item;
-
     if (right_item == "chevron-right") {
         item = (
             <Icon name={expanded ? 'chevron-right' : 'chevron-down'} size={15} color="#bbb" />
@@ -44,7 +43,7 @@ const Accordion:React.FC<IAccordion> = ({ children, title, source, right_item, a
     } else if(typeof(right_item)){
         if (decimal) {
             item = (
-                <Text style={styles.normalText}>{ right_item  }</Text>
+                <Text style={styles.normalText}>{ right_item/10 }</Text>
             );
         }
         item = (

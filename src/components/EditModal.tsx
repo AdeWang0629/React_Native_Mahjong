@@ -9,8 +9,8 @@ import {
     heightPercentageToDP as hp 
 } from 'react-native-responsive-screen'
 
-import { RootState } from '../store';
 import { useDispatch, useSelector } from 'react-redux';
+import { useCreatePlayerMutation } from '../api/playerEditApi'
 
 interface IEditModal {
     modalState ?: any
@@ -18,12 +18,18 @@ interface IEditModal {
 
 const EditModal: React.FC<IEditModal> = ({modalState}) => {
     const [modalVisible, setModalVisible] = React.useState(modalState);
-
     const [text, onChangeText] = React.useState('');
 
     const dispatch = useDispatch();
+    const [ createPlayer ] = useCreatePlayerMutation();
 
     const toggleModal = () => {
+        setModalVisible(!modalVisible);
+        dispatch(setModalState(!setModalVisible));
+    }
+
+    const editPlayer = async () => {
+        const result = await createPlayer(text);
         setModalVisible(!modalVisible);
         dispatch(setModalState(!setModalVisible));
     }
@@ -52,7 +58,7 @@ const EditModal: React.FC<IEditModal> = ({modalState}) => {
                             value={text}
                         />
                         <View style={{marginBottom: 10}}>
-                            <Button title='OK' onPress={toggleModal} color={COLORS.PINK}/>
+                            <Button title='OK' onPress={editPlayer} color={COLORS.PINK}/>
                         </View>
                         <View>
                             <Button title='キャンセル' onPress={toggleModal} color={COLORS.BLACK}/>
@@ -78,7 +84,8 @@ const styles = StyleSheet.create({
         width: wp(60), 
         backgroundColor: COLORS.WHITE,
         alignItems: 'center',
-        borderRadius: 8
+        borderRadius: 8,
+        paddingHorizontal: 10
     },
     normalText: {
         fontSize: 20,

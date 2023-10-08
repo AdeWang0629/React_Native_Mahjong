@@ -1,27 +1,71 @@
-import* as React from 'react'
-import { View, Image, Text } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, { useState } from 'react';
+import { FlatList, Text, View } from 'react-native';
+import CheckBox from 'react-native-check-box';
+import { useGetPlayerQuery } from '../../api/playerEditApi';
+import NoData from './noData';
 import styles from './style';
-import Button from '../../components/Button';
+import  Icon  from "react-native-vector-icons/Ionicons";
+import { ListItem } from '../../interface/listItem';
+import { setPlayerList } from '../../store/global';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../store';
 
 const PlayerChooseScreen: React.FC = () => {
-    const navigation = useNavigation<{[x: string]: any}>();
+    const { data: getPlayer } = useGetPlayerQuery(1);
 
-    const mainAvatar = require('../../../assets/people_plus_big.png');
-    const handlePress = () => {
-        navigation.navigate('PlayerEditScreen');
-    }
+    const [listItems, setListItems] = useState<ListItem[]>([]);
+
+    React.useEffect(()=>{
+        setListItems(getPlayer);
+    },[getPlayer]);
+
+    const dispatch = useDispatch();
+
+    const handleItemCheck = (id ?: number) => {
+        const newListItems = listItems.map((item) => {
+        if (item.id === id) {
+            return { ...item, checked: !item.checked };
+        } else {
+            return item;
+        }
+        });
+        setListItems(newListItems);
+        dispatch(setPlayerList(newListItems));
+    };
     
-    return (
-        <View style={styles.ContentViewContainer}>
-            <Image source={mainAvatar} style={styles.mainAvatar}/>
-
-            <Text style={styles.TextHeader}>No Players Regist</Text>
-            <Text style={styles.NormalText}>プレイヤーが未登録です。</Text>
-            <Text>プレイヤーを登録してください。</Text>
-
-            <Button label={"プレイヤーを登録する"} onPress={handlePress} />
+    const {playerlist} = useSelector((state:RootState) => state.global);
+    console.log('playerlist', playerlist);
+    console.log("dfdfdf", "dfdfd");
+    const renderItem = ({ item }: { item: ListItem }) => (
+        <View style={styles.list}>
+            <CheckBox
+                style={{flex: 1}}
+                onClick={()=> handleItemCheck(item.id)}
+                isChecked={item.checked}
+                checkedImage={<Icon name="checkmark-outline" size={30} style={{color: '#1168d7'}}/>}
+                unCheckedImage={<Text></Text>}
+                leftText={`${item.name}`}
+                uncheckedCheckBoxColor={'white'}
+            />
         </View>
+      );
+
+    return (
+        <>
+            {
+                !listItems ? (
+                    <NoData />
+                ) : (
+                    <>
+                        <FlatList
+                            data={listItems}
+                            renderItem={renderItem}
+                            keyExtractor={(item) => item.id?.toString()}
+                        />
+                    </>
+                )
+            }
+        </>
     )
 };
 

@@ -1,5 +1,5 @@
 import* as React from 'react'
-import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from './style';
 import  Icon  from "react-native-vector-icons/Ionicons";
@@ -8,6 +8,7 @@ import EditModal from '../../components/EditModal';
 
 import { RootState } from '../../store';
 import { useDispatch, useSelector } from 'react-redux';
+import { useGetPlayerQuery, useDeletePlayerMutation } from '../../api/playerEditApi';
 
 const PlayerEditScreen = () => {
     const navigation = useNavigation<{[x: string]: any}>();
@@ -17,57 +18,46 @@ const PlayerEditScreen = () => {
 
     const { modalState } = useSelector((state: RootState) => state.global);
 
+    //RTK QUERY
+    const { data : getPlayer } = useGetPlayerQuery(1);
+    const [ deletePlayer ] = useDeletePlayerMutation();
+
     React.useEffect(()=>{
         setEditModalState(modalState);
     });
 
-    const data = [
-        {
-           id: 0,
-           name: '佐藤',
-        },
-        {
-           id: 1,
-           name: '鈴木',
-        },
-        {
-           id: 2,
-           name: '田中',
-        },
-        {
-           id: 3,
-           name: '中村',
-        }
-    ]
-
     React.useEffect(()=>{
-        setListState(data);
-    }, []);
-
+        setListState(getPlayer);
+    },[getPlayer]);
+    
     const handlePress = () => {
         navigation.navigate('GameEditScreen');
     }
 
     return (
-        <View style={styles.ContentViewContainer}>
+        <ScrollView>
+            <View style={styles.ContentViewContainer}>
             
-            {
-                listState.map((item, index) => (
-                    <TouchableOpacity
-                       key = {item.id}
-                       style = {styles.container}
-                       onPress = {() => alert(item)}>
-                        <Icon name="remove-circle" size={30} style={MARGIN.marginRight3}/>
-                        <Text>
-                            {item.name}
-                        </Text>
-                    </TouchableOpacity>
-                 ))
-            }
+                {
+                    listState 
+                    &&
+                    listState.map((item, index) => (
+                        <View
+                        key = {item.id}
+                        style = {styles.container}  >
+                            <TouchableOpacity onPress = {async () => {const resutl = await deletePlayer(item.id); console.log(resutl);}}>
+                                <Icon name="remove-circle" size={30} style={MARGIN.marginRight3} />
+                            </TouchableOpacity>
+                            <Text>
+                                {item.name}
+                            </Text>
+                        </View>
+                    ))
+                }
 
-            <EditModal modalState={modalState} />
-            {/* <EditModal /> */}
-        </View>
+                <EditModal modalState={modalState} />
+            </View>
+        </ScrollView>
     )
 };
 

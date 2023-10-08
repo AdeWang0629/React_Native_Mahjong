@@ -8,16 +8,23 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import Accordion from '../../components/Accordion';
 import NumberPicker from '../../components/NumberPicker';
 
+const firstSource = require('../../../assets/people_plus.png');
+const secondSource = require('../../../assets/calculator.png');
+const thirdSource = require('../../../assets/database.png');
+const fourthSource = require('../../../assets/championship.png');
+const fifthSource = require('../../../assets/global.png');
+const sixthSource = require('../../../assets/calendar.png');
+const seventhSource = require('../../../assets/image.png');
+
 type RootStackParamList = {
     Details: undefined;
 }
 
 type GameEditScreenNavigationProp = StackNavigationProp<RootStackParamList,'Details'>;
 
-
 const GameEditScreen = () => {
-    const [ scorePickerValue, setScorePickerValue ] = useState(0);
-    const [ chipPickerValue, setChipPickerValue ] = useState(0);
+    const [ scorePickerValue, setScorePickerValue ] = useState(0.5);
+    const [ chipPickerValue, setChipPickerValue ] = useState(5);
 
     // const navigation = useNavigation<{[x: string]: any}>();
     const navigation = useNavigation<GameEditScreenNavigationProp>();
@@ -27,16 +34,9 @@ const GameEditScreen = () => {
         navigation.navigate('Details');
     }
 
-    const firstSource = require('../../../assets/people_plus.png');
-    const secondSource = require('../../../assets/calculator.png');
-    const thirdSource = require('../../../assets/database.png');
-    const fourthSource = require('../../../assets/championship.png');
-    const fifthSource = require('../../../assets/global.png');
-    const sixthSource = require('../../../assets/calendar.png');
-    const seventhSource = require('../../../assets/image.png');
-
     const onScorePickerChange = (value: any) => {
-        setScorePickerValue(value);
+        const number = parseFloat(value) / 10;
+        setScorePickerValue(number);
     }
 
     const onChipPickerChange = (value: any) => {
@@ -113,13 +113,13 @@ const GameEditScreen = () => {
                         </Text>
                     </Accordion>
 
-                    <Accordion title={'開催日'} source={sixthSource} right_item='2023/10/01'>
+                    {/* <Accordion title={'開催日'} source={sixthSource} right_item='2023/10/01'>
                         <Text style={styles.textSmall}>
                             React Native lets you create truly native apps and
                             doesn't compromise your users' experiences. It provides a core set of platform
                             agnostic native components 
                         </Text>
-                    </Accordion>
+                    </Accordion> */}
 
                     <Accordion title={'サムネイル'} source={seventhSource}>
                         <Text style={styles.textSmall}>

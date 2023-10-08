@@ -3,16 +3,16 @@ import { setupListeners } from '@reduxjs/toolkit/query';
 import messageReducer from './message';
 import usersReducer from './users';
 import globalReducer from './global';
-import { jsonServerApi } from '../api/jsonServerApi';
+import { playerEditApi } from '../api/playerEditApi';
 
 export const store = configureStore({
   reducer: {
     message: messageReducer,
     users: usersReducer,
     global: globalReducer,
-    [jsonServerApi.reducerPath]: jsonServerApi.reducer
+    [playerEditApi.reducerPath]: playerEditApi.reducer
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(jsonServerApi.middleware),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(playerEditApi.middleware),
 });
 
 export type AppDispatch = typeof store.dispatch;

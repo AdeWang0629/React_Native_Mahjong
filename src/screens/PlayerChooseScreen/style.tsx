@@ -6,7 +6,7 @@ import {
 import COLORS from "../../theme/colors";
 
 const styles = StyleSheet.create({
-    ContentViewContainer: {
+    NoContentViewContainer: {
         flex: 1, 
         alignItems: 'center', 
         justifyContent: 'center',
@@ -25,6 +25,17 @@ const styles = StyleSheet.create({
     mainAvatar: {
         width: wp(60),
         height: hp(30)
+    },
+    list: {
+        backgroundColor: COLORS.WHITE,
+        borderBottomWidth: .8,
+        borderBottomColor: COLORS.WEAKGREY,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingLeft: wp(6),
+        paddingRight: wp(3),
+        height: hp(6)
     }
 })
 
