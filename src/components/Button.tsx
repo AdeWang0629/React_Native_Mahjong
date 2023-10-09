@@ -5,14 +5,9 @@ import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp
 } from 'react-native-responsive-screen'
+import { IButtonProps } from '../interface/Button';
 
-interface ButtonProps {
-    label?: string;
-    onPress?: () => void;
-    disabled?: boolean;
-}
-
-const Button: React.FC<ButtonProps> = ({ label, onPress, disabled }) => {
+const Button : React.FC<IButtonProps> = ({ label, onPress, disabled }) => {
     return (
         <TouchableOpacity
             style={styles.button}

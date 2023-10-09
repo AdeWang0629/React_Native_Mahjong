@@ -1,14 +1,11 @@
 import React, {useState} from 'react';
 import {View} from 'react-native';
 import Picker from 'rmc-picker';
+import { INumberPiecker } from '../interface/NumberPicker';
 
-interface INumberPiecker {
-    onPickerChange: any;
-    score: number,
-    initialValue: number,
-}
-
-const NumberPicker:React.FC<INumberPiecker> = ({onPickerChange, score, initialValue}) => {
+const NumberPicker : React.FC<INumberPiecker> = ({onPickerChange, score, initialValue}) => {
+    console.log("initialValue", initialValue);
+    console.log("initialValueType", typeof(initialValue));
     const count = 0;
     
     const getItems = (start : any) => {
@@ -47,43 +44,11 @@ const NumberPicker:React.FC<INumberPiecker> = ({onPickerChange, score, initialVa
         console.log('onScrollChange', value);
 
     }
-
+    console.log("value", value);
     return (
         <View style={{borderTopWidth: .3}}>
-            {/* <Picker onValueChange={}>
-                <Picker.Item value="1">
-                    1
-                </Picker.Item>
-                <Picker.Item value="2">
-                    2
-                </Picker.Item>
-                <Picker.Item value="3">
-                    3
-                </Picker.Item>
-                <Picker.Item value="4">
-                    4
-                </Picker.Item>
-                <Picker.Item value="5">
-                    5
-                </Picker.Item>
-                <Picker.Item value="6">
-                    6
-                </Picker.Item>
-                <Picker.Item value="7">
-                    7
-                </Picker.Item>
-                <Picker.Item value="8">
-                    8
-                </Picker.Item>
-                <Picker.Item value="9">
-                    9
-                </Picker.Item>
-                <Picker.Item value="10">
-                    10
-                </Picker.Item>
-            </Picker>              */}
             <Picker
-                selectedValue={value}
+                selectedValue={value.toString()}
                 onValueChange={onChange}
                 onScrollChange={onScrollChange}
             >

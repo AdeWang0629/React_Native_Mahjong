@@ -1,47 +1,51 @@
-import React, { ReactElement, useState } from 'react'
-import { View, Text, TouchableOpacity, Dimensions } from 'react-native';
+import React, { useEffect, useState } from 'react'
+import { View, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from './style';
 
 import { StackNavigationProp } from "@react-navigation/stack";
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
 
+import CList from '../../components/CList';
 import Accordion from '../../components/Accordion';
 import NumberPicker from '../../components/NumberPicker';
+// import CTextInput from '../../components/CTextInput';
+import {CDatePicker} from '../../components/CDatePicker';
+
+import moment from 'moment';
 
 const firstSource = require('../../../assets/people_plus.png');
 const secondSource = require('../../../assets/calculator.png');
 const thirdSource = require('../../../assets/database.png');
-const fourthSource = require('../../../assets/championship.png');
-const fifthSource = require('../../../assets/global.png');
+// const fourthSource = require('../../../assets/championship.png');
+// const fifthSource = require('../../../assets/global.png');
 const sixthSource = require('../../../assets/calendar.png');
-const seventhSource = require('../../../assets/image.png');
+// const seventhSource = require('../../../assets/image.png');
 
-type RootStackParamList = {
-    Details: undefined;
-}
+interface GameEditScreenProps {}
 
-type GameEditScreenNavigationProp = StackNavigationProp<RootStackParamList,'Details'>;
-
-const GameEditScreen = () => {
-    const [ scorePickerValue, setScorePickerValue ] = useState(0.5);
+const GameEditScreen : React.FC<GameEditScreenProps> = () => {
+    const [ scorePickerValue, setScorePickerValue ] = useState(5);
     const [ chipPickerValue, setChipPickerValue ] = useState(5);
 
-    // const navigation = useNavigation<{[x: string]: any}>();
-    const navigation = useNavigation<GameEditScreenNavigationProp>();
-
-    const handlePress = () => {
-        console.log('asdf');
-        navigation.navigate('Details');
-    }
+    const navigation = useNavigation<{[x: string]: any}>();
+    const {playerlist} = useSelector((state:RootState) => state.global);
 
     const onScorePickerChange = (value: any) => {
-        const number = parseFloat(value) / 10;
-        setScorePickerValue(number);
+        setScorePickerValue(value);
     }
 
     const onChipPickerChange = (value: any) => {
         setChipPickerValue(value);
     }
+
+    const [ date, setDate ] = useState<string>(moment(new Date()).format('YYYY/MM/DD'));
+
+    const onChangeDate = (selectedDate: Date) => {
+        const formattedDate = moment(selectedDate).format('YYYY/MM/DD');
+        setDate(formattedDate);
+    };
 
     return (
         <View style={styles.ContentViewContainer}>
@@ -51,14 +55,17 @@ const GameEditScreen = () => {
             <View style={styles.SectionContainer}>
 
                 <View style={styles.SectionContainerHeader}>
+
                     <Text>
                         プレイヤー
                     </Text>
+
                 </View>
 
                 <View style={styles.SectionContainerContent}>
-                    <Accordion title={'0人選択中'} source={firstSource} right_item={'chevron-right'} action="PlayerChooseScreen">
-                    </Accordion>
+                    
+                    <CList title={`${playerlist.filter((item)=> item.checked == true).length}人選択中`} source={firstSource} action="PlayerChooseScreen" />
+
                 </View>
 
             </View>
@@ -97,37 +104,19 @@ const GameEditScreen = () => {
                 </Text>
 
                 <View style={styles.SectionContainerContent}>
-                    <Accordion title={'タイトル'} source={fourthSource}>
-                        <Text style={styles.textSmall}>
-                            React Native lets you create truly native apps and
-                            doesn't compromise your users' experiences. It provides a core set of platform
-                            agnostic native components 
-                        </Text>
+
+                    {/* <CTextInput title={'タイトル'} source={fourthSource} />
+
+                    <CTextInput title={'場所'} source={fifthSource} /> */}
+
+                    <Accordion title={'開催日'} source={sixthSource} right_item={`${date}`}>
+                        
+                        <CDatePicker onChangeDate={onChangeDate} />
+
                     </Accordion>
 
-                    <Accordion title={'場所'} source={fifthSource}>
-                        <Text style={styles.textSmall}>
-                            React Native lets you create truly native apps and
-                            doesn't compromise your users' experiences. It provides a core set of platform
-                            agnostic native components 
-                        </Text>
-                    </Accordion>
-
-                    {/* <Accordion title={'開催日'} source={sixthSource} right_item='2023/10/01'>
-                        <Text style={styles.textSmall}>
-                            React Native lets you create truly native apps and
-                            doesn't compromise your users' experiences. It provides a core set of platform
-                            agnostic native components 
-                        </Text>
+                    {/* <Accordion title={'サムネイル'} source={seventhSource}>
                     </Accordion> */}
-
-                    <Accordion title={'サムネイル'} source={seventhSource}>
-                        <Text style={styles.textSmall}>
-                            React Native lets you create truly native apps and
-                            doesn't compromise your users' experiences. It provides a core set of platform
-                            agnostic native components 
-                        </Text>
-                    </Accordion>
                 </View>
             </View>
         </View>

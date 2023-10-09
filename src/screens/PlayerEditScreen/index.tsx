@@ -1,4 +1,4 @@
-import* as React from 'react'
+import * as React from 'react'
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from './style';
@@ -10,7 +10,7 @@ import { RootState } from '../../store';
 import { useDispatch, useSelector } from 'react-redux';
 import { useGetPlayerQuery, useDeletePlayerMutation } from '../../api/playerEditApi';
 
-const PlayerEditScreen = () => {
+const PlayerEditScreen : React.FC = () => {
     const navigation = useNavigation<{[x: string]: any}>();
 
     const [listState, setListState] = React.useState<{ id: number; name: string; }[]>([]);

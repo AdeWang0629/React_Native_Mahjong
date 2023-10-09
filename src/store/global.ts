@@ -1,17 +1,17 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ListItem } from '../interface/listItem';
+import { IListItem } from '../interface/ListItem';
 
 const golbalSlice = createSlice({
   name: 'global',
   initialState: {
     modalState: false,
-    playerlist: [] as ListItem[]
+    playerlist: [] as IListItem[]
   },
   reducers: {
     setModalState(state, action: PayloadAction<boolean>) {
       state.modalState = action.payload;
     },
-    setPlayerList(state, action: PayloadAction<ListItem[]>){
+    setPlayerList(state, action: PayloadAction<IListItem[]>){
       state.playerlist = action.payload
     }
   }

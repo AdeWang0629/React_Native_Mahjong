@@ -25,13 +25,11 @@ const AppStack = () => {
 
   //ホーム画面のヘッダー画像
   const crown = require("../../assets/6.png");
-  const exclamation = require("../../assets/7.png");
 
   //ゲーム編集画面のヘッダー画像
   const heart = require("../../assets/heart.png");
 
   //プレイヤー選択画面のヘッダー画像
-  const question = require("../../assets/question.png");
   const setting = require("../../assets/setting.png");
   
   const { modalState } = useSelector((state: RootState) => state.global);
@@ -60,7 +58,6 @@ const AppStack = () => {
               headerRight: () => (
                 <View style={styles.avatarContainer}>
                   <Image source={crown} style={styles.avatarImage_first} />
-                  <Image source={exclamation} style={styles.avatarImage_second} />
                 </View>
               ),
             }}
@@ -83,7 +80,7 @@ const AppStack = () => {
                   <TouchableOpacity
                     onPress={() => navigation.goBack()}
                   >
-                      <Image source={question} style={styles.avatarImage_first} />
+                    <Icon name="arrow-back-circle" size={30} style={MARGIN.marginLeft11}/>
                   </TouchableOpacity>
                 ),
                 headerRight: () => (
@@ -114,7 +111,6 @@ const AppStack = () => {
                 ),
                 headerRight: () => (
                   <View style={styles.avatarContainer}>
-                    <Image source={question} style={styles.avatarImage_first} />
                     <TouchableOpacity
                       onPress={() => navigation.push('PlayerEditScreen')}
                     >
@@ -147,7 +143,6 @@ const AppStack = () => {
                 ),
                 headerRight: () => (
                   <View style={styles.avatarContainer}>
-                    <Icon name="help-circle-outline" size={30} style={MARGIN.marginRight3}></Icon>
                     <TouchableOpacity
                       onPress={() => {dispatch(setModalState(true));}}
                     >

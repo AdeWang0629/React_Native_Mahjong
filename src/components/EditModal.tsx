@@ -11,12 +11,9 @@ import {
 
 import { useDispatch, useSelector } from 'react-redux';
 import { useCreatePlayerMutation } from '../api/playerEditApi'
+import { IEditModal } from '../interface/EditModal'
 
-interface IEditModal {
-    modalState ?: any
-}
-
-const EditModal: React.FC<IEditModal> = ({modalState}) => {
+const EditModal : React.FC<IEditModal> = ({modalState}) => {
     const [modalVisible, setModalVisible] = React.useState(modalState);
     const [text, onChangeText] = React.useState('');
 

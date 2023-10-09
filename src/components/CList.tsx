@@ -12,9 +12,9 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import COLORS from '../theme/colors';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { useNavigation } from '@react-navigation/native';
-import { IAccordion } from '../interface/Accordion';
+import { IList } from '../interface/List';
 
-const Accordion : React.FC<IAccordion> = ({ children, title, source, right_item, action, decimal }) => {
+const CList : React.FC<IList> = ({ title, source, action,}) => {
     const [ expanded, setExpanded ] = useState(false);
     const navigation = useNavigation<{[x: string]: any}>();
 
@@ -24,52 +24,30 @@ const Accordion : React.FC<IAccordion> = ({ children, title, source, right_item,
         }
         setExpanded(!expanded);
     }
-  
-    const body = <View style={styles.accordBody}>{ children }</View>;
-
-    let item;
-
-    if (decimal) {
-        if (right_item == 0) {
-            item = (<Text style={styles.normalText}>0.0</Text>);
-        }else if (right_item == 10) {
-            item = (<Text style={styles.normalText}>1.0</Text>);
-        }else if (right_item == 20) {
-            item = (<Text style={styles.normalText}>2.0</Text>);
-        }else{
-            item = (<Text style={styles.normalText}>{ right_item / 10 }</Text>);
-        }
-    }else{
-        item = (
-            <Text style={styles.normalText}>{ right_item }</Text>
-        );
-    }
 
     return (
-        <View style={styles.accordContainer}>
-            <TouchableOpacity style={styles.accordHeader} onPress={ toggleItem }>
+        <View style={styles.container}>
+            <TouchableOpacity style={styles.header} onPress={ toggleItem }>
                 <View style={styles.flexDirection}>
                     <Image source={source} style={styles.avatar} />
-                    <Text style={styles.accordTitle}>{ title }</Text>
+                    <Text style={styles.title}>{ title }</Text>
                 </View>
                 
-                { item && item}
+                <Icon name={expanded ? 'chevron-right' : 'chevron-down'} size={15} color="#bbb" />
 
             </TouchableOpacity>
-
-            { expanded && body }
         </View>
     );
 };
 
-export default Accordion;
+export default CList;
 
 const styles = StyleSheet.create({
-    accordContainer: {
+    container: {
         borderBottomWidth: .4,
         paddingTop: 1
     },
-    accordHeader: {
+    header: {
         paddingVertical: 7,
         paddingHorizontal: 20,
         backgroundColor: COLORS.WHITE,
@@ -78,13 +56,10 @@ const styles = StyleSheet.create({
         justifyContent:'space-between',
         alignItems: 'center', 
     },
-    accordTitle: {
+    title: {
         fontSize: 15,
         paddingTop: hp(.6),
         paddingLeft: wp(3)
-    },
-    accordBody: {
-        // padding: 12
     },
     avatar: {
         width: 30,

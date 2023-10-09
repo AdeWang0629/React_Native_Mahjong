@@ -5,7 +5,7 @@ import { useGetPlayerQuery } from '../../api/playerEditApi';
 import NoData from './noData';
 import styles from './style';
 import  Icon  from "react-native-vector-icons/Ionicons";
-import { ListItem } from '../../interface/listItem';
+import { IListItem } from '../../interface/ListItem';
 import { setPlayerList } from '../../store/global';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
@@ -13,7 +13,7 @@ import { RootState } from '../../store';
 const PlayerChooseScreen: React.FC = () => {
     const { data: getPlayer } = useGetPlayerQuery(1);
 
-    const [listItems, setListItems] = useState<ListItem[]>([]);
+    const [listItems, setListItems] = useState<IListItem[]>([]);
 
     React.useEffect(()=>{
         setListItems(getPlayer);
@@ -34,10 +34,12 @@ const PlayerChooseScreen: React.FC = () => {
     };
     
     const {playerlist} = useSelector((state:RootState) => state.global);
-    console.log('playerlist', playerlist);
-    console.log("dfdfdf", "dfdfd");
-    const renderItem = ({ item }: { item: ListItem }) => (
+    console.log("=================================");
+    playerlist.map((item)=>console.log(item.checked));
+
+    const renderItem = ({ item }: { item: IListItem }) => (
         <View style={styles.list}>
+            {/* ERROR */}
             <CheckBox
                 style={{flex: 1}}
                 onClick={()=> handleItemCheck(item.id)}
