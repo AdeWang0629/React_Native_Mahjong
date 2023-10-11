@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from './style';
 
 import { StackNavigationProp } from "@react-navigation/stack";
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store';
 
 import CList from '../../components/CList';
@@ -23,103 +23,128 @@ const thirdSource = require('../../../assets/database.png');
 const sixthSource = require('../../../assets/calendar.png');
 // const seventhSource = require('../../../assets/image.png');
 
-interface GameEditScreenProps {}
+import { setScore, setChip, setEventDate } from '../../store/global';
+import Button from '../../components/Button';
+import { useCreateGameMutation } from '../../api/gameEditApi';
 
-const GameEditScreen : React.FC<GameEditScreenProps> = () => {
-    const [ scorePickerValue, setScorePickerValue ] = useState(5);
-    const [ chipPickerValue, setChipPickerValue ] = useState(5);
+const GameEditScreen : React.FC = () => {
+    const {playerlist, score, chip, event_date} = useSelector((state:RootState)=>state.global);
+    const dispatch = useDispatch();
 
     const navigation = useNavigation<{[x: string]: any}>();
-    const {playerlist} = useSelector((state:RootState) => state.global);
 
     const onScorePickerChange = (value: any) => {
-        setScorePickerValue(value);
+        dispatch(setScore(value));
     }
 
     const onChipPickerChange = (value: any) => {
-        setChipPickerValue(value);
+        dispatch(setChip(value));
     }
-
-    const [ date, setDate ] = useState<string>(moment(new Date()).format('YYYY/MM/DD'));
 
     const onChangeDate = (selectedDate: Date) => {
         const formattedDate = moment(selectedDate).format('YYYY/MM/DD');
-        setDate(formattedDate);
+        dispatch(setEventDate(formattedDate));
     };
 
+    const [ createGame ] = useCreateGameMutation();
+
+    const createGameList = async () => {
+      const body = {
+        'playerlist' : playerlist,
+        'score' : score,
+        'chip' : chip,
+        'event_date' : event_date
+      };
+  
+      const result = await createGame(body);
+      console.log("result",result);
+
+      navigation.navigate('HomeScreen');
+    }
+
     return (
-        <View style={styles.ContentViewContainer}>
+        <ScrollView>
+            <View style={styles.ContentViewContainer}>
 
-            {/* プレイヤー セクション */}
+                {/* プレイヤー セクション */}
 
-            <View style={styles.SectionContainer}>
+                <View style={styles.SectionContainer}>
 
-                <View style={styles.SectionContainerHeader}>
+                    {/* <View style={styles.SectionContainerHeader}>
 
-                    <Text>
-                        プレイヤー
-                    </Text>
+                        <Text>
+                            プレイヤー
+                        </Text>
 
-                </View>
+                    </View> */}
 
-                <View style={styles.SectionContainerContent}>
-                    
-                    <CList title={`${playerlist.filter((item)=> item.checked == true).length}人選択中`} source={firstSource} action="PlayerChooseScreen" />
-
-                </View>
-
-            </View>
-            
-            {/* レート セクション */}
-
-            <View style={styles.SectionContainer}>
-
-                <Text style={styles.SectionContainerHeader}>
-                    レート
-                </Text>
-
-                <View style={styles.SectionContainerContent}>
-
-                    <Accordion title={'スコア'} source={secondSource} right_item={`${scorePickerValue}`} decimal={true}>
-
-                        <NumberPicker onPickerChange={onScorePickerChange} initialValue={scorePickerValue} score={21} />
-
-                    </Accordion>
-
-                    <Accordion title={'チップ'} source={thirdSource} right_item={`${chipPickerValue}`}>
-
-                        <NumberPicker onPickerChange={onChipPickerChange} initialValue={chipPickerValue} score={11}/>
-
-                    </Accordion>
-                </View>
-
-            </View>
-
-            {/* 付加情報 セクション */}
-            
-            <View style={styles.SectionContainer}>
-
-                <Text style={styles.SectionContainerHeader}>
-                    付加情報
-                </Text>
-
-                <View style={styles.SectionContainerContent}>
-
-                    {/* <CTextInput title={'タイトル'} source={fourthSource} />
-
-                    <CTextInput title={'場所'} source={fifthSource} /> */}
-
-                    <Accordion title={'開催日'} source={sixthSource} right_item={`${date}`}>
+                    <View style={styles.SectionContainerContent}>
                         
-                        <CDatePicker onChangeDate={onChangeDate} />
+                        <CList title={`${playerlist ? playerlist.filter((item)=> item.checked == true).length : 0}人選択中`} source={firstSource} action="PlayerChooseScreen" />
 
-                    </Accordion>
+                    </View>
 
-                    {/* <Accordion title={'サムネイル'} source={seventhSource}>
-                    </Accordion> */}
+                </View>
+
+                {/* レート セクション */}
+
+                <View style={styles.SectionContainer}>
+
+                    {/* <Text style={styles.SectionContainerHeader}>
+
+                        レート
+
+                    </Text> */}
+
+                    <View style={styles.SectionContainerContent}>
+
+                        <Accordion title={'スコア'} source={secondSource} right_item={`${score}`} decimal={true}>
+
+                            <NumberPicker onPickerChange={onScorePickerChange} initialValue={score} score={39} />
+
+                        </Accordion>
+
+                        <Accordion title={'チップ'} source={thirdSource} right_item={`${chip}`}>
+
+                            <NumberPicker onPickerChange={onChipPickerChange} initialValue={chip} score={11}/>
+
+                        </Accordion>
+                    </View>
+
+                </View>
+
+                {/* 付加情報 セクション */}
+
+                <View style={styles.SectionContainer}>
+{/* 
+                    <Text style={styles.SectionContainerHeader}>
+                        付加情報
+                    </Text> */}
+
+                    <View style={styles.SectionContainerContent}>
+
+                        {/* <CTextInput title={'タイトル'} source={fourthSource} />
+
+                        <CTextInput title={'場所'} source={fifthSource} /> */}
+
+                        <Accordion title={'開催日'} source={sixthSource} right_item={`${event_date}`}>
+                            
+                            <CDatePicker onChangeDate={onChangeDate} />
+
+                        </Accordion>
+
+                        {/* <Accordion title={'サムネイル'} source={seventhSource}>
+                        </Accordion> */}
+                    </View>
+                </View>
+                
+                <View style={styles.center}>
+
+                    <Button label='保                 存' onPress={createGameList}/>
+
                 </View>
             </View>
-        </View>
+        </ScrollView>
     )
 };
 

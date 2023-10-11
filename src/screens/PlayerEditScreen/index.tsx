@@ -7,7 +7,7 @@ import MARGIN from '../../theme/margin';
 import EditModal from '../../components/EditModal';
 
 import { RootState } from '../../store';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useGetPlayerQuery, useDeletePlayerMutation } from '../../api/playerEditApi';
 
 const PlayerEditScreen : React.FC = () => {
@@ -29,10 +29,6 @@ const PlayerEditScreen : React.FC = () => {
     React.useEffect(()=>{
         setListState(getPlayer);
     },[getPlayer]);
-    
-    const handlePress = () => {
-        navigation.navigate('GameEditScreen');
-    }
 
     return (
         <ScrollView>
@@ -45,7 +41,7 @@ const PlayerEditScreen : React.FC = () => {
                         <View
                         key = {item.id}
                         style = {styles.container}  >
-                            <TouchableOpacity onPress = {async () => {const resutl = await deletePlayer(item.id); console.log(resutl);}}>
+                            <TouchableOpacity onPress = {async () => {const result = await deletePlayer(item.id); console.log(result);}}>
                                 <Icon name="remove-circle" size={30} style={MARGIN.marginRight3} />
                             </TouchableOpacity>
                             <Text>

@@ -21,6 +21,16 @@ export const playerEditApi = createApi({
             }),
             invalidatesTags: ['Player']
         }),
+        updatePlayer: builder.mutation({
+            query: (id) => {
+                console.log("dfddddddddd", id);
+            return {
+                url: `player/${id}`,
+                method: 'PUT',
+                body: {}
+            }},
+            invalidatesTags: ['Player']
+        }),
         deletePlayer: builder.mutation({
             query: (id) => {
                 return {url: `player/${id}`,
@@ -31,4 +41,9 @@ export const playerEditApi = createApi({
     })
 });
 
-export const { useGetPlayerQuery, useCreatePlayerMutation, useDeletePlayerMutation } = playerEditApi;
+export const { 
+    useGetPlayerQuery, 
+    useCreatePlayerMutation, 
+    useUpdatePlayerMutation,
+    useDeletePlayerMutation 
+} = playerEditApi;

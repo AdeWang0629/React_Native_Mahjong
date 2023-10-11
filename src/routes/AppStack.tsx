@@ -41,7 +41,7 @@ const AppStack = () => {
 
           {/* ホーム画面 */}
           <Stack.Screen 
-            name="Home" 
+            name="HomeScreen" 
             component={HomeScreen} 
             options={{
               headerTitle: "ゲーム一覧",
@@ -80,12 +80,9 @@ const AppStack = () => {
                   <TouchableOpacity
                     onPress={() => navigation.goBack()}
                   >
-                    <Icon name="arrow-back-circle" size={30} style={MARGIN.marginLeft11}/>
+                    <Icon name="arrow-back-circle" size={30} style={MARGIN.marginLeft5}/>
                   </TouchableOpacity>
-                ),
-                headerRight: () => (
-                  <Image source={heart} style={styles.avatarImage_first} />
-                ),
+                )
             })}
           />
 
@@ -106,7 +103,7 @@ const AppStack = () => {
                   <TouchableOpacity
                     onPress={() => navigation.goBack()}
                   >
-                      <Icon name="arrow-back-circle" size={30} style={MARGIN.marginLeft11}/>
+                      <Icon name="arrow-back-circle" size={30} style={MARGIN.marginLeft5}/>
                   </TouchableOpacity>
                 ),
                 headerRight: () => (
@@ -138,7 +135,7 @@ const AppStack = () => {
                   <TouchableOpacity
                     onPress={() => navigation.goBack()}
                   >
-                    <Icon name="save-outline" size={30} style={MARGIN.marginLeft11}/>
+                    <Text style={styles.headerText}>完了</Text>
                   </TouchableOpacity>
                 ),
                 headerRight: () => (
@@ -179,5 +176,10 @@ const styles = StyleSheet.create({
   avatarImage_Left: {
     width: 25,
     height: 25
+  },
+  headerText: {
+    fontSize: 15, 
+    fontWeight: '700', 
+    letterSpacing: 2
   }
 })

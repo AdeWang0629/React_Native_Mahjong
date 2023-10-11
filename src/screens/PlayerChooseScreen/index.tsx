@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { FlatList, Text, View } from 'react-native';
 import CheckBox from 'react-native-check-box';
 import { useGetPlayerQuery } from '../../api/playerEditApi';
@@ -9,41 +9,37 @@ import { IListItem } from '../../interface/ListItem';
 import { setPlayerList } from '../../store/global';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
+import { useUpdatePlayerMutation } from '../../api/playerEditApi';
 
 const PlayerChooseScreen: React.FC = () => {
     const { data: getPlayer } = useGetPlayerQuery(1);
+    const {playerlist} = useSelector((state:RootState) => state.global);
+    const dispatch = useDispatch();
+    const [ updatePlayer ] = useUpdatePlayerMutation();
 
-    const [listItems, setListItems] = useState<IListItem[]>([]);
-
-    React.useEffect(()=>{
-        setListItems(getPlayer);
+    useEffect(()=>{
+        dispatch(setPlayerList(getPlayer));
     },[getPlayer]);
 
-    const dispatch = useDispatch();
-
     const handleItemCheck = (id ?: number) => {
-        const newListItems = listItems.map((item) => {
+        const newListItems = playerlist.map((item: any) => {
         if (item.id === id) {
+            updatePlayer(id);
             return { ...item, checked: !item.checked };
         } else {
             return item;
         }
         });
-        setListItems(newListItems);
         dispatch(setPlayerList(newListItems));
     };
     
-    const {playerlist} = useSelector((state:RootState) => state.global);
-    console.log("=================================");
-    playerlist.map((item)=>console.log(item.checked));
-
     const renderItem = ({ item }: { item: IListItem }) => (
         <View style={styles.list}>
             {/* ERROR */}
             <CheckBox
                 style={{flex: 1}}
                 onClick={()=> handleItemCheck(item.id)}
-                isChecked={item.checked}
+                isChecked={Boolean(item.checked)}
                 checkedImage={<Icon name="checkmark-outline" size={30} style={{color: '#1168d7'}}/>}
                 unCheckedImage={<Text></Text>}
                 leftText={`${item.name}`}
@@ -55,16 +51,17 @@ const PlayerChooseScreen: React.FC = () => {
     return (
         <>
             {
-                !listItems ? (
-                    <NoData />
-                ) : (
+                playerlist && playerlist.length ? (
                     <>
                         <FlatList
-                            data={listItems}
+                            data={playerlist}
                             renderItem={renderItem}
                             keyExtractor={(item) => item.id?.toString()}
                         />
                     </>
+                    
+                ) : (
+                    <NoData />
                 )
             }
         </>

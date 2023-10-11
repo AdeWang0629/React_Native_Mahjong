@@ -20,7 +20,8 @@ const styles = StyleSheet.create({
         marginBottom: hp(1)
     },
     NormalText: {
-        color: COLORS.WEAKGREY
+        color: COLORS.WEAKGREY,
+        paddingVertical: hp(2)
     },
     mainAvatar: {
         width: wp(60),

@@ -38,6 +38,11 @@ const styles = StyleSheet.create({
     },
     textSmall: {
         fontSize: 16
+    },
+    center: {
+        flex: 1, 
+        alignItems: 'center', 
+        justifyContent: 'center',
     }
 })
 

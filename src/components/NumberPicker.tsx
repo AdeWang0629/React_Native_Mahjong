@@ -10,13 +10,22 @@ const NumberPicker : React.FC<INumberPiecker> = ({onPickerChange, score, initial
     
     const getItems = (start : any) => {
         const items: any[] = [];
-        if (score == 21) {
+        if (score == 39) {
             for(let i = start ; i < start + score ; i++){
-                items.push(
-                <Picker.Item value={i + ''} key={i}>
-                    { (i == 0) ? ('0.0') : ((i == 10) ? ('1.0') : ((i == 20) ? ('2.0') : i/10)) }
-                </Picker.Item>
-                );
+                if (i < 21) {
+                    items.push(
+                        <Picker.Item value={i + ''} key={i}>
+                            { (i == 0) ? ('0.0') : ((i == 10) ? ('1.0') : ((i == 20) ? ('2.0') : i/10)) }
+                        </Picker.Item>
+                    );
+                }else{
+                    const number = i-18;
+                    items.push(
+                        <Picker.Item value={i + ''} key={i}>
+                            {number.toFixed(1)}
+                        </Picker.Item>
+                    );
+                }
             }    
         } else if (score == 11) {
             for(let i = start ; i < start + score ; i++){

@@ -29,7 +29,7 @@ export const CDatePicker:React.FC <ICdatePicker> = ({onChangeDate}) => {
 
   return (
     <SafeAreaView>
-      <Button onPress={showDatepicker} title="Show date picker!" />
+      <Button onPress={showDatepicker} title="日付ピッカーを表示!" />
       {show && (
         <DateTimePicker
           testID="dateTimePicker"

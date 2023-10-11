@@ -36,8 +36,10 @@ const Accordion : React.FC<IAccordion> = ({ children, title, source, right_item,
             item = (<Text style={styles.normalText}>1.0</Text>);
         }else if (right_item == 20) {
             item = (<Text style={styles.normalText}>2.0</Text>);
-        }else{
+        }else if(right_item < 21){
             item = (<Text style={styles.normalText}>{ right_item / 10 }</Text>);
+        }else {
+            item = (<Text style={styles.normalText}>{ (right_item-18).toFixed(1) }</Text>);
         }
     }else{
         item = (

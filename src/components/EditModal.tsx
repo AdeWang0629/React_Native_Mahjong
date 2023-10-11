@@ -29,6 +29,7 @@ const EditModal : React.FC<IEditModal> = ({modalState}) => {
         const result = await createPlayer(text);
         setModalVisible(!modalVisible);
         dispatch(setModalState(!setModalVisible));
+        onChangeText('');
     }
 
     React.useEffect(()=>{
