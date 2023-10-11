@@ -4,7 +4,8 @@ const COLORS = {
     GREY: '#555555',
     WEAKGREY: '#5c5c5c',
     BLACK: '#5c5c5c',
-    PINK: '#a428ff'
+    PINK: '#a428ff',
+    GREEN: '#e5ffe4'
 };
 
 export default COLORS;

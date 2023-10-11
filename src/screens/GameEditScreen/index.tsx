@@ -42,6 +42,7 @@ const GameEditScreen : React.FC = () => {
     }
 
     const onChangeDate = (selectedDate: Date) => {
+        console.log("132132132132132",Date);
         const formattedDate = moment(selectedDate).format('YYYY/MM/DD');
         dispatch(setEventDate(formattedDate));
     };

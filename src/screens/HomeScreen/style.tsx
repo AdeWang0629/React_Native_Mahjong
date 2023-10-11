@@ -40,6 +40,15 @@ const styles = StyleSheet.create({
         bottom: hp(5),
         right: wp(5),
     },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+     },
+    horizontal: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        padding: 10,
+    },
 })
 
 export default styles;

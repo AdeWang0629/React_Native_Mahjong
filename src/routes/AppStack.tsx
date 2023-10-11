@@ -17,6 +17,8 @@ import HomeScreen from '../screens/HomeScreen/index';
 import GameEditScreen from '../screens/GameEditScreen';
 import PlayerChooseScreen from "../screens/PlayerChooseScreen";
 import PlayerEditScreen from "../screens/PlayerEditScreen";
+import ScoreScreen from "../screens/ScoreScreen";
+
 import { RootState } from '../store';
 import { useDispatch, useSelector } from 'react-redux';
 import { setModalState } from '../store/global';
@@ -43,7 +45,7 @@ const AppStack = () => {
           <Stack.Screen 
             name="HomeScreen" 
             component={HomeScreen} 
-            options={{
+            options={({navigation})=>({
               headerTitle: "ゲーム一覧",
               headerTitleAlign: 'center',
               headerTitleStyle: {
@@ -53,14 +55,25 @@ const AppStack = () => {
                 backgroundColor: '#f7f6f6'
               },
               headerLeft: ()=>(
-                null
+                <TouchableOpacity
+                  onPress={() => navigation.push('PlayerEditScreen')}
+                >
+                    <Image source={setting} style={styles.avatarImage_second} />
+                </TouchableOpacity>
               ),
               headerRight: () => (
-                <View style={styles.avatarContainer}>
-                  <Image source={crown} style={styles.avatarImage_first} />
-                </View>
+                <>
+                  <View style={styles.avatarContainer}>
+                    <Image source={crown} style={styles.avatarImage_first} />
+                  </View>
+                  <TouchableOpacity
+                  onPress={() => navigation.navigate('GameEditScreen')}
+                  >
+                    <Icon name="add-circle-outline" size={30} style={MARGIN.marginLeft5}/>
+                  </TouchableOpacity>
+                </>
               ),
-            }}
+            })}
           />
 
           {/* ゲーム編集画面 */}
@@ -103,7 +116,7 @@ const AppStack = () => {
                   <TouchableOpacity
                     onPress={() => navigation.goBack()}
                   >
-                      <Icon name="arrow-back-circle" size={30} style={MARGIN.marginLeft5}/>
+                    <Icon name="arrow-back-circle" size={30} style={MARGIN.marginLeft5}/>
                   </TouchableOpacity>
                 ),
                 headerRight: () => (
@@ -150,6 +163,30 @@ const AppStack = () => {
                 modalState: modalState
             })}
           />
+
+          {/* スコア画面 */}
+          <Stack.Screen 
+            name="ScoreScreen" 
+            component={ScoreScreen} 
+            options={({navigation})=>({
+                headerTitle: "スコア",
+                headerTitleAlign: 'center',
+                headerTitleStyle: {
+                  fontWeight: 'bold',
+                },
+                headerStyle: {
+                  backgroundColor: COLORS.WHITE
+                },
+                headerLeft: ()=>(
+                  <TouchableOpacity
+                    onPress={() => navigation.goBack()}
+                  >
+                    <Icon name="arrow-back-circle" size={30} style={MARGIN.marginLeft5}/>
+                  </TouchableOpacity>
+                )
+            })}
+          />
+
         </Stack.Navigator>
     </NavigationContainer>
   );

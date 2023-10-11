@@ -9,6 +9,7 @@ import EditModal from '../../components/EditModal';
 import { RootState } from '../../store';
 import { useSelector } from 'react-redux';
 import { useGetPlayerQuery, useDeletePlayerMutation } from '../../api/playerEditApi';
+import DeleteModal from '../../components/DeleteModal';
 
 const PlayerEditScreen : React.FC = () => {
     const navigation = useNavigation<{[x: string]: any}>();
@@ -30,6 +31,27 @@ const PlayerEditScreen : React.FC = () => {
         setListState(getPlayer);
     },[getPlayer]);
 
+    const [deleteModalState, setDeleteModalState] = React.useState(false);
+    const [itemId, setItemId] = React.useState(-1);
+
+    const visibleModalEvent = (id:any) => {
+        console.log("dfdfdfdfd", id);
+        setDeleteModalState(!deleteModalState);
+        if (!id) {
+            setItemId(-1);
+        }else {
+            setItemId(id);
+        }
+    }
+
+    const deleteModalEvent = async () => {
+        const result = await deletePlayer(itemId); 
+
+        if (result) {
+            setDeleteModalState(!deleteModalState);
+        }
+    }
+    
     return (
         <ScrollView>
             <View style={styles.ContentViewContainer}>
@@ -41,7 +63,7 @@ const PlayerEditScreen : React.FC = () => {
                         <View
                         key = {item.id}
                         style = {styles.container}  >
-                            <TouchableOpacity onPress = {async () => {const result = await deletePlayer(item.id); console.log(result);}}>
+                            <TouchableOpacity onPress = {() => visibleModalEvent(item.id)}>
                                 <Icon name="remove-circle" size={30} style={MARGIN.marginRight3} />
                             </TouchableOpacity>
                             <Text>
@@ -50,8 +72,10 @@ const PlayerEditScreen : React.FC = () => {
                         </View>
                     ))
                 }
-
+                
                 <EditModal modalState={modalState} />
+
+                <DeleteModal modalState={deleteModalState} visibleModalEvent={visibleModalEvent} deleteModalEvent={deleteModalEvent}/>
             </View>
         </ScrollView>
     )
