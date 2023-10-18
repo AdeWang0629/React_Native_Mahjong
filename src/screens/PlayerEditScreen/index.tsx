@@ -10,19 +10,20 @@ import { RootState } from '../../store';
 import { useSelector } from 'react-redux';
 import { useGetPlayerQuery, useDeletePlayerMutation } from '../../api/playerEditApi';
 import DeleteModal from '../../components/DeleteModal';
+import AlertModal from '../../components/AlertModal';
 
 const PlayerEditScreen : React.FC = () => {
     const navigation = useNavigation<{[x: string]: any}>();
 
-    const [listState, setListState] = React.useState<{ id: number; name: string; }[]>([]);
+    const [ listState, setListState ] = React.useState<{ id: number; name: string; }[]>([]);
     const [ editModalState, setEditModalState ] = React.useState(false);
 
-    const { modalState } = useSelector((state: RootState) => state.global);
+    const { modalState, alertModalState } = useSelector((state: RootState) => state.global);
 
     //RTK QUERY
     const { data : getPlayer } = useGetPlayerQuery(1);
     const [ deletePlayer ] = useDeletePlayerMutation();
-
+    console.log("adffffffffffffffffffffffffffffffffffffffff", getPlayer);
     React.useEffect(()=>{
         setEditModalState(modalState);
     });
@@ -76,6 +77,8 @@ const PlayerEditScreen : React.FC = () => {
                 <EditModal modalState={modalState} />
 
                 <DeleteModal modalState={deleteModalState} visibleModalEvent={visibleModalEvent} deleteModalEvent={deleteModalEvent}/>
+
+                <AlertModal modalState={alertModalState} label={'10人以上のプレイヤーを追加できません！'} />
             </View>
         </ScrollView>
     )

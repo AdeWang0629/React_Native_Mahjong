@@ -15,20 +15,34 @@ const HomeScreen: React.FC = () => {
     const navigation = useNavigation<{[x: string]: any}>();
     const dispatch = useDispatch();
 
-    const { data: getGame } = useGetGameQuery(1);
-
+    const [page, setPage] = useState(1);
+    const { data: getGame, refetch } = useGetGameQuery(1);
+   
     const { gameList } = useSelector((state:RootState) => state.global);
     const [ deleteGame ] = useDeleteGameMutation();
 
     const [loading, setLoading] = useState(true);
 
     useEffect(()=>{
+        refetch();
+    });
+
+    useEffect(()=>{
         dispatch(setGameList(getGame));
         setLoading(false);
     },[getGame]);
-    console.log("123456789123456789",gameList);
+
+    const onPress = (item : any) => {
+        if (item.status) {
+            navigation.navigate('ScoreViewScreen', {item: item});
+        }else {
+            navigation.navigate('ScoreScreen', {item: item});
+        }
+        setPage(page + 1);
+    }
+
     const renderItem = ({ item }: { item: any }) => (
-        <TouchableOpacity onPress={()=> navigation.navigate('ScoreScreen', {item: item})}>
+        <TouchableOpacity onPress={()=> onPress(item)}>
 
             <View style={styles.list}>
                 

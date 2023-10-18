@@ -26,9 +26,11 @@ const sixthSource = require('../../../assets/calendar.png');
 import { setScore, setChip, setEventDate } from '../../store/global';
 import Button from '../../components/Button';
 import { useCreateGameMutation } from '../../api/gameEditApi';
+import { setAlertModalState } from '../../store/global';
+import AlertModal from '../../components/AlertModal';
 
 const GameEditScreen : React.FC = () => {
-    const {playerlist, score, chip, event_date} = useSelector((state:RootState)=>state.global);
+    const { playerlist, score, chip, event_date, alertModalState } = useSelector((state:RootState)=>state.global);
     const dispatch = useDispatch();
 
     const navigation = useNavigation<{[x: string]: any}>();
@@ -42,7 +44,6 @@ const GameEditScreen : React.FC = () => {
     }
 
     const onChangeDate = (selectedDate: Date) => {
-        console.log("132132132132132",Date);
         const formattedDate = moment(selectedDate).format('YYYY/MM/DD');
         dispatch(setEventDate(formattedDate));
     };
@@ -50,17 +51,22 @@ const GameEditScreen : React.FC = () => {
     const [ createGame ] = useCreateGameMutation();
 
     const createGameList = async () => {
-      const body = {
-        'playerlist' : playerlist,
-        'score' : score,
-        'chip' : chip,
-        'event_date' : event_date
-      };
-  
-      const result = await createGame(body);
-      console.log("result",result);
-
-      navigation.navigate('HomeScreen');
+        const count = playerlist.filter((item)=> item.checked == true).length;
+        if (2 < count && count < 5) {
+            const body = {
+                'playerlist' : playerlist,
+                'score' : score,
+                'chip' : chip,
+                'event_date' : event_date
+            };
+            
+            const result = await createGame(body);
+            console.log("result",result);
+    
+            navigation.navigate('HomeScreen');
+        }else{
+            dispatch(setAlertModalState(true));
+        }
     }
 
     return (
@@ -142,9 +148,11 @@ const GameEditScreen : React.FC = () => {
                 <View style={styles.center}>
 
                     <Button label='保                 存' onPress={createGameList}/>
-
+                    
                 </View>
             </View>
+
+            <AlertModal modalState={alertModalState} label={'3人打または4人打のみ可能です!'} />
         </ScrollView>
     )
 };

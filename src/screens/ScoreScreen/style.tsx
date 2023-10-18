@@ -16,7 +16,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         borderWidth: 1, 
-        borderColor: 'black'
+        borderColor: 'black',
+        textAlign: 'center'
     },
     bigBox: {
         height: hp(6),
@@ -39,13 +40,34 @@ const styles = StyleSheet.create({
         borderColor: 'black',
         backgroundColor: COLORS.GREEN
     },
+    desBox: {
+        height: hp(6),
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 1, 
+        borderColor: 'black',
+        backgroundColor: COLORS.GREEN
+    },
     addButton: {
-        width: wp(60),
         height: hp(6),
         backgroundColor: COLORS.GREY,
         borderRadius: 10,
         alignItems: 'center',
         justifyContent: 'center'
+    },
+    saveButton: {
+        height: hp(6),
+        width: wp(60), 
+        backgroundColor: COLORS.PINK,
+        borderRadius: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 20,
+        flexDirection: 'row'
+    },
+    normalText: {
+        fontSize: 15,
+        fontWeight: '700'
     }
 })
 

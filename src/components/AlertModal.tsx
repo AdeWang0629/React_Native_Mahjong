@@ -7,17 +7,17 @@ import {
     heightPercentageToDP as hp 
 } from 'react-native-responsive-screen'
 
-import { IEditModal } from '../interface/EditModal'
+import { IAlertModal } from '../interface/AlertModal'
+import { useDispatch } from 'react-redux'
+import { setAlertModalState } from '../store/global'
 
-const DeleteModal : React.FC<IEditModal> = ({modalState, visibleModalEvent, deleteModalEvent}) => {
-    const [modalVisible, setModalVisible] = React.useState(modalState);
+const AlertModal : React.FC<IAlertModal> = ({modalState, label}) => {
+    const dispatch = useDispatch();
+    const [modalVisible, setModalVisible] = React.useState(false);
 
     const toggleModal = () => {
-        visibleModalEvent();
-    }
-
-    const deletePlayerModal = () => {
-        deleteModalEvent();
+        setModalVisible(!modalVisible);
+        dispatch(setAlertModalState(!modalVisible));
     }
 
     React.useEffect(()=>{
@@ -32,25 +32,22 @@ const DeleteModal : React.FC<IEditModal> = ({modalState, visibleModalEvent, dele
 
                     <View>
                         <View style={{alignItems: 'center'}}>
-                            <Text style={styles.normalText}>削除</Text>
-                            <Text style={styles.text}>   プレイヤーを本当に削除しますか？   </Text>
+                            <Text style={styles.normalText}>警告</Text>
+                            <Text style={styles.text}>   {label}   </Text>
                         </View>
 
                         <View style={{marginVertical: 10}}>
-                            <Button title='OK' onPress={deletePlayerModal} color={COLORS.PINK}/>
-                        </View>
-                        <View>
-                            <Button title='キャンセル' onPress={toggleModal} color={COLORS.BLACK}/>
+                            <Button title='OK' onPress={toggleModal} color={COLORS.PINK}/>
                         </View>
                     </View>
                 </View>
             </View>
-            
+
         </Modal>
     )
 }
 
-export default DeleteModal;
+export default AlertModal;
 
 const styles = StyleSheet.create({
     modalContainer: {
