@@ -10,16 +10,22 @@ import { setPlayerList } from '../../store/global';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { useUpdatePlayerMutation } from '../../api/playerEditApi';
+import Spinner from 'react-native-loading-spinner-overlay';
+import AlertModal from '../../components/AlertModal';
 
 const PlayerChooseScreen: React.FC = () => {
-    const { data: getPlayer } = useGetPlayerQuery(1);
-    const {playerlist} = useSelector((state:RootState) => state.global);
+    const { data: getPlayer, isLoading, isFetching } = useGetPlayerQuery(1);
+    const {playerlist, alertModalState} = useSelector((state:RootState) => state.global);
     const dispatch = useDispatch();
     const [ updatePlayer ] = useUpdatePlayerMutation();
 
     useEffect(()=>{
         dispatch(setPlayerList(getPlayer));
     },[getPlayer]);
+
+    if (isLoading || isFetching) {
+        return <Spinner visible={true} />;
+    }
 
     const handleItemCheck = (id ?: number) => {
         const newListItems = playerlist.map((item: any) => {
@@ -51,13 +57,15 @@ const PlayerChooseScreen: React.FC = () => {
     return (
         <>
             {
-                playerlist && playerlist.length ? (
+                getPlayer.length ? (
                     <>
                         <FlatList
                             data={playerlist}
                             renderItem={renderItem}
                             keyExtractor={(item) => item.id?.toString()}
                         />
+
+                        <AlertModal modalState={alertModalState} label={'３人以上を選択してください。'} />
                     </>
                     
                 ) : (

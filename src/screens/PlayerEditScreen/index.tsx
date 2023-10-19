@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import styles from './style';
 import  Icon  from "react-native-vector-icons/Ionicons";
 import MARGIN from '../../theme/margin';
@@ -10,20 +9,18 @@ import { RootState } from '../../store';
 import { useSelector } from 'react-redux';
 import { useGetPlayerQuery, useDeletePlayerMutation } from '../../api/playerEditApi';
 import DeleteModal from '../../components/DeleteModal';
-import AlertModal from '../../components/AlertModal';
 
 const PlayerEditScreen : React.FC = () => {
-    const navigation = useNavigation<{[x: string]: any}>();
 
     const [ listState, setListState ] = React.useState<{ id: number; name: string; }[]>([]);
     const [ editModalState, setEditModalState ] = React.useState(false);
 
-    const { modalState, alertModalState } = useSelector((state: RootState) => state.global);
+    const { modalState } = useSelector((state: RootState) => state.global);
 
     //RTK QUERY
     const { data : getPlayer } = useGetPlayerQuery(1);
     const [ deletePlayer ] = useDeletePlayerMutation();
-    console.log("adffffffffffffffffffffffffffffffffffffffff", getPlayer);
+
     React.useEffect(()=>{
         setEditModalState(modalState);
     });
@@ -33,10 +30,10 @@ const PlayerEditScreen : React.FC = () => {
     },[getPlayer]);
 
     const [deleteModalState, setDeleteModalState] = React.useState(false);
+
     const [itemId, setItemId] = React.useState(-1);
 
     const visibleModalEvent = (id:any) => {
-        console.log("dfdfdfdfd", id);
         setDeleteModalState(!deleteModalState);
         if (!id) {
             setItemId(-1);
@@ -77,8 +74,6 @@ const PlayerEditScreen : React.FC = () => {
                 <EditModal modalState={modalState} />
 
                 <DeleteModal modalState={deleteModalState} visibleModalEvent={visibleModalEvent} deleteModalEvent={deleteModalEvent}/>
-
-                <AlertModal modalState={alertModalState} label={'10人以上のプレイヤーを追加できません！'} />
             </View>
         </ScrollView>
     )

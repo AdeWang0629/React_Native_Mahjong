@@ -9,15 +9,10 @@ import  Icon  from "react-native-vector-icons/Ionicons";
 import { useCreateTotalScoreMutation } from '../../api/scoreEditApi';
 
 const ScoreScreen: React.FC<any> = ({route}) => {
-    const {item} = route.params;
-    console.log("This is ITEM LIST", item);
+    const {item, refetchAction} = route.params;
     const navigation = useNavigation<{[x: string]: any}>();
 
     const [ createTotalScore ] = useCreateTotalScoreMutation();
-
-    const createGame = () => {
-        navigation.navigate('GameEditScreen');
-    }
 
     const [rowCount, setRowCount] = useState(20);
     const [rows, setRows] = useState<string[][]>(Array.from({ length: rowCount }, () => ['']));
@@ -39,7 +34,7 @@ const ScoreScreen: React.FC<any> = ({route}) => {
                     totalScore += parseInt(rows[j][i]) || 0;
                 }
                 newScore.push(totalScore);
-                newConvertedAmount.push(totalScore * item.score * 100)
+                newConvertedAmount.push(totalScore * 100 * item.score )
             }
             setScore(newScore);
             setConvertedAmount(newConvertedAmount);
@@ -203,62 +198,65 @@ const ScoreScreen: React.FC<any> = ({route}) => {
         newChipNumber[index] = isNaN(parsedValue) ? '0' : parsedValue.toString();
         
         const newChipMoney = [...chipMoney];
-        newChipMoney[index] = Number(newChipNumber[index]) * item.score * item.chip * 100;
+        newChipMoney[index] = Number(newChipNumber[index]) * 100 * item.score * item.chip ;
 
         setChipNumber(newChipNumber);
         setChipMoney(newChipMoney);
     };
 
     const handleSaveScore = async () => {
-        console.log(chipNumber.length);
-        console.log(item.players.length);
         const totalBody = {
             game_id: item.id,
             score: score,
             scoreMoney: convertedAmount,
             chipNumber: chipNumber,
-            chipMoney: chipMoney
+            chipMoney: chipMoney,
+            rows: rows
         };
         const result = await createTotalScore(totalBody);
+        refetchAction();
         navigation.navigate('HomeScreen');
     }
 
     return (
-        <View style={{alignItems: 'center', backgroundColor: 'white', height: hp(100)}}>
+        <ScrollView>
 
-            <DesBox title={"スコア"} number={item.score} />
+            <View style={{alignItems: 'center', backgroundColor: 'white', paddingBottom: 20}}>
 
-            <DesBox title={"チップ"} number={item.chip} />
+                <DesBox title={"スコア"} number={item.score} />
 
-            <RenderHeader />
-            
-            <ScrollView style={{backgroundColor: 'white'}}>
+                <DesBox title={"チップ"} number={item.chip} />
 
-                <RenderContent />
-                
-                <RenderFooter title={"合計"} type={"score"} />
+                <RenderHeader />
 
-                <RenderFooter title={"スコア金   額"} type={"converted_amount"} />
+                <ScrollView style={{backgroundColor: 'white'}}>
 
-                <RenderChipNumber title={"チップ(±枚数)"} />
+                    <RenderContent />
+                    
+                    <RenderFooter title={"合計"} type={"score"} />
 
-                <RenderFooter title={"チップ金   額"} type={"chip_money"} />
-                
-                {
-                    editButtonState && (
-                        <View style={{alignItems: 'center'}}>
-                            <TouchableOpacity style={styles.saveButton} onPress={handleSaveScore}>
-                                <Icon name={'save-outline'} size={25} color={COLORS.WHITE}/>
-                                <Text style={[styles.text, {color: COLORS.WHITE}]}>       保        存</Text>
-                            </TouchableOpacity>
-                        </View>
-                    )
-                }
+                    <RenderFooter title={"スコア金   額"} type={"converted_amount"} />
 
-                <View style={{height: 80}}></View>
+                    <RenderChipNumber title={"チップ(±枚数)"} />
 
-            </ScrollView>
-        </View>
+                    <RenderFooter title={"チップ金   額"} type={"chip_money"} />
+                    
+                    {
+                        editButtonState && (
+                            <View style={{alignItems: 'center'}}>
+                                <TouchableOpacity style={styles.saveButton} onPress={handleSaveScore}>
+                                    <Icon name={'save-outline'} size={25} color={COLORS.WHITE}/>
+                                    <Text style={[styles.text, {color: COLORS.WHITE}]}>       保        存</Text>
+                                </TouchableOpacity>
+                            </View>
+                        )
+                    }
+
+                </ScrollView>
+
+            </View>
+
+        </ScrollView>
     )
 };
 

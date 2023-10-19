@@ -20,24 +20,7 @@ export const scoreEditApi = createApi({
                 body: {body}
             }),
             invalidatesTags: ['Score']
-        }),
-        updatePlayer: builder.mutation({
-            query: (id) => {
-                console.log("dfddddddddd", id);
-            return {
-                url: `player/${id}`,
-                method: 'PUT',
-                body: {}
-            }},
-            invalidatesTags: ['Score']
-        }),
-        deletePlayer: builder.mutation({
-            query: (id) => {
-                return {url: `player/${id}`,
-                method: 'DELETE'}
-            },
-            invalidatesTags: ['Score']
-        }),
+        })
     })
 });
 

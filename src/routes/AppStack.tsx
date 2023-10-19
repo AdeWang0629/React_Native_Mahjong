@@ -35,7 +35,7 @@ const AppStack = () => {
   //プレイヤー選択画面のヘッダー画像
   const setting = require("../../assets/setting.png");
   
-  const { modalState, playerlist } = useSelector((state: RootState) => state.global);
+  const { playerlist, modalState } = useSelector((state: RootState) => state.global);
   const dispatch = useDispatch();
 
   return (
@@ -115,7 +115,14 @@ const AppStack = () => {
                 },
                 headerLeft: ()=>(
                   <TouchableOpacity
-                    onPress={() => navigation.goBack()}
+                    onPress={() => {
+                      const count = playerlist.filter((item)=> item.checked == true).length;
+                      if (2 < count) {              
+                        navigation.goBack();
+                      }else{
+                        dispatch(setAlertModalState(true));
+                      }
+                    }}
                   >
                     <Icon name="arrow-back-circle" size={30} style={MARGIN.marginLeft5}/>
                   </TouchableOpacity>
@@ -156,12 +163,7 @@ const AppStack = () => {
                   <View style={styles.avatarContainer}>
                     <TouchableOpacity
                       onPress={() => {
-                        console.log("123123123123", playerlist.length);
-                        if (!playerlist.length || playerlist.length < 10) {
-                          dispatch(setModalState(true));
-                        }else{
-                          dispatch(setAlertModalState(true));
-                        }
+                        dispatch(setModalState(true));
                       }}
                     >
                       <Icon name="add" size={33}></Icon>

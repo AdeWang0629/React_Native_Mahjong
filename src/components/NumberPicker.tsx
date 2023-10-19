@@ -4,8 +4,6 @@ import Picker from 'rmc-picker';
 import { INumberPiecker } from '../interface/NumberPicker';
 
 const NumberPicker : React.FC<INumberPiecker> = ({onPickerChange, score, initialValue}) => {
-    console.log("initialValue", initialValue);
-    console.log("initialValueType", typeof(initialValue));
     const count = 0;
     
     const getItems = (start : any) => {
@@ -44,16 +42,13 @@ const NumberPicker : React.FC<INumberPiecker> = ({onPickerChange, score, initial
     const [items, setItems] = React.useState(getItems(count));
 
     const onChange = (i : any) => {
-        console.log('onChangeNumberPicker', i);
         setValue(i);
         onPickerChange(i);
     }
 
     const onScrollChange = (value : any) => {
-        console.log('onScrollChange', value);
-
     }
-    console.log("value", value);
+
     return (
         <View style={{borderTopWidth: .3}}>
             <Picker

@@ -1,23 +1,25 @@
-import React, { useState, useEffect} from 'react'
+import React from 'react'
 import { View, ScrollView, Text, TextInput } from 'react-native';
 import styles from './style';
-import { useDispatch } from 'react-redux';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useGetTotalScoreQuery } from '../../api/scoreEditApi';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const ScoreViewScreen: React.FC<any> = ({route}) => {
     const {item} = route.params;
     
-    const { data: total_score, refetch } = useGetTotalScoreQuery(item.id);
-    total_score?.map((item : any) => console.log(item['total_scores']));
-    const [ score, setScore ] = useState<number[]>([]);
-    const [ convertedAmount, setConvertedAmount ] =  useState<number[]>([]);
-    const [ chipNumber, setChipNumber ] = useState<string[]>([]);
-    const [ chipMoney, setChipMoney ] = useState<number[]>([]);
+    const { data: score, isLoading, isFetching } = useGetTotalScoreQuery(item.id);
+
+    // score.map((item: any)=> console.log(item));
+
+    if (isLoading || isFetching) {
+        return <Spinner visible={true} />;
+    }
 
     const RenderHeader = () => {
         return (
             <View style={styles.rowContainer}>
+
                 <View style={styles.smallBox}>
                     <Text style={styles.text}></Text>
                 </View>
@@ -29,9 +31,53 @@ const ScoreViewScreen: React.FC<any> = ({route}) => {
                         </View>
                     ))
                 }
+
             </View>
         )
     }
+
+    const RenderContent = () => {
+        return (
+            <ScrollView>
+
+                <View style={{flexDirection: 'row'}}>
+
+                    <View style={{flexDirection: 'column'}}>
+
+                        {score[0]['normal_scores'].map((column: any, index: number) => (
+                            <View key={index}>
+
+                                <View style={styles.smallBox}>
+
+                                    <Text style={styles.text}>{index + 1}</Text>
+
+                                </View>
+
+                            </View>
+                        ))}
+
+                    </View>
+
+                    {score.map((row: any, index: number) => (
+                        <View key={index}>
+
+                            {row['normal_scores'].map((data: any, id:number) => (
+                                <View style={styles.bigBox} key={id}>
+                                    <Text
+                                        style={{textAlign: 'center'}} >
+                                        {data['score']}
+                                    </Text>
+                                </View>
+                            ))}
+
+                        </View>
+                    ))}
+
+                </View>
+                
+            </ScrollView>
+        );
+    };
 
     const RenderFooter = ({title, type} : any) => {
         return (
@@ -41,7 +87,7 @@ const ScoreViewScreen: React.FC<any> = ({route}) => {
                 </View>
 
                 {
-                    total_score?.map((data:any, index:any)=>(
+                    score?.map((data:any, index:any)=>(
                         <View style={styles.headerBox} key={data.id}>
                             <Text>          
                                 {type == "score" ? data['total_scores']['score'] : 
@@ -63,7 +109,7 @@ const ScoreViewScreen: React.FC<any> = ({route}) => {
                 </View>
 
                 {
-                    total_score?.map((data:any, index:any)=>(
+                    score?.map((data:any, index:any)=>(
                         <View style={[styles.headerBox]} key={data.id}>
                             <Text style={styles.normalText}>{data['total_scores']['chip_number']}</Text>
                         </View>
@@ -74,12 +120,14 @@ const ScoreViewScreen: React.FC<any> = ({route}) => {
     }
 
     return (
-        <View style={{alignItems: 'center', backgroundColor: 'white', height: hp(100)}}>
+        <View style={{alignItems: 'center', backgroundColor: 'white'}}>
 
             <RenderHeader />
 
-            <ScrollView style={{backgroundColor: 'white'}}>
+            <ScrollView style={{backgroundColor: 'white', paddingBottom: 20}}>
                 
+                <RenderContent />
+
                 <RenderFooter title={"合計"} type={"score"} />
 
                 <RenderFooter title={"スコア金   額"} type={"converted_amount"} />

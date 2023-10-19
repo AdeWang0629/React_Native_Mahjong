@@ -23,7 +23,6 @@ export const playerEditApi = createApi({
         }),
         updatePlayer: builder.mutation({
             query: (id) => {
-                console.log("dfddddddddd", id);
             return {
                 url: `player/${id}`,
                 method: 'PUT',

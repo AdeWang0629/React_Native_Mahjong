@@ -11,32 +11,36 @@ import NoData from './noData';
 import moment from 'moment';
 import { useDeleteGameMutation } from '../../api/gameEditApi';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import Spinner from 'react-native-loading-spinner-overlay';
+
 const HomeScreen: React.FC = () => {
+
     const navigation = useNavigation<{[x: string]: any}>();
     const dispatch = useDispatch();
 
     const [page, setPage] = useState(1);
-    const { data: getGame, refetch } = useGetGameQuery(1);
+    const { data: getGame, refetch, isLoading, isFetching } = useGetGameQuery(1);
    
     const { gameList } = useSelector((state:RootState) => state.global);
     const [ deleteGame ] = useDeleteGameMutation();
 
-    const [loading, setLoading] = useState(true);
-
-    useEffect(()=>{
-        refetch();
-    });
-
     useEffect(()=>{
         dispatch(setGameList(getGame));
-        setLoading(false);
     },[getGame]);
+
+    if (isLoading || isFetching) {
+        return <Spinner visible={true} />;
+    }
+
+    const refetchAction = () => {
+        refetch();
+    }
 
     const onPress = (item : any) => {
         if (item.status) {
             navigation.navigate('ScoreViewScreen', {item: item});
         }else {
-            navigation.navigate('ScoreScreen', {item: item});
+            navigation.navigate('ScoreScreen', {item: item, refetchAction: refetchAction});
         }
         setPage(page + 1);
     }
@@ -74,11 +78,7 @@ const HomeScreen: React.FC = () => {
     return (
         <>
             {
-                loading ? (
-                    <View style={[styles.loadingContainer, styles.horizontal]}>
-                        <ActivityIndicator size="large" color="#0000ff" />
-                    </View>
-                ) : gameList && gameList.length ? (
+                getGame.length ? (
                     <FlatList
                         data={gameList}
                         renderItem={renderItem}
