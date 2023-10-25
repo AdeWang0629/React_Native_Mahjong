@@ -24,8 +24,8 @@ const styles = StyleSheet.create({
         paddingVertical: hp(2)
     },
     mainAvatar: {
-        width: wp(60),
-        height: hp(30)
+        width: wp(50),
+        height: hp(20)
     },
     list: {
         backgroundColor: COLORS.WHITE,

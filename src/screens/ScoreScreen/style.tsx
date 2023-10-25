@@ -11,45 +11,46 @@ const styles = StyleSheet.create({
     },
     smallBox: {
         backgroundColor: '#f0f0f0',
-        height: hp(6),
+        height: hp(4),
         width: wp(15),
         alignItems: 'center',
         justifyContent: 'center',
         borderWidth: 1, 
-        borderColor: 'black',
+        borderColor: 'grey',
         textAlign: 'center'
     },
     bigBox: {
-        height: hp(6),
+        height: hp(4),
         width: wp(20),
         alignItems: 'center',
         justifyContent: 'center',
         borderWidth: 1, 
-        borderColor: 'black'
+        borderColor: 'grey'
     },
     text: {
         fontSize: 20,
         fontWeight: '700'
     },
     headerBox: {
-        height: hp(6),
+        height: hp(4),
         width: wp(20),
         alignItems: 'center',
         justifyContent: 'center',
         borderWidth: 1, 
-        borderColor: 'black',
-        backgroundColor: COLORS.GREEN
+        borderColor: 'grey',
+        backgroundColor: COLORS.WEAKGREY2
     },
     desBox: {
-        height: hp(6),
+        height: hp(4),
         alignItems: 'center',
         justifyContent: 'center',
         borderWidth: 1, 
-        borderColor: 'black',
-        backgroundColor: COLORS.GREEN
+        borderColor: 'grey',
+        backgroundColor: COLORS.WEAKGREY2,
+        marginBottom: hp(2)
     },
     addButton: {
-        height: hp(6),
+        height: hp(4),
         backgroundColor: COLORS.GREY,
         borderRadius: 10,
         alignItems: 'center',
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     normalText: {
-        fontSize: 15,
+        fontSize: 13,
         fontWeight: '700'
     }
 })

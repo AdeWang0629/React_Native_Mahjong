@@ -4,6 +4,12 @@ const globalMarginStyles = StyleSheet.create({
     marginRight13: {
         marginRight: 13,
     },
+    marginLeft13: {
+        marginLeft: 13
+    },
+    marginLeft10: {
+        marginLeft: 10
+    },
     marginLeft5: {
         marginLeft: 5
     },

@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
         borderBottomColor: COLORS.WEAKGREY,
         flexDirection: 'row',
         alignItems: 'center',
-        paddingVertical: 8,
+        paddingVertical: wp(3.5),
         paddingLeft: wp(6)
      }
 })

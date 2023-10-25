@@ -30,10 +30,11 @@ import { useCreateGameMutation } from '../../api/gameEditApi';
 const GameEditScreen : React.FC = () => {
     const { playerlist, score, chip, event_date } = useSelector((state:RootState)=>state.global);
     const dispatch = useDispatch();
-
+    console.log("132", typeof(secondSource));
     const navigation = useNavigation<{[x: string]: any}>();
 
     const onScorePickerChange = (value: any) => {
+        console.log(value);
         dispatch(setScore(value));
     }
 
@@ -97,9 +98,9 @@ const GameEditScreen : React.FC = () => {
 
                     <View style={styles.SectionContainerContent}>
 
-                        <Accordion title={'スコア'} source={secondSource} right_item={`${score}`} decimal={true}>
+                        <Accordion title={'レート'} source={secondSource} right_item={`${score}`} decimal={true}>
 
-                            <NumberPicker onPickerChange={onScorePickerChange} initialValue={score} score={39} />
+                            <NumberPicker onPickerChange={onScorePickerChange} initialValue={score} score={13} />
 
                         </Accordion>
 
@@ -126,7 +127,7 @@ const GameEditScreen : React.FC = () => {
 
                         <CTextInput title={'場所'} source={fifthSource} /> */}
 
-                        <Accordion title={'開催日'} source={sixthSource} right_item={`${event_date}`}>
+                        <Accordion title={'開催日'} source={'date'} right_item={`${event_date}`}>
                             
                             <CDatePicker onChangeDate={onChangeDate} />
 

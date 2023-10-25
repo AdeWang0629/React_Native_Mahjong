@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react'
+import React, { useState, useEffect, useRef} from 'react'
 import { View, ScrollView, Text, FlatList, TouchableOpacity, TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from './style';
@@ -16,17 +16,19 @@ const ScoreScreen: React.FC<any> = ({route}) => {
 
     const [rowCount, setRowCount] = useState(20);
     const [rows, setRows] = useState<string[][]>(Array.from({ length: rowCount }, () => ['']));
-    
+
     const [ score, setScore ] = useState<number[]>([]);
     const [ convertedAmount, setConvertedAmount ] =  useState<number[]>([]);
     const [ chipNumber, setChipNumber ] = useState<string[]>([]);
-    const [ chipMoney, setChipMoney ] = useState<number[]>([]);
+    const [ chipMoney, setChipMoney ] = useState<number[]>([0]);
     const [ editButtonState, setEditButtonState ] = useState(false);
+    const scrollViewRef = useRef<ScrollView>(null);
 
     useEffect(() => {
         const calculate = () => {
             const newScore: number[] = [];
             const newConvertedAmount: number[] = [];
+            const newChipMoney: number[] = [];
 
             for (let i = 0; i < item.players.length; i++) {
                 let totalScore = 0;
@@ -34,31 +36,57 @@ const ScoreScreen: React.FC<any> = ({route}) => {
                     totalScore += parseInt(rows[j][i]) || 0;
                 }
                 newScore.push(totalScore);
-                newConvertedAmount.push(totalScore * 100 * item.score )
+                newConvertedAmount.push(totalScore * 100 * item.score );
+                if (Number(chipNumber[i])) {
+                    newChipMoney.push(totalScore * 100 * item.score + Number(chipNumber[i]));
+                }
             }
             setScore(newScore);
             setConvertedAmount(newConvertedAmount);
+            setChipMoney(newChipMoney);
         };
 
         calculate();
+        console.log(rows, "newRows")
+
     }, [rows]);
 
     const handleInputChange = (text: string, index: number, id:number) => {
         const newRows = [...rows];
+        console.log(newRows, "newRows")
         const parsedValue = parseInt(text);
         newRows[index][id] = isNaN(parsedValue) ? '0' : parsedValue.toString();
         setRows(newRows);
         setEditButtonState(true);
-    };
 
-    const handleAddRow = () => {
-        setRowCount(rowCount + 1);
-        setRows([...rows, Array.from({ length: item.players.length }, () => '')]);
+        //
+
+        const totalBody = {
+            game_id: item.id,
+            score: score,
+            scoreMoney: convertedAmount,
+            chipNumber: chipNumber,
+            chipMoney: chipMoney,
+            rows: rows
+        };
+        const result = createTotalScore(totalBody);
+        console.log(totalBody);
+        refetchAction();
+    }
+
+    const handleAddRow = async () => {
+        // setRowCount(rowCount + 1);
+        setRows([...rows, [""]])
+
+        // setTimeout(() => {
+        //     // scrollViewRef.current?.scrollToEnd({ animated: false });
+        // },1)
     };
 
     const RenderHeader = () => {
         return (
             <View style={styles.rowContainer}>
+
                 <View style={styles.smallBox}>
                     <Text style={styles.text}>No</Text>
                 </View>
@@ -70,79 +98,80 @@ const ScoreScreen: React.FC<any> = ({route}) => {
                         </View>
                     ))
                 }
+
             </View>
         )
     }
 
-    const RenderContent = () => {
-        return (
-            <ScrollView>
-                {rows.map((row: string[], index: number) => (
-                    <View style={styles.rowContainer} key={index}>
+    // const RenderContent = ({ nestedScrollEnabled }: { nestedScrollEnabled: boolean }) => {
+    //     return (
+    //        <>
+    //             <ScrollView style={{flex:1, height: hp(60)}} nestedScrollEnabled={true} ref={scrollViewRef}>
 
-                        <View style={styles.smallBox}>
-                            <Text style={styles.text}>{index + 1}</Text>
-                        </View>
+    //                 {rows.map((row: string[], index: number) => (
+    //                     <View style={styles.rowContainer} key={index}>
 
-                        {item.players.map((data: any, id:number) => (
-                            <View style={styles.bigBox} key={id}>
-                                <TextInput
-                                    value={row[id] || ''}
-                                    onChangeText={(text) => handleInputChange(text, index, id)}
-                                    keyboardType = 'numeric'
-                                    style={{textAlign: 'center'}}
-                                />
-                            </View>
-                        ))}
+    //                         <View style={styles.smallBox}>
+    //                             <Text style={styles.text}>{index + 1}</Text>
+    //                         </View>
 
-                    </View>
-                ))}
-
-                <View style={styles.rowContainer}>
-                    <View style={styles.smallBox}>
-                        <Icon name={'add-circle-outline'} size={30}/>
-                    </View>
+    //                         {item.players.map((data: any, id:number) => (
+    //                             <View style={styles.bigBox} key={id}>
+    //                                 <TextInput
+    //                                     value={row[id] || ''}
+    //                                     onChangeText={(text) => handleInputChange(text, index, id)}
+    //                                     keyboardType = 'numeric'
+    //                                     style={{textAlign: 'center'}}
+    //                                 />
+    //                             </View>
+    //                         ))}
                             
-                    {
-                        item.players.length == 3 ?
-                        (
-                            <View style={{alignItems: 'center'}}>
-                                <TouchableOpacity style={[styles.addButton, {width: wp(60)}]} onPress={handleAddRow}>
-                                    <Text style={[styles.text, {color: COLORS.WHITE}]}>追        加</Text>
-                                </TouchableOpacity>
-                            </View>
-                        ) : (
-                            <View style={{alignItems: 'center'}}>
-                                <TouchableOpacity style={[styles.addButton, {width: wp(80)}]} onPress={handleAddRow}>
-                                    <Text style={[styles.text, {color: COLORS.WHITE}]}>追        加</Text>
-                                </TouchableOpacity>
-                            </View>
-                        )
-                    }
+    //                     </View>
+    //                 ))}
 
-                </View>
-                
-            </ScrollView>
-        );
-    };
+    //             </ScrollView>
 
-    const DesBox = ({title, number} : any) => {
+    //             <TouchableOpacity style={[styles.addButton, {width: wp(75)}]} onPress={handleAddRow}>
+    //                 <Text style={[styles.text, {color: COLORS.WHITE}]}>追        加</Text>
+    //             </TouchableOpacity>
+    //        </>
+    //     );
+    // };
+
+    const DesBox = () => {
         return (
-
+        
             <View style={styles.rowContainer}>
                 <View style={styles.smallBox}>
-                    <Text style={styles.normalText}>{title}</Text>
+                    <Text style={styles.normalText}>{ ("スコア") }</Text>
                 </View>
 
                 {
                     item.players.length == 3 ?
                     (
-                        <View style={[styles.desBox, {width: wp(60)}]}>
-                            <Text>{number}</Text>
+                        <View style={[styles.desBox, {width: wp(22.5)}]}>
+                            <Text>{item.score}</Text>
                         </View>
                     ) : (
-                        <View style={[styles.desBox, {width: wp(80)}]}>
-                            <Text>{number}</Text>
+                        <View style={[styles.desBox, {width: wp(32.5)}]}>
+                            <Text>{item.score}</Text>
+                        </View>
+                    )
+                }
+
+                <View style={styles.smallBox}>
+                    <Text style={styles.normalText}>{ ("チップ") }</Text>
+                </View>
+                
+                {
+                    item.players.length == 3 ?
+                    (
+                        <View style={[styles.desBox, {width: wp(22.5)}]}>
+                            <Text>{item.chip}</Text>
+                        </View>
+                    ) : (
+                        <View style={[styles.desBox, {width: wp(32.5)}]}>
+                            <Text>{item.chip}</Text>
                         </View>
                     )
                 }
@@ -198,7 +227,8 @@ const ScoreScreen: React.FC<any> = ({route}) => {
         newChipNumber[index] = isNaN(parsedValue) ? '0' : parsedValue.toString();
         
         const newChipMoney = [...chipMoney];
-        newChipMoney[index] = Number(newChipNumber[index]) * 100 * item.score * item.chip ;
+        // newChipMoney[index] = Number(newChipNumber[index]) * 100 * item.score * item.chip ;
+        newChipMoney[index] = Number(newChipNumber[index]) + convertedAmount[index] ;
 
         setChipNumber(newChipNumber);
         setChipMoney(newChipMoney);
@@ -219,40 +249,59 @@ const ScoreScreen: React.FC<any> = ({route}) => {
     }
 
     return (
-        <ScrollView>
 
-            <View style={{alignItems: 'center', backgroundColor: 'white', paddingBottom: 20}}>
+        <ScrollView style={{backgroundColor: COLORS.GREY}}>
 
-                <DesBox title={"スコア"} number={item.score} />
+        
+            <View style={{alignItems: 'center', backgroundColor: "#f2f2f2", paddingBottom: 20}}>
 
-                <DesBox title={"チップ"} number={item.chip} />
+                <DesBox />
 
                 <RenderHeader />
 
-                <ScrollView style={{backgroundColor: 'white'}}>
+                {/* <ScrollView style={{backgroundColor: 'white'}}> 
 
-                    <RenderContent />
-                    
-                    <RenderFooter title={"合計"} type={"score"} />
+                    <RenderContent nestedScrollEnabled={true}   />
 
-                    <RenderFooter title={"スコア金   額"} type={"converted_amount"} />
+                </ScrollView>  */}
 
-                    <RenderChipNumber title={"チップ(±枚数)"} />
+                <ScrollView style={{flex:1, height: hp(60)}} nestedScrollEnabled={true} ref={scrollViewRef}>
 
-                    <RenderFooter title={"チップ金   額"} type={"chip_money"} />
-                    
-                    {
-                        editButtonState && (
-                            <View style={{alignItems: 'center'}}>
-                                <TouchableOpacity style={styles.saveButton} onPress={handleSaveScore}>
-                                    <Icon name={'save-outline'} size={25} color={COLORS.WHITE}/>
-                                    <Text style={[styles.text, {color: COLORS.WHITE}]}>       保        存</Text>
-                                </TouchableOpacity>
+                    {rows.map((row: string[], index: number) => (
+                        <View style={styles.rowContainer} key={index}>
+
+                            <View style={styles.smallBox}>
+                                <Text style={styles.text}>{index + 1}</Text>
                             </View>
-                        )
-                    }
 
+                            {item.players.map((data: any, id:number) => (
+                                <View style={styles.bigBox} key={id}>
+                                    <TextInput
+                                        value={row[id] || ''}
+                                        onChangeText={(text) => handleInputChange(text, index, id)}
+                                        keyboardType = 'numeric'
+                                        style={{textAlign: 'center'}}
+                                    />
+                                </View>
+                            ))}
+                            
+                        </View>
+                    ))}
+                    
                 </ScrollView>
+
+                <TouchableOpacity style={[styles.addButton, {width: wp(75)}]} onPress={handleAddRow}>
+                    <Text style={[styles.text, {color: COLORS.WHITE}]}>追        加</Text>
+                </TouchableOpacity>
+
+
+                <RenderFooter title={"素点"} type={"score"} />
+
+                <RenderFooter title={"素点金額"} type={"converted_amount"} />
+
+                <RenderChipNumber title={"チップ"} />
+
+                <RenderFooter title={"合計"} type={"chip_money"} />
 
             </View>
 

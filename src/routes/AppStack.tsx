@@ -23,7 +23,6 @@ import { RootState } from '../store';
 import { useDispatch, useSelector } from 'react-redux';
 import { setModalState, setAlertModalState } from '../store/global';
 
-
 const AppStack = () => {
 
   //ホーム画面のヘッダー画像
@@ -59,18 +58,15 @@ const AppStack = () => {
                 <TouchableOpacity
                   onPress={() => navigation.push('PlayerEditScreen')}
                 >
-                    <Image source={setting} style={styles.avatarImage_second} />
+                    <Image source={setting} style={[styles.avatarImage_setting, MARGIN.marginLeft10]} />
                 </TouchableOpacity>
               ),
               headerRight: () => (
                 <>
-                  <View style={styles.avatarContainer}>
-                    <Image source={crown} style={styles.avatarImage_first} />
-                  </View>
                   <TouchableOpacity
                   onPress={() => navigation.navigate('GameEditScreen')}
                   >
-                    <Icon name="add-circle-outline" size={30} style={MARGIN.marginLeft5}/>
+                    <Icon name="add-outline" size={30}/>
                   </TouchableOpacity>
                 </>
               ),
@@ -241,6 +237,11 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     marginLeft: 8,
+    paddingBottom: 3
+  },
+  avatarImage_setting: {
+    width: 25,
+    height: 25,
     paddingBottom: 3
   },
   avatarImage_Left: {

@@ -13,6 +13,7 @@ import COLORS from '../theme/colors';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { useNavigation } from '@react-navigation/native';
 import { IList } from '../interface/List';
+import  BestIcon  from "react-native-vector-icons/Ionicons";
 
 const CList : React.FC<IList> = ({ title, source, action,}) => {
     const [ expanded, setExpanded ] = useState(false);
@@ -29,7 +30,7 @@ const CList : React.FC<IList> = ({ title, source, action,}) => {
         <View style={styles.container}>
             <TouchableOpacity style={styles.header} onPress={ toggleItem }>
                 <View style={styles.flexDirection}>
-                    <Image source={source} style={styles.avatar} />
+                    <BestIcon name="person-add-outline" size={30} />
                     <Text style={styles.title}>{ title }</Text>
                 </View>
                 

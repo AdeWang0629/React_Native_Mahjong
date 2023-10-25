@@ -56,7 +56,7 @@ const EditModal : React.FC<IEditModal> = ({modalState}) => {
                             value={text}
                         />
                         <View style={{marginBottom: 10}}>
-                            <Button title='OK' onPress={editPlayer} color={COLORS.PINK}/>
+                            <Button title='OK' onPress={editPlayer} color={COLORS.BLACK}/>
                         </View>
                         <View>
                             <Button title='キャンセル' onPress={toggleModal} color={COLORS.BLACK}/>
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
         marginVertical: 15,
         borderWidth: 1,
         borderRadius: 3,
-        borderColor: '#a428ff',
+        // borderColor: '#a428ff',
         paddingLeft: 10
     },
     avatar: {

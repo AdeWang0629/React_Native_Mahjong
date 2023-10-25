@@ -13,6 +13,7 @@ import COLORS from '../theme/colors';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { useNavigation } from '@react-navigation/native';
 import { IAccordion } from '../interface/Accordion';
+import  BestIcon  from "react-native-vector-icons/Ionicons";
 
 const Accordion : React.FC<IAccordion> = ({ children, title, source, right_item, action, decimal }) => {
     const [ expanded, setExpanded ] = useState(false);
@@ -30,17 +31,9 @@ const Accordion : React.FC<IAccordion> = ({ children, title, source, right_item,
     let item;
 
     if (decimal) {
-        if (right_item == 0) {
-            item = (<Text style={styles.normalText}>0.0</Text>);
-        }else if (right_item == 10) {
-            item = (<Text style={styles.normalText}>1.0</Text>);
-        }else if (right_item == 20) {
-            item = (<Text style={styles.normalText}>2.0</Text>);
-        }else if(right_item < 21){
-            item = (<Text style={styles.normalText}>{ right_item / 10 }</Text>);
-        }else {
-            item = (<Text style={styles.normalText}>{ (right_item-18).toFixed(1) }</Text>);
-        }
+
+        item = (<Text style={styles.normalText}>{ (right_item / 10).toFixed(1) }</Text>);
+
     }else{
         item = (
             <Text style={styles.normalText}>{ right_item }</Text>
@@ -51,7 +44,11 @@ const Accordion : React.FC<IAccordion> = ({ children, title, source, right_item,
         <View style={styles.accordContainer}>
             <TouchableOpacity style={styles.accordHeader} onPress={ toggleItem }>
                 <View style={styles.flexDirection}>
-                    <Image source={source} style={styles.avatar} />
+                    {source == 'date' ? (
+                        <BestIcon name="calendar-outline" size={30} />
+                    ) : (
+                        <Image source={source} style={styles.avatar} />
+                    )}         
                     <Text style={styles.accordTitle}>{ title }</Text>
                 </View>
                 

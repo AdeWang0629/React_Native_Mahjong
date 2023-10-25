@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from 'react'
-import { View, ScrollView, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from './style';
 import { useSelector, useDispatch } from 'react-redux';
@@ -12,6 +12,7 @@ import moment from 'moment';
 import { useDeleteGameMutation } from '../../api/gameEditApi';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Spinner from 'react-native-loading-spinner-overlay';
+import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
 
 const HomeScreen: React.FC = () => {
 
@@ -46,60 +47,64 @@ const HomeScreen: React.FC = () => {
     }
 
     const renderItem = ({ item }: { item: any }) => (
-        <TouchableOpacity onPress={()=> onPress(item)}>
+        <Swipeable
+            renderRightActions={RightActions}
+            onSwipeableWillOpen={() => deleteGame(item.id)}
+            key = {item.id}
+        >
+            <TouchableOpacity onPress={()=> onPress(item)}>
 
-            <View style={styles.list}>
-                
-                <Icon name="enter-outline" size={30} />
+                <View style={styles.list}>
+                    
+                    <Icon name="enter-outline" size={30} />
 
-                <View style={styles.text}>
-                    <Text>{moment(item.event_date).format("YYYY/M/D ddd")}</Text>
+                    <View style={styles.text}>
+                        <Text>{moment(item.event_date).format("YYYY/M/D ddd")}</Text>
+                    </View>
+                    
                 </View>
-                
-                {/* <View style={{width: wp(40)}}>
 
-                </View> */}
-
-                <TouchableOpacity onPress={()=> deleteGame(item.id)} style={{position: 'absolute', right: wp(4)}}>
-
-                    <Icon name="trash-outline" size={25}/>
-
-                </TouchableOpacity>
-                
-            </View>
-
-        </TouchableOpacity>
+            </TouchableOpacity>
+            
+        </Swipeable>
     );
 
     const createGame = () => {
         navigation.navigate('GameEditScreen');
     }
 
+    const RightActions = () => {
+        return (
+          <View
+            style={{ flex: 1, justifyContent: 'center' }}>
+            <Text
+              style={{
+                paddingHorizontal: 10,
+                fontWeight: '600'
+              }}>
+            </Text>
+          </View>
+        )
+    }
+
     return (
         <>
             {
                 getGame.length ? (
-                    <FlatList
-                        data={gameList}
-                        renderItem={renderItem}
-                        keyExtractor={(item) => item.id?.toString()}
-                    />
+                    <GestureHandlerRootView style={{ flex: 1 }}>
+                        
+                        <FlatList
+                            data={gameList}
+                            renderItem={renderItem}
+                            keyExtractor={(item) => item.id?.toString()}
+                        />
+
+                    </GestureHandlerRootView>
                 ) : (
                     <NoData />
                 )
             }
             
-            {
-                gameList && gameList.length ? (
-                    <View style={styles.iconContainer}>
-                        <TouchableOpacity onPress={createGame}>
-                        {/* <Icon name="add-circle-outline" size={60} /> */}
-                        </TouchableOpacity>
-                    </View>
-                ) : (
-                    ''
-                )
-            }
         </>
     )
 };

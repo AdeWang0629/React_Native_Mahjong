@@ -9,6 +9,7 @@ import { RootState } from '../../store';
 import { useSelector } from 'react-redux';
 import { useGetPlayerQuery, useDeletePlayerMutation } from '../../api/playerEditApi';
 import DeleteModal from '../../components/DeleteModal';
+import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
 
 const PlayerEditScreen : React.FC = () => {
 
@@ -34,12 +35,16 @@ const PlayerEditScreen : React.FC = () => {
     const [itemId, setItemId] = React.useState(-1);
 
     const visibleModalEvent = (id:any) => {
-        setDeleteModalState(!deleteModalState);
-        if (!id) {
-            setItemId(-1);
-        }else {
-            setItemId(id);
-        }
+        // setDeleteModalState(!deleteModalState);
+        // if (!id) {
+        //     setItemId(-1);
+        // }else {
+        //     setItemId(id);
+        // }
+
+        const result = deletePlayer(id); 
+        const updatedList = listState.filter((item) => item.id !== id);
+        setListState(updatedList);
     }
 
     const deleteModalEvent = async () => {
@@ -50,27 +55,48 @@ const PlayerEditScreen : React.FC = () => {
         }
     }
     
+    const RightActions = () => {
+        return (
+          <View
+            style={{ flex: 1, justifyContent: 'center' }}>
+            <Text
+              style={{
+                paddingHorizontal: 10,
+                fontWeight: '600'
+              }}>
+            </Text>
+          </View>
+        )
+    }
+
     return (
         <ScrollView>
             <View style={styles.ContentViewContainer}>
-            
-                {
-                    listState 
-                    &&
-                    listState.map((item, index) => (
-                        <View
-                        key = {item.id}
-                        style = {styles.container}  >
-                            <TouchableOpacity onPress = {() => visibleModalEvent(item.id)}>
-                                <Icon name="remove-circle" size={30} style={MARGIN.marginRight3} />
-                            </TouchableOpacity>
-                            <Text>
-                                {item.name}
-                            </Text>
-                        </View>
-                    ))
-                }
-                
+
+                    <GestureHandlerRootView style={{ flex: 1 }}>
+
+                        {
+                            listState 
+                            &&
+                            listState.map((item, index) => (
+                                <Swipeable
+                                    renderRightActions={RightActions}
+                                    onSwipeableWillOpen={() => visibleModalEvent(item.id)}
+                                    key = {item.id}
+                                >
+                                    <View
+                                    style = {styles.container}  >
+                                            <Text>
+                                                {item.name}
+                                            </Text>
+                                    
+                                    </View>
+                                </Swipeable>
+                            ))
+                        }
+
+                    </GestureHandlerRootView>
+
                 <EditModal modalState={modalState} />
 
                 <DeleteModal modalState={deleteModalState} visibleModalEvent={visibleModalEvent} deleteModalEvent={deleteModalEvent}/>

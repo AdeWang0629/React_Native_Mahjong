@@ -4,7 +4,7 @@ import { ImageSourcePropType } from "react-native";
 export interface IAccordion{
     children: ReactNode;
     title: string;
-    source: ImageSourcePropType;
+    source: any;
     right_item?: any;
     action ?: string;
     decimal ?: boolean
