@@ -38,7 +38,7 @@ const ScoreScreen: React.FC<any> = ({route}) => {
                 newScore.push(totalScore);
                 newConvertedAmount.push(totalScore * 100 * item.score );
                 if (Number(chipNumber[i])) {
-                    newChipMoney.push(totalScore * 100 * item.score + Number(chipNumber[i]));
+                    newChipMoney.push(totalScore * 100 * item.score + Number(chipNumber[i]) * 100 * item.chip * item.score);
                 }
             }
             setScore(newScore);
@@ -75,12 +75,7 @@ const ScoreScreen: React.FC<any> = ({route}) => {
     }
 
     const handleAddRow = async () => {
-        // setRowCount(rowCount + 1);
         setRows([...rows, [""]])
-
-        // setTimeout(() => {
-        //     // scrollViewRef.current?.scrollToEnd({ animated: false });
-        // },1)
     };
 
     const RenderHeader = () => {

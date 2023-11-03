@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { SafeAreaView, Text, Button} from 'react-native';
+import { StyleSheet, SafeAreaView, Text, Button, Platform} from 'react-native';
 
 interface ICdatePicker {
   onChangeDate: any
@@ -9,11 +9,13 @@ interface ICdatePicker {
 export const CDatePicker:React.FC <ICdatePicker> = ({onChangeDate}) => {
   const [date, setDate] = useState<Date>(new Date());
   const [mode, setMode] = useState<any>('date');
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(true);
 
   const onChange = (event: any, selectedDate: any) => {
     const currentDate = selectedDate;
-    setShow(false);
+    if(Platform.OS === 'android'){
+      setShow(false);
+    }
     setDate(currentDate);
     onChangeDate(currentDate);
   };
@@ -28,17 +30,30 @@ export const CDatePicker:React.FC <ICdatePicker> = ({onChangeDate}) => {
   };
 
   return (
-    <SafeAreaView>
-      <Button onPress={showDatepicker} title="日付ピッカーを表示!" />
+    <SafeAreaView style={styles.container}>
+      {/* <Button onPress={showDatepicker} title="日付ピッカーを表示!" /> */}
       {show && (
         <DateTimePicker
-          testID="dateTimePicker"
           value={date}
           mode={mode}
+          display={Platform.OS === 'ios' ? 'spinner' : 'default'}
           is24Hour={true}
           onChange={onChange}
+          style={styles.datePicker}
         />
       )}
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    justifyContent: 'center', 
+    alignItems: 'center'
+  },
+  // This only works on iOS
+  datePicker: {
+    width: 320,
+    height: 260,
+  },
+});

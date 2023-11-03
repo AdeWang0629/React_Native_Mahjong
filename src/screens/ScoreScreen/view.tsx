@@ -130,11 +130,11 @@ const ScoreViewScreen: React.FC<any> = ({route}) => {
 
                 <RenderFooter title={"合計"} type={"score"} />
 
-                <RenderFooter title={"スコア金   額"} type={"converted_amount"} />
+                <RenderFooter title={"素点金額"} type={"converted_amount"} />
 
-                <RenderChipNumber title={"チップ(±枚数)"} />
+                <RenderChipNumber title={"チップ"} />
 
-                <RenderFooter title={"チップ金   額"} type={"chip_money"} />
+                <RenderFooter title={"合計"} type={"chip_money"} />
 
             </ScrollView>
         </View>

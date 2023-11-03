@@ -42,6 +42,7 @@ const Accordion : React.FC<IAccordion> = ({ children, title, source, right_item,
 
     return (
         <View style={styles.accordContainer}>
+
             <TouchableOpacity style={styles.accordHeader} onPress={ toggleItem }>
                 <View style={styles.flexDirection}>
                     {source == 'date' ? (
@@ -57,6 +58,7 @@ const Accordion : React.FC<IAccordion> = ({ children, title, source, right_item,
             </TouchableOpacity>
 
             { expanded && body }
+            
         </View>
     );
 };
