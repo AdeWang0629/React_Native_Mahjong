@@ -287,13 +287,13 @@ const ScoreScreen: React.FC<any> = ({route}) => {
                         item.players.length == 3 ?
                         (
                             <View style={[styles.desBox, {width: wp(22.5), borderTopWidth: 3}]}>
-                                {/* <Text>{item.score < 1 ? item.score : item.score.toFixed(1)}</Text> */}
-                                <TextInput value={gameScore} onChangeText={(text) => handleInputScoreChange(text)} onBlur={handleInputScoreChangeSubmit} keyboardType = 'numeric' style={{textAlign: 'center'}} />
+                                <Text>{item.score < 1 ? item.score : item.score.toFixed(1)}</Text>
+                                {/* <TextInput value={gameScore} onChangeText={(text) => handleInputScoreChange(text)} onBlur={handleInputScoreChangeSubmit} keyboardType = 'numeric' style={{textAlign: 'center'}} /> */}
                             </View>
                         ) : (
                             <View style={[styles.desBox, {width: wp(32.5), borderTopWidth: 3}]}>
-                                {/* <Text>{item.score < 1 ? item.score : item.score.toFixed(1)}</Text> */}
-                                <TextInput value={gameScore} onChangeText={(text) => handleInputScoreChange(text)} onBlur={handleInputScoreChangeSubmit} keyboardType = 'numeric' style={{textAlign: 'center'}} />
+                                <Text>{item.score < 1 ? item.score : item.score.toFixed(1)}</Text>
+                                {/* <TextInput value={gameScore} onChangeText={(text) => handleInputScoreChange(text)} onBlur={handleInputScoreChangeSubmit} keyboardType = 'numeric' style={{textAlign: 'center'}} /> */}
                             </View>
                         )
                     }
