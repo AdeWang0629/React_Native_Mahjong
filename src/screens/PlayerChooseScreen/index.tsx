@@ -9,7 +9,6 @@ import { IListItem } from '../../interface/ListItem';
 import { setPlayerList } from '../../store/global';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
-import { useUpdatePlayerMutation } from '../../api/playerEditApi';
 import Spinner from 'react-native-loading-spinner-overlay';
 import AlertModal from '../../components/AlertModal';
 
@@ -17,7 +16,6 @@ const PlayerChooseScreen: React.FC = () => {
     const { data: getPlayer, isLoading, isFetching } = useGetPlayerQuery(1);
     const {playerlist, alertModalState} = useSelector((state:RootState) => state.global);
     const dispatch = useDispatch();
-    const [ updatePlayer ] = useUpdatePlayerMutation();
 
     useEffect(()=>{
         dispatch(setPlayerList(getPlayer));
@@ -30,7 +28,6 @@ const PlayerChooseScreen: React.FC = () => {
     const handleItemCheck = (id ?: number) => {
         const newListItems = playerlist.map((item: any) => {
         if (item.id === id) {
-            updatePlayer(id);
             return { ...item, checked: !item.checked };
         } else {
             return item;

@@ -10,6 +10,8 @@ import { useSelector } from 'react-redux';
 import { useGetPlayerQuery, useDeletePlayerMutation } from '../../api/playerEditApi';
 import DeleteModal from '../../components/DeleteModal';
 import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
+import Swipelist from 'react-native-swipeable-list-view';
+import COLORS from '../../theme/colors';
 
 const PlayerEditScreen : React.FC = () => {
 
@@ -35,24 +37,26 @@ const PlayerEditScreen : React.FC = () => {
     const [itemId, setItemId] = React.useState(-1);
 
     const visibleModalEvent = (id:any) => {
-        // setDeleteModalState(!deleteModalState);
-        // if (!id) {
-        //     setItemId(-1);
-        // }else {
-        //     setItemId(id);
-        // }
+        setDeleteModalState(!deleteModalState);
+        if (!id) {
+            setItemId(-1);
+        }else {
+            setItemId(id);
+        }
 
-        const result = deletePlayer(id); 
-        const updatedList = listState.filter((item) => item.id !== id);
-        setListState(updatedList);
+        // const result = deletePlayer(id); 
+        // const updatedList = listState.filter((item) => item.id !== id);
+        // setListState(updatedList);
     }
 
     const deleteModalEvent = async () => {
+        setDeleteModalState(!deleteModalState);
+
         const result = await deletePlayer(itemId); 
 
-        if (result) {
-            setDeleteModalState(!deleteModalState);
-        }
+        // if (result) {
+        //     setDeleteModalState(!deleteModalState);
+        // }
     }
     
     const RightActions = () => {
@@ -73,29 +77,44 @@ const PlayerEditScreen : React.FC = () => {
         <ScrollView>
             <View style={styles.ContentViewContainer}>
 
-                    <GestureHandlerRootView style={{ flex: 1 }}>
+                <View style={{height: 10}}>
 
-                        {
-                            listState 
-                            &&
-                            listState.map((item, index) => (
-                                <Swipeable
-                                    renderRightActions={RightActions}
-                                    onSwipeableWillOpen={() => visibleModalEvent(item.id)}
-                                    key = {item.id}
-                                >
-                                    <View
-                                    style = {styles.container}  >
-                                            <Text>
-                                                {item.name}
-                                            </Text>
-                                    
-                                    </View>
-                                </Swipeable>
-                            ))
-                        }
+                </View>
 
-                    </GestureHandlerRootView>
+                {
+                    listState 
+                    &&
+                    (
+                        <Swipelist
+                            data={listState}
+                            renderRightItem={(data, index) => (
+                                <View key={index} style={styles.container}>
+
+                                    <Text>
+                                        {data.name}
+                                    </Text>
+
+                                </View>
+                            )}
+                            renderHiddenItem={(data, index) => (
+                                <View style={{ flexDirection: 'row' }}>
+                                    <TouchableOpacity
+                                    style={[styles.rightAction, { backgroundColor: COLORS.RED }]}
+                                    onPress={() => visibleModalEvent(data.id)}
+                                    >
+                                        {/* <Icon name='trash-outline' size={18} style={{color: COLORS.WHITE}}/>
+                                         */}
+                                         <Text style={styles.deleteText}>
+                                         削除
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            )}
+                            rightOpenValue={130}
+                        />
+                    )
+                }
+
 
                 <EditModal modalState={modalState} />
 

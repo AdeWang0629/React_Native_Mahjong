@@ -120,7 +120,7 @@ const ScoreViewScreen: React.FC<any> = ({route}) => {
     }
 
     return (
-        <View style={{alignItems: 'center', backgroundColor: 'white'}}>
+        <View style={{ paddingVertical: 50, alignItems: 'center', width: wp(100), height: hp(100), backgroundColor: 'white' }}>
 
             <RenderHeader />
 

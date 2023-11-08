@@ -1,12 +1,15 @@
 import React, {useState} from 'react'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { StyleSheet, SafeAreaView, Text, Button, Platform} from 'react-native';
+import moment from 'moment';
+import mt from 'moment-timezone';
 
 interface ICdatePicker {
   onChangeDate: any
 }
 
 export const CDatePicker:React.FC <ICdatePicker> = ({onChangeDate}) => {
+  console.log("111",mt().tz('Asia/Tokyo').toDate());
   const [date, setDate] = useState<Date>(new Date());
   const [mode, setMode] = useState<any>('date');
   const [show, setShow] = useState(true);
@@ -40,6 +43,7 @@ export const CDatePicker:React.FC <ICdatePicker> = ({onChangeDate}) => {
           is24Hour={true}
           onChange={onChange}
           style={styles.datePicker}
+          locale= "ja-JP"
         />
       )}
     </SafeAreaView>

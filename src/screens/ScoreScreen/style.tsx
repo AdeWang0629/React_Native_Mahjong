@@ -10,12 +10,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     smallBox: {
-        backgroundColor: '#f0f0f0',
+        backgroundColor: COLORS.WEAKGREY1,
         height: hp(4),
         width: wp(15),
         alignItems: 'center',
         justifyContent: 'center',
-        borderWidth: 1, 
+        borderWidth: .6, 
         borderColor: 'grey',
         textAlign: 'center'
     },
@@ -24,19 +24,19 @@ const styles = StyleSheet.create({
         width: wp(20),
         alignItems: 'center',
         justifyContent: 'center',
-        borderWidth: 1, 
+        borderWidth: .6, 
         borderColor: 'grey'
     },
     text: {
-        fontSize: 20,
-        fontWeight: '700'
+        // fontSize: 20,
+        // fontWeight: '700'
     },
     headerBox: {
         height: hp(4),
         width: wp(20),
         alignItems: 'center',
         justifyContent: 'center',
-        borderWidth: 1, 
+        borderWidth: .6, 
         borderColor: 'grey',
         backgroundColor: COLORS.WEAKGREY2
     },
@@ -44,10 +44,10 @@ const styles = StyleSheet.create({
         height: hp(4),
         alignItems: 'center',
         justifyContent: 'center',
-        borderWidth: 1, 
+        borderWidth: .6, 
         borderColor: 'grey',
         backgroundColor: COLORS.WEAKGREY2,
-        marginBottom: hp(2)
+        // marginBottom: hp(2)
     },
     addButton: {
         height: hp(4),

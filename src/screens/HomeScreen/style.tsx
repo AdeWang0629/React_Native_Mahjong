@@ -28,12 +28,11 @@ const styles = StyleSheet.create({
         borderBottomColor: COLORS.WEAKGREY,
         flexDirection: 'row',
         alignItems: 'center',
-        paddingLeft: wp(6),
-        paddingRight: wp(3),
         height: hp(6)
     },
     text: {
-        paddingLeft: wp(10)
+        paddingLeft: wp(8),
+        paddingRight: wp(5)
     },
     iconContainer: {
         position: 'absolute',
@@ -49,6 +48,48 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         padding: 10,
     },
+    playerName: {
+        paddingHorizontal: wp(.8),
+    },
+    container: {
+        height: hp(8),
+        marginVertical: hp(1.2),
+        backgroundColor: '#ffffff',
+        // justifyContent: 'center',
+        paddingLeft: wp(6),
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+        flexDirection: 'row',
+        verticalAlign: 'center',
+        alignItems: 'center',
+    },
+    rightAction: {
+        marginVertical: hp(1.2),
+        alignItems: 'center',
+        flex: 1,
+        justifyContent: 'center',
+        height: hp(8),
+        backgroundColor: '#ffffff',
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
+    deleteText: {
+        fontSize: 20,
+        letterSpacing: 2,
+        color: COLORS.WHITE
+    }
 })
 
 export default styles;

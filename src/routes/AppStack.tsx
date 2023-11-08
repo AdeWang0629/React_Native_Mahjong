@@ -13,15 +13,17 @@ import  Icon  from "react-native-vector-icons/Ionicons";
 import COLORS from "../theme/colors";
 import MARGIN from '../theme/margin';
 
-import HomeScreen from '../screens/HomeScreen/index';
+import HomeScreen from '../screens/HomeScreen';
 import GameEditScreen from '../screens/GameEditScreen';
 import PlayerChooseScreen from "../screens/PlayerChooseScreen";
-import PlayerEditScreen from "../screens/PlayerEditScreen";
+import PlayerEditScreen from "../screens/PlayerEditScreen/index";
 import ScoreScreen from "../screens/ScoreScreen";
 import ScoreViewScreen from "../screens/ScoreScreen/view";
 import { RootState } from '../store';
 import { useDispatch, useSelector } from 'react-redux';
 import { setModalState, setAlertModalState } from '../store/global';
+import { useUpdatePlayerMutation } from '../api/playerEditApi';
+import { setPlayerList } from '../store/global';
 
 const AppStack = () => {
 
@@ -36,7 +38,8 @@ const AppStack = () => {
   
   const { playerlist, modalState } = useSelector((state: RootState) => state.global);
   const dispatch = useDispatch();
-
+  const [ updatePlayer ] = useUpdatePlayerMutation();
+  console.log(playerlist);
   return (
     <NavigationContainer>
         <Stack.Navigator>
@@ -52,7 +55,7 @@ const AppStack = () => {
                 fontWeight: 'bold',
               },
               headerStyle: {
-                backgroundColor: '#f7f6f6'
+                backgroundColor: COLORS.WHITE
               },
               headerLeft: ()=>(
                 <TouchableOpacity
@@ -64,8 +67,11 @@ const AppStack = () => {
               headerRight: () => (
                 <>
                   <TouchableOpacity
-                  onPress={() => navigation.navigate('GameEditScreen')}
-                  >
+                  onPress={() => {
+                      dispatch(setPlayerList([]));
+                      navigation.navigate('GameEditScreen');
+                    }
+                  }>
                     <Icon name="add-outline" size={30}/>
                   </TouchableOpacity>
                 </>
@@ -90,7 +96,10 @@ const AppStack = () => {
                   <TouchableOpacity
                     onPress={() => navigation.goBack()}
                   >
-                    <Icon name="arrow-back-circle" size={30} style={MARGIN.marginLeft5}/>
+                    <View style={styles.leftSide}>
+                      <Icon name="chevron-back-outline" size={30} style={MARGIN.marginLeft5}/>
+                      <Text style={{fontSize: 18}}>一覧</Text>
+                    </View>
                   </TouchableOpacity>
                 )
             })}
@@ -113,7 +122,8 @@ const AppStack = () => {
                   <TouchableOpacity
                     onPress={() => {
                       const count = playerlist.filter((item)=> item.checked == true).length;
-                      if (2 < count) {              
+                      if (2 < count) {   
+                        // updatePlayer(playerlist);           
                         navigation.goBack();
                       }else{
                         dispatch(setAlertModalState(true));
@@ -187,7 +197,10 @@ const AppStack = () => {
                   <TouchableOpacity
                     onPress={() => navigation.goBack()}
                   >
-                    <Icon name="arrow-back-circle" size={30} style={MARGIN.marginLeft5}/>
+                    <View style={styles.leftSide}>
+                      <Icon name="chevron-back-outline" size={30} style={MARGIN.marginLeft5}/>
+                      <Text style={{fontSize: 18}}>一覧</Text>
+                    </View>
                   </TouchableOpacity>
                 )
             })}
@@ -210,7 +223,10 @@ const AppStack = () => {
                   <TouchableOpacity
                     onPress={() => navigation.goBack()}
                   >
-                    <Icon name="arrow-back-circle" size={30} style={MARGIN.marginLeft5}/>
+                    <View style={styles.leftSide}>
+                      <Icon name="chevron-back-outline" size={30} style={MARGIN.marginLeft5}/>
+                      <Text style={{fontSize: 18}}>一覧</Text>
+                    </View>
                   </TouchableOpacity>
                 )
             })}
@@ -252,5 +268,10 @@ const styles = StyleSheet.create({
     fontSize: 15, 
     fontWeight: '700', 
     letterSpacing: 2
+  },
+  leftSide: {
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    justifyContent: 'center'
   }
 })

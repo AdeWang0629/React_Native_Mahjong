@@ -9,7 +9,8 @@ import { RootState } from '../../store';
 
 import CList from '../../components/CList';
 import Accordion from '../../components/Accordion';
-import NumberPicker from '../../components/NumberPicker';
+// import NumberPicker from '../../components/NumberPicker';
+import NumberPicker from '../../components/NumberPicker(IOS)';
 // import CTextInput from '../../components/CTextInput';
 import {CDatePicker} from '../../components/CDatePicker';
 
@@ -30,9 +31,9 @@ import { useCreateGameMutation } from '../../api/gameEditApi';
 import { setAlertModalState } from '../../store/global'
 
 const GameEditScreen : React.FC = () => {
+
     const { playerlist, score, chip, event_date, alertModalState } = useSelector((state:RootState)=>state.global);
     const dispatch = useDispatch();
-    console.log("132", playerlist, alertModalState);
     const navigation = useNavigation<{[x: string]: any}>();
 
     const onScorePickerChange = (value: any) => {
@@ -52,7 +53,7 @@ const GameEditScreen : React.FC = () => {
     const [ createGame ] = useCreateGameMutation();
 
     const createGameList = async () => {
-        if (playerlist.length > 3) {
+        if (playerlist.length > 2) {
             const body = {
                 'playerlist' : playerlist,
                 'score' : score,

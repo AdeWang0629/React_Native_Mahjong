@@ -26,9 +26,46 @@ const styles = StyleSheet.create({
         borderBottomColor: COLORS.WEAKGREY,
         flexDirection: 'row',
         alignItems: 'center',
-        paddingVertical: wp(3.5),
-        paddingLeft: wp(6)
-     }
+        paddingVertical: wp(3.8),
+        paddingLeft: wp(6),
+        marginVertical: hp(.5),
+    },
+    // container: {
+    //     height: hp(8),
+    //     marginVertical: hp(1.2),
+    //     backgroundColor: '#ffffff',
+    //     justifyContent: 'center',
+    //     paddingLeft: wp(6),
+    //     shadowColor: '#000',
+    //     shadowOffset: {
+    //       width: 0,
+    //       height: 2,
+    //     },
+    //     shadowOpacity: 0.25,
+    //     shadowRadius: 3.84,
+    //     elevation: 5,
+    // },
+    rightAction: {
+        paddingVertical: hp(2),
+        alignItems: 'center',
+        flex: 1,
+        justifyContent: 'center',
+        backgroundColor: '#ffffff',
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+        marginVertical: hp(.5),
+    },
+    deleteText: {
+        fontSize: 16,
+        letterSpacing: 1,
+        color: COLORS.WHITE
+    }
 })
 
 export default styles;

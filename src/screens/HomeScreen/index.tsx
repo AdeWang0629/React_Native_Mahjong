@@ -1,5 +1,11 @@
 import React, { useState, useEffect} from 'react'
-import { View, Text, FlatList, TouchableOpacity } from 'react-native';
+import { 
+    View, 
+    Text, 
+    FlatList, 
+    TouchableOpacity,
+    ScrollView
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from './style';
 import { useSelector, useDispatch } from 'react-redux';
@@ -12,10 +18,12 @@ import moment from 'moment';
 import { useDeleteGameMutation } from '../../api/gameEditApi';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
+import Swipelist from 'react-native-swipeable-list-view';
+import COLORS from '../../theme/colors';
+import DeleteModal from '../../components/DeleteModal';
 
 const HomeScreen: React.FC = () => {
-
+    
     const navigation = useNavigation<{[x: string]: any}>();
     const dispatch = useDispatch();
 
@@ -24,87 +32,110 @@ const HomeScreen: React.FC = () => {
    
     const { gameList } = useSelector((state:RootState) => state.global);
     const [ deleteGame ] = useDeleteGameMutation();
-
+    
     useEffect(()=>{
         dispatch(setGameList(getGame));
     },[getGame]);
-
-    if (isLoading || isFetching) {
-        return <Spinner visible={true} />;
-    }
-
+   
+    const showSpinner = isLoading || isFetching;
+    
     const refetchAction = () => {
+
         refetch();
     }
 
     const onPress = (item : any) => {
-        if (item.status) {
-            navigation.navigate('ScoreViewScreen', {item: item});
-        }else {
-            navigation.navigate('ScoreScreen', {item: item, refetchAction: refetchAction});
-        }
+
+        // if (item.status) {
+        //     navigation.navigate('ScoreViewScreen', {item: item});
+        // }else {
+        //     navigation.navigate('ScoreScreen', {item: item, refetchAction: refetchAction});
+        // }
+
+        navigation.navigate('ScoreScreen', {item: item, refetchAction: refetchAction});
+
         setPage(page + 1);
     }
 
-    const renderItem = ({ item }: { item: any }) => (
-        <Swipeable
-            renderRightActions={RightActions}
-            onSwipeableWillOpen={() => deleteGame(item.id)}
-            key = {item.id}
-        >
-            <TouchableOpacity onPress={()=> onPress(item)}>
+    const [deleteModalState, setDeleteModalState] = React.useState(false);
 
-                <View style={styles.list}>
-                    
-                    <Icon name="enter-outline" size={30} />
+    const [itemId, setItemId] = React.useState(-1);
 
-                    <View style={styles.text}>
-                        <Text>{moment(item.event_date).format("YYYY/M/D ddd")}</Text>
-                    </View>
-                    
-                </View>
-
-            </TouchableOpacity>
-            
-        </Swipeable>
-    );
-
-    const createGame = () => {
-        navigation.navigate('GameEditScreen');
+    const visibleModalEvent = (id:any) => {
+        setDeleteModalState(!deleteModalState);
+        if (!id) {
+            setItemId(-1);
+        }else {
+            setItemId(id);
+        }
     }
 
-    const RightActions = () => {
-        return (
-          <View
-            style={{ flex: 1, justifyContent: 'center' }}>
-            <Text
-              style={{
-                paddingHorizontal: 10,
-                fontWeight: '600'
-              }}>
-            </Text>
-          </View>
-        )
+    const deleteModalEvent = async () => {
+        const result = await deleteGame(itemId);
+        setDeleteModalState(!deleteModalState);
     }
-
+    if(showSpinner){
+        return <Spinner visible={true}/>;
+    }
     return (
         <>
             {
+                getGame &&
                 getGame.length ? (
-                    <GestureHandlerRootView style={{ flex: 1 }}>
-                        
-                        <FlatList
-                            data={gameList}
-                            renderItem={renderItem}
-                            keyExtractor={(item) => item.id?.toString()}
-                        />
+                    <ScrollView>
+                        <View style={{height: 10}}>
 
-                    </GestureHandlerRootView>
+                        </View>
+                        <Swipelist
+                            data={gameList}
+                            renderRightItem={(data, index) => (
+                                <TouchableOpacity onPress={()=> onPress(data)}>
+                                    <View key={index} style={styles.container}>
+
+                                        <Text style={{fontSize: 18}}>
+
+                                            {moment(data.event_date).format("YYYY/M/D ddd")}
+                                            &nbsp;
+
+                                        </Text>
+                                        <Text> {'['} </Text>
+                                            
+                                        {data.players.map((item : any, number : any)=>(
+                                            <View style={styles.playerName} key={number}>
+                                                <Text>
+                                                    {item.name}
+                                                </Text>
+                                            </View>
+                                        ))}
+                                            
+                                        <Text> {']'} </Text>
+              
+                                    </View>
+                                </TouchableOpacity>
+                            )}
+                            renderHiddenItem={(data, index) => (
+                                <View style={{ flexDirection: 'row' }}>
+                                    <TouchableOpacity
+                                    style={[styles.rightAction, { backgroundColor: COLORS.RED }]}
+                                    onPress={() => visibleModalEvent(data.id)}
+                                    >
+                                        {/* <Icon name='trash-outline' size={30} style={{color: COLORS.WHITE}}/>
+                                         */}
+                                        <Text style={styles.deleteText}>
+                                            削除
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            )}
+                            rightOpenValue={130}
+                        />
+                    </ScrollView>
                 ) : (
                     <NoData />
                 )
             }
             
+            <DeleteModal modalState={deleteModalState} visibleModalEvent={visibleModalEvent} deleteModalEvent={deleteModalEvent}/>
         </>
     )
 };

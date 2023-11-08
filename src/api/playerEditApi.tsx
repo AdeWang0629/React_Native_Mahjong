@@ -22,11 +22,11 @@ export const playerEditApi = createApi({
             invalidatesTags: ['Player']
         }),
         updatePlayer: builder.mutation({
-            query: (id) => {
+            query: (playerlist) => {
             return {
-                url: `player/${id}`,
-                method: 'PUT',
-                body: {}
+                url: `player/`,
+                method: 'POST',
+                body: {playerlist}
             }},
             invalidatesTags: ['Player']
         }),
