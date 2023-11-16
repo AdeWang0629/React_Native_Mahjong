@@ -29,14 +29,14 @@ const HomeScreen: React.FC = () => {
 
     const [page, setPage] = useState(1);
     const { data: getGame, refetch, isLoading, isFetching } = useGetGameQuery(1);
-   
+
     const { gameList } = useSelector((state:RootState) => state.global);
     const [ deleteGame ] = useDeleteGameMutation();
-    
+
     useEffect(()=>{
         dispatch(setGameList(getGame));
     },[getGame]);
-   
+
     const showSpinner = isLoading || isFetching;
     
     const refetchAction = () => {
@@ -57,26 +57,14 @@ const HomeScreen: React.FC = () => {
         setPage(page + 1);
     }
 
-    const [deleteModalState, setDeleteModalState] = React.useState(false);
-
-    const [itemId, setItemId] = React.useState(-1);
-
-    const visibleModalEvent = (id:any) => {
-        setDeleteModalState(!deleteModalState);
-        if (!id) {
-            setItemId(-1);
-        }else {
-            setItemId(id);
-        }
+    const visibleModalEvent = async (id:any) => {
+        const result = await deleteGame(id);
     }
 
-    const deleteModalEvent = async () => {
-        const result = await deleteGame(itemId);
-        setDeleteModalState(!deleteModalState);
+    if (isLoading || isFetching) {
+        return <Spinner visible={true} />;
     }
-    if(showSpinner){
-        return <Spinner visible={true}/>;
-    }
+    
     return (
         <>
             {
@@ -90,7 +78,7 @@ const HomeScreen: React.FC = () => {
                             data={gameList}
                             renderRightItem={(data, index) => (
                                 <TouchableOpacity onPress={()=> onPress(data)}>
-                                    <View key={index} style={styles.container}>
+                                    <View key={index} style={[styles.container, index == 0 && ({borderTopWidth: 1.2})]}>
 
                                         <Text style={{fontSize: 18}}>
 
@@ -122,7 +110,7 @@ const HomeScreen: React.FC = () => {
                                         {/* <Icon name='trash-outline' size={30} style={{color: COLORS.WHITE}}/>
                                          */}
                                         <Text style={styles.deleteText}>
-                                            削除
+                                            削   除
                                         </Text>
                                     </TouchableOpacity>
                                 </View>
@@ -134,8 +122,6 @@ const HomeScreen: React.FC = () => {
                     <NoData />
                 )
             }
-            
-            <DeleteModal modalState={deleteModalState} visibleModalEvent={visibleModalEvent} deleteModalEvent={deleteModalEvent}/>
         </>
     )
 };

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { FlatList, Text, View } from 'react-native';
+import { FlatList, Text, View, TouchableOpacity } from 'react-native';
 import CheckBox from 'react-native-check-box';
 import { useGetPlayerQuery } from '../../api/playerEditApi';
 import NoData from './noData';
@@ -37,18 +37,25 @@ const PlayerChooseScreen: React.FC = () => {
     };
     
     const renderItem = ({ item }: { item: IListItem }) => (
-        <View style={styles.list}>
-            {/* ERROR */}
-            <CheckBox
-                style={{flex: 1}}
-                onClick={()=> handleItemCheck(item.id)}
-                isChecked={Boolean(item.checked)}
-                checkedImage={<Icon name="checkmark-outline" size={30} style={{color: '#1168d7'}}/>}
-                unCheckedImage={<Text></Text>}
-                leftText={`${item.name}`}
-                uncheckedCheckBoxColor={'white'}
-            />
-        </View>
+        <TouchableOpacity
+            onPress={()=> handleItemCheck(item.id)}
+            activeOpacity={1}
+        >
+            <View style={styles.list}>
+
+                    <CheckBox
+                        style={{flex: 1}}
+                        onClick={()=> handleItemCheck(item.id)}
+                        isChecked={Boolean(item.checked)}
+                        checkedImage={<Icon name="checkmark-outline" size={30} style={{color: '#1168d7'}}/>}
+                        unCheckedImage={<Text></Text>}
+                        leftText={`${item.name}`}
+                        uncheckedCheckBoxColor={'white'}
+                    />
+    
+                {/* ERROR */}
+            </View>
+        </TouchableOpacity>
       );
 
     return (
@@ -62,7 +69,7 @@ const PlayerChooseScreen: React.FC = () => {
                             keyExtractor={(item) => item.id?.toString()}
                         />
 
-                        <AlertModal modalState={alertModalState} label={'３人以上を選択してください。'} />
+                        <AlertModal modalState={alertModalState} label={'３人か４人を選択ください。'} />
                     </>
                     
                 ) : (

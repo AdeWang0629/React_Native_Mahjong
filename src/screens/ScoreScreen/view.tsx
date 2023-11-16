@@ -10,8 +10,6 @@ const ScoreViewScreen: React.FC<any> = ({route}) => {
     
     const { data: score, isLoading, isFetching } = useGetTotalScoreQuery(item.id);
 
-    // score.map((item: any)=> console.log(item));
-
     if (isLoading || isFetching) {
         return <Spinner visible={true} />;
     }

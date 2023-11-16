@@ -69,6 +69,11 @@ const styles = StyleSheet.create({
     normalText: {
         fontSize: 13,
         fontWeight: '700'
+    },
+    customTextInput: {
+        textAlign: 'center', 
+        width: '100%',
+        height: '100%'
     }
 })
 

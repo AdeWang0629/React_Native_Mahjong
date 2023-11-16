@@ -15,7 +15,7 @@ import { ITextInput } from '../interface/TextInput';
 const CTextInput:React.FC<ITextInput> = ({ title, source }) => {
     return (
         <View style={styles.container}>
-            <TouchableOpacity style={styles.header} onPress={ () => (console.log('d')) }>
+            <TouchableOpacity style={styles.header} onPress={ () => (console.log('clicked')) }>
                 <View style={styles.flexDirection}>
                     <Image source={source} style={styles.avatar} />
                     <Text style={styles.title}>{ title }</Text>

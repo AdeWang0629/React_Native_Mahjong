@@ -39,7 +39,7 @@ const AppStack = () => {
   const { playerlist, modalState } = useSelector((state: RootState) => state.global);
   const dispatch = useDispatch();
   const [ updatePlayer ] = useUpdatePlayerMutation();
-  console.log(playerlist);
+
   return (
     <NavigationContainer>
         <Stack.Navigator>
@@ -122,7 +122,7 @@ const AppStack = () => {
                   <TouchableOpacity
                     onPress={() => {
                       const count = playerlist.filter((item)=> item.checked == true).length;
-                      if (2 < count) {   
+                      if (2 < count && count < 5) {   
                         // updatePlayer(playerlist);           
                         navigation.goBack();
                       }else{
@@ -130,7 +130,10 @@ const AppStack = () => {
                       }
                     }}
                   >
-                    <Icon name="arrow-back-circle" size={30} style={MARGIN.marginLeft5}/>
+                    <View style={styles.leftSide}>
+                      <Icon name="chevron-back-outline" size={30}/>
+                      <Text style={{fontSize: 18}}>戻る</Text>
+                    </View>
                   </TouchableOpacity>
                 ),
                 headerRight: () => (
@@ -221,7 +224,7 @@ const AppStack = () => {
                 },
                 headerLeft: ()=>(
                   <TouchableOpacity
-                    onPress={() => navigation.goBack()}
+                    onPress={() => navigation.navigete('HomeScreen')}
                   >
                     <View style={styles.leftSide}>
                       <Icon name="chevron-back-outline" size={30} style={MARGIN.marginLeft5}/>

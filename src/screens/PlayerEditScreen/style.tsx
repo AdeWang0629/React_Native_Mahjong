@@ -22,13 +22,12 @@ const styles = StyleSheet.create({
     },
     container: {
         backgroundColor: COLORS.WHITE,
-        borderBottomWidth: .8,
+        borderBottomWidth: .6,
         borderBottomColor: COLORS.WEAKGREY,
         flexDirection: 'row',
         alignItems: 'center',
         paddingVertical: wp(3.8),
         paddingLeft: wp(6),
-        marginVertical: hp(.5),
     },
     // container: {
     //     height: hp(8),
@@ -59,11 +58,10 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
-        marginVertical: hp(.5),
+        // marginVertical: hp(.5),
+        textAlign: 'center'
     },
     deleteText: {
-        fontSize: 16,
-        letterSpacing: 1,
         color: COLORS.WHITE
     }
 })

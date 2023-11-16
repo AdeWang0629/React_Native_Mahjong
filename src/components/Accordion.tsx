@@ -92,7 +92,8 @@ const styles = StyleSheet.create({
         height: 30
     },
     normalText: {
-        color: COLORS.WEAKGREY
+        color: COLORS.WEAKGREY,
+        fontSize: 18
     },
     flexDirection: {
         flexDirection: 'row'

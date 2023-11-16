@@ -9,7 +9,7 @@ interface ICdatePicker {
 }
 
 export const CDatePicker:React.FC <ICdatePicker> = ({onChangeDate}) => {
-  console.log("111",mt().tz('Asia/Tokyo').toDate());
+
   const [date, setDate] = useState<Date>(new Date());
   const [mode, setMode] = useState<any>('date');
   const [show, setShow] = useState(true);

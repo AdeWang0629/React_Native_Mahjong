@@ -37,10 +37,10 @@ const DeleteModal : React.FC<IEditModal> = ({modalState, visibleModalEvent, dele
                         </View>
 
                         <View style={{marginVertical: 10}}>
-                            <Button title='OK' onPress={deletePlayerModal} color={COLORS.PINK}/>
+                            <Button title='は　い' onPress={deletePlayerModal} color={COLORS.PINK}/>
                         </View>
                         <View>
-                            <Button title='キャンセル' onPress={toggleModal} color={COLORS.BLACK}/>
+                            <Button title='い　え' onPress={toggleModal} color={COLORS.BLACK}/>
                         </View>
                     </View>
                 </View>

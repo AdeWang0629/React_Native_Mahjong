@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef} from 'react'
-import { View, ScrollView, Text, FlatList, TouchableOpacity, TextInput } from 'react-native';
+import { View, ScrollView, Text, FlatList, TouchableOpacity, TextInput, SafeAreaView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from './style';
 import { useDispatch } from 'react-redux';
@@ -10,13 +10,15 @@ import { useCreateTotalScoreMutation } from '../../api/scoreEditApi';
 import { useGetTotalScoreQuery } from '../../api/scoreEditApi';
 import { useCreateGameScoreMutation } from '../../api/gameEditApi';
 import { useCreateGameChipMutation } from '../../api/gameEditApi';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const ScoreScreen: React.FC<any> = ({route}) => {
     const {item, refetchAction} = route.params;
     const navigation = useNavigation<{[x: string]: any}>();
 
     const [ createTotalScore ] = useCreateTotalScoreMutation();
-    const { data: scores, isLoading, isFetching } = useGetTotalScoreQuery(item.id);
+    const { data: scores, refetch, isLoading, isFetching } = useGetTotalScoreQuery(item.id);
+
     const [ createGameScore, results ] = useCreateGameScoreMutation();
     const [ createGameChip ] = useCreateGameChipMutation();
 
@@ -27,11 +29,16 @@ const ScoreScreen: React.FC<any> = ({route}) => {
     const [ convertedAmount, setConvertedAmount ] =  useState<number[]>([]);
     const [ chipNumber, setChipNumber ] = useState<string[]>([]);
     const [ chipMoney, setChipMoney ] = useState<number[]>([]);
-    // const [ editButtonState, setEditButtonState ] = useState(false);
-    const scrollViewRef = useRef<ScrollView>(null);
 
-    const [ gameScore, setGameScore ] = useState<string>('');
-    const [ gameChip, setGameChip ] = useState<string>('');
+    const scrollViewRef = useRef<ScrollView>(null);
+    
+    // useEffect(()=>{
+    //     refetch();
+    // },[]);
+
+    useEffect(()=>{
+        refetch();
+    });
 
     useEffect(()=>{
 
@@ -78,20 +85,56 @@ const ScoreScreen: React.FC<any> = ({route}) => {
         setChipMoney(newChipMoney);
 
     },[scores]);
-
-    useEffect(() => {
-        
-        setGameScore(item.score.toString());
-        setGameChip(item.chip.toString());
-
-    }, []);
-   
+    
     const handleInputChange = (text: string, index: number, id:number) => {
 
         const newRows = [...rows];
 
         const parsedValue = parseInt(text);
         newRows[index][id] = isNaN(parsedValue) ? '' : parsedValue.toString();
+
+        
+        const newScore: number[] = [];
+        const newConvertedAmount: number[] = [];
+        const newChipMoney: number[] = [];
+
+        for (let i = 0; i < item.players.length; i++) {
+            let totalScore = 0;
+            for (let j = 0; j < rows.length; j++) {
+                totalScore += parseInt(rows[j][i]) || 0;
+            }
+            newScore.push(totalScore);
+            newConvertedAmount.push(totalScore * 100 * item.score );
+            if (Number(chipNumber[i])) {
+                newChipMoney.push(totalScore * 100 * item.score + Number(chipNumber[i]) * 100 * item.chip * item.score);
+            }
+        }
+        setRows(newRows);
+        setScore(newScore);
+        setConvertedAmount(newConvertedAmount);
+        setChipMoney(newChipMoney);
+        refetch();
+    }
+
+    const handleInputChangeSubmit = () => {
+
+        const newRows = [...rows];
+
+        if (item.players.length == 4) {
+            newRows.map(data => {
+                if (data.length == 3) {
+                    data[data.length] = ((Number(data[0]) + Number(data[1]) + Number(data[2])) * (-1)).toString();
+                }
+            });
+        }else if (item.players.length == 3) {
+
+            newRows.map(data => {
+
+                if (data.length == 2) {
+                    data[data.length] = ((Number(data[0]) + Number(data[1])) * (-1)).toString();
+                }
+            });
+        }
 
         const newScore: number[] = [];
         const newConvertedAmount: number[] = [];
@@ -112,9 +155,7 @@ const ScoreScreen: React.FC<any> = ({route}) => {
         setScore(newScore);
         setConvertedAmount(newConvertedAmount);
         setChipMoney(newChipMoney);
-    }
-
-    const handleInputChangeSubmit = () => {
+        refetch();
         
         const totalBody = {
             game_id: item.id,
@@ -126,6 +167,45 @@ const ScoreScreen: React.FC<any> = ({route}) => {
         };
 
         const result = createTotalScore(totalBody);
+        
+    }
+    
+    const handleInputChipChange = (text: string, index: number) => {
+
+        const newChipNumber = [...chipNumber];
+        const parsedValue = parseInt(text);
+        newChipNumber[index] = isNaN(parsedValue) ? '' : parsedValue.toString();
+        
+        const newChipMoney = [...chipMoney];
+        if(convertedAmount[index]){
+
+            newChipMoney[index] = Number(newChipNumber[index]) * 100 * item.score * item.chip + convertedAmount[index];
+
+        }else{
+
+            newChipMoney[index] = Number(newChipNumber[index]) * 100 * item.score * item.chip;
+
+        }
+        
+        setChipMoney(newChipMoney);
+        setChipNumber(newChipNumber);
+        
+        
+        // refetchAction();
+    };
+
+    const handleInputChipChangeSubmit = () => {
+
+        const totalBody = {
+            game_id: item.id,
+            score: score,
+            scoreMoney: convertedAmount,
+            chipNumber: chipNumber,
+            chipMoney: chipMoney,
+            rows: rows
+        };
+
+        createTotalScore(totalBody);
 
     }
 
@@ -138,7 +218,7 @@ const ScoreScreen: React.FC<any> = ({route}) => {
             <View style={styles.rowContainer}>
 
                 <View style={[styles.smallBox, {borderLeftWidth: 3}]}>
-                    <Text style={styles.text}>No</Text>
+                    <Text style={styles.text}>No.</Text>
                 </View>
                 
                 {
@@ -188,92 +268,49 @@ const ScoreScreen: React.FC<any> = ({route}) => {
         )
     }
 
-    const handleInputScoreChange = (text: string) => {
+    // const handleInputScoreChange = (text: string) => {
 
-        const newConvertedAmount: number[] = [];
-        convertedAmount.map((item)=>{
-            const total = item / Number(gameScore) *  Number(text);
-            newConvertedAmount.push(total);
-        })
+    //     const newConvertedAmount: number[] = [];
+    //     convertedAmount.map((item)=>{
+    //         const total = item / Number(gameScore) *  Number(text);
+    //         newConvertedAmount.push(total);
+    //     })
         
-        setGameScore(text);
-        setConvertedAmount(newConvertedAmount);
+    //     setGameScore(text);
+    //     setConvertedAmount(newConvertedAmount);
 
-    }
+    // }
 
-    const handleInputScoreChangeSubmit = () => {
+    // const handleInputScoreChangeSubmit = () => {
 
-        const totalBody = {
-            game_id: item.id,
-            game_score: gameScore
-        };
+    //     const totalBody = {
+    //         game_id: item.id,
+    //         game_score: gameScore
+    //     };
 
-        createGameScore(totalBody);
+    //     createGameScore(totalBody);
 
-    }
+    // }
 
-    const handleInputGameChipChange = (text: string) => {
+    // const handleInputGameChipChange = (text: string) => {
 
-        setGameChip(text);
+    //     setGameChip(text);
         
-        const totalBody = {
-            game_id: item.id,
-            game_chip: text
-        };
+    //     const totalBody = {
+    //         game_id: item.id,
+    //         game_chip: text
+    //     };
 
-        createGameChip(totalBody);
-        // console.log("result", result);
-    }
-    
-    const handleInputChipChange = (text: string, index: number) => {
-
-        const newChipNumber = [...chipNumber];
-        const parsedValue = parseInt(text);
-        newChipNumber[index] = isNaN(parsedValue) ? '' : parsedValue.toString();
-        
-        // const newChipMoney = [...chipMoney];
-        // if(convertedAmount[index]){
-        //     newChipMoney[index] = Number(newChipNumber[index]) * 100 * item.score * item.chip + convertedAmount[index] ;
-        // }else{
-        //     newChipMoney[index] = Number(newChipNumber[index]) * 100 * item.score * item.chip ;
-        // }
-        
-        // newChipMoney[index] = Number(newChipNumber[index]) + convertedAmount[index] ;
-
-        // setChipMoney(newChipMoney);
-        setChipNumber(newChipNumber);
-        
-        // refetchAction();
-    };
-
-    const handleInputChipChangeSubmit = () => {
-        const newChipMoney = [...chipMoney];
-        newChipMoney.map((item:any, index: any)=>(
-            newChipMoney[index] = Number(chipNumber[index]) + convertedAmount[index]
-        ))
-        
-        setChipMoney(newChipMoney);
-        
-
-        const totalBody = {
-            game_id: item.id,
-            score: score,
-            scoreMoney: convertedAmount,
-            chipNumber: chipNumber,
-            chipMoney: chipMoney,
-            rows: rows
-        };
-
-        const result = createTotalScore(totalBody);
-
-    }
+    //     createGameChip(totalBody);
+    //     // console.log("result", result);
+    // }
 
     return (
 
         <ScrollView>
 
         
-            <View style={{alignItems: 'center', backgroundColor: COLORS.WHITE, paddingTop: 10, paddingBottom: 20}}>
+            <View style={{alignItems: 'center', backgroundColor: COLORS.WHITE, paddingTop: 10, paddingBottom: 20, height: hp(92)}}>
 
                 {/* ==================================================================================================================================== */}
                 {/* Begin Score and Chip Information Part */}
@@ -310,7 +347,7 @@ const ScoreScreen: React.FC<any> = ({route}) => {
                                 {/* <TextInput value={gameChip} onChangeText={(text) => handleInputGameChipChange(text)} keyboardType = 'numeric' style={{textAlign: 'center'}} /> */}
                             </View>
                         ) : (
-                            <View style={[styles.desBox, {width: wp(32.5), borderTopWidth: 3, borderRightWidth: 3, borderRightColor: 'red'}]}>
+                            <View style={[styles.desBox, {width: wp(32.5), borderTopWidth: 3, borderRightWidth: 3, borderRightColor: 'black'}]}>
                                 <Text>{item.chip.toFixed(1)}</Text>
                                 {/* <TextInput value={gameChip} onChangeText={(text) => handleInputGameChipChange(text)} keyboardType = 'numeric' style={{textAlign: 'center'}} /> */}
                             </View>
@@ -349,8 +386,8 @@ const ScoreScreen: React.FC<any> = ({route}) => {
                                                     value={row[id] ? row[id].toString() : ''}
                                                     onChangeText={(text) => handleInputChange(text, index, id)}
                                                     onBlur={handleInputChangeSubmit}
-                                                    keyboardType = 'numeric'
-                                                    style={{textAlign: 'center'}}
+                                                    keyboardType = 'decimal-pad'
+                                                    style={styles.customTextInput}
                                                 />
                                             </View>
                                         )
@@ -407,7 +444,7 @@ const ScoreScreen: React.FC<any> = ({route}) => {
 
                         return (
                             <View style={[styles.headerBox, flag && {borderRightWidth: 3}]} key={data.id}>
-                                <TextInput value={chipNumber[index]} onChangeText={(text) => handleInputChipChange(text, index)} onBlur={handleInputChipChangeSubmit} keyboardType = 'numeric' style={{textAlign: 'center'}} />
+                                <TextInput value={chipNumber[index]} onChangeText={(text) => handleInputChipChange(text, index)} onBlur={handleInputChipChangeSubmit} keyboardType = 'numeric' style={styles.customTextInput} />
                             </View>
                             )
                         })

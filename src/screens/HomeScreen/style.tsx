@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     playerName: {
         paddingHorizontal: wp(.8),
     },
-    container: {
+    C_container: {
         height: hp(8),
         marginVertical: hp(1.2),
         backgroundColor: '#ffffff',
@@ -69,12 +69,21 @@ const styles = StyleSheet.create({
         verticalAlign: 'center',
         alignItems: 'center',
     },
+    container: {
+        backgroundColor: COLORS.WHITE,
+        borderWidth: .6,
+        borderColor: COLORS.WEAKGREY,
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: wp(3.8),
+        paddingLeft: wp(6),
+        borderRightColor: COLORS.BLACK,
+    },
     rightAction: {
-        marginVertical: hp(1.2),
+        paddingVertical: hp(2),
         alignItems: 'center',
         flex: 1,
         justifyContent: 'center',
-        height: hp(8),
         backgroundColor: '#ffffff',
         shadowColor: '#000',
         shadowOffset: {
@@ -84,10 +93,10 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
+        // marginVertical: hp(.5),
     },
     deleteText: {
-        fontSize: 20,
-        letterSpacing: 2,
+        fontSize: 17,
         color: COLORS.WHITE
     }
 })

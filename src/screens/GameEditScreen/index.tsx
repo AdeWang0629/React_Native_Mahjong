@@ -37,7 +37,6 @@ const GameEditScreen : React.FC = () => {
     const navigation = useNavigation<{[x: string]: any}>();
 
     const onScorePickerChange = (value: any) => {
-        console.log(value);
         dispatch(setScore(value));
     }
 
@@ -152,7 +151,7 @@ const GameEditScreen : React.FC = () => {
                 </View>
             </View>
 
-            <AlertModal modalState={alertModalState} label={'３人以上を選択してください。'} />
+            <AlertModal modalState={alertModalState} label={'３人か４人を選択ください。'} />
         </ScrollView>
     )
 };

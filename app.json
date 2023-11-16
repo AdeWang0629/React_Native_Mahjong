@@ -16,7 +16,12 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.ada-wang.New-React-Native-Mahjong"
+      "bundleIdentifier": "com.ada-wang.New-Mahjong",
+      "buildNumber": "4.0.0",
+      "infoPlist": {
+        "UIKeyboardType": "UIKeyboardTypeDefault",
+        "UIKeyboardAppearance": "UIKeyboardAppearanceDefault"
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -30,7 +35,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "df9d2e29-90e9-46d3-a10c-6aba3f5c22fb"
+        "projectId": "f3e562f6-ecd6-4dcd-8429-214efb40493c"
       }
     }
   }

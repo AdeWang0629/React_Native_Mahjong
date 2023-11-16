@@ -32,31 +32,8 @@ const PlayerEditScreen : React.FC = () => {
         setListState(getPlayer);
     },[getPlayer]);
 
-    const [deleteModalState, setDeleteModalState] = React.useState(false);
-
-    const [itemId, setItemId] = React.useState(-1);
-
     const visibleModalEvent = (id:any) => {
-        setDeleteModalState(!deleteModalState);
-        if (!id) {
-            setItemId(-1);
-        }else {
-            setItemId(id);
-        }
-
-        // const result = deletePlayer(id); 
-        // const updatedList = listState.filter((item) => item.id !== id);
-        // setListState(updatedList);
-    }
-
-    const deleteModalEvent = async () => {
-        setDeleteModalState(!deleteModalState);
-
-        const result = await deletePlayer(itemId); 
-
-        // if (result) {
-        //     setDeleteModalState(!deleteModalState);
-        // }
+        const result = deletePlayer(id); 
     }
     
     const RightActions = () => {
@@ -88,7 +65,7 @@ const PlayerEditScreen : React.FC = () => {
                         <Swipelist
                             data={listState}
                             renderRightItem={(data, index) => (
-                                <View key={index} style={styles.container}>
+                                <View key={index} style={[styles.container, index == 0 && ({borderTopWidth: 1, borderTopColor: 'grey'}),]}>
 
                                     <Text>
                                         {data.name}
@@ -105,7 +82,7 @@ const PlayerEditScreen : React.FC = () => {
                                         {/* <Icon name='trash-outline' size={18} style={{color: COLORS.WHITE}}/>
                                          */}
                                          <Text style={styles.deleteText}>
-                                         削除
+                                         削   除
                                         </Text>
                                     </TouchableOpacity>
                                 </View>
@@ -117,8 +94,6 @@ const PlayerEditScreen : React.FC = () => {
 
 
                 <EditModal modalState={modalState} />
-
-                <DeleteModal modalState={deleteModalState} visibleModalEvent={visibleModalEvent} deleteModalEvent={deleteModalEvent}/>
             </View>
         </ScrollView>
     )
