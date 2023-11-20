@@ -61,7 +61,7 @@ const PlayerChooseScreen: React.FC = () => {
     return (
         <>
             {
-                getPlayer.length ? (
+                getPlayer && getPlayer.length ? (
                     <>
                         <FlatList
                             data={playerlist}

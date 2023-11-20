@@ -27,10 +27,6 @@ const styles = StyleSheet.create({
         borderWidth: .6, 
         borderColor: 'grey'
     },
-    text: {
-        // fontSize: 20,
-        // fontWeight: '700'
-    },
     headerBox: {
         height: hp(4),
         width: wp(20),
@@ -70,10 +66,14 @@ const styles = StyleSheet.create({
         fontSize: 13,
         fontWeight: '700'
     },
+    numberText: {
+        fontSize: 14.5,
+    },
     customTextInput: {
         textAlign: 'center', 
         width: '100%',
-        height: '100%'
+        height: '100%',
+        fontSize: 14.5
     }
 })
 

@@ -17,7 +17,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.ada-wang.New-Mahjong",
-      "buildNumber": "4.0.0",
+      "buildNumber": "6.0.0",
       "infoPlist": {
         "UIKeyboardType": "UIKeyboardTypeDefault",
         "UIKeyboardAppearance": "UIKeyboardAppearanceDefault"
