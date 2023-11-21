@@ -64,7 +64,7 @@ const HomeScreen: React.FC = () => {
     if (isLoading || isFetching) {
         return <Spinner visible={true} />;
     }
-    
+
     return (
         <>
             {

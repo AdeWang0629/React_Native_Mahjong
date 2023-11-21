@@ -16,12 +16,8 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.ada-wang.New-Mahjong",
-      "buildNumber": "6.0.0",
-      "infoPlist": {
-        "UIKeyboardType": "UIKeyboardTypeDefault",
-        "UIKeyboardAppearance": "UIKeyboardAppearanceDefault"
-      }
+      "bundleIdentifier": "com.final.mahjong.app",
+      "buildNumber": "4.0.0"
     },
     "android": {
       "adaptiveIcon": {
@@ -35,7 +31,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "f3e562f6-ecd6-4dcd-8429-214efb40493c"
+        "projectId": "11ffe582-7722-4b7a-b1ca-ad86c75b9835"
       }
     }
   }
