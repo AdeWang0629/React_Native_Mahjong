@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import styles from './style';
+import styles from '../GameEditScreen/style';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store';
 
 import CList from '../../components/CList';
 import Accordion from '../../components/Accordion';
-import RateAccordion from './RateAccordion';
-import ChipAccordion from './ChipAccordion';
-import NumberPicker from '../../components/NumberPicker';
-// import NumberPicker from '../../components/NumberPicker(IOS)';
+import RateAccordion from '../GameEditScreen/RateAccordion';
+import ChipAccordion from '../GameEditScreen/ChipAccordion';
+// import NumberPicker from '../../components/NumberPicker';
+import NumberPicker from '../../components/NumberPicker(IOS)';
 import {CDatePicker} from '../../components/CDatePicker';
 
 import moment from 'moment';
@@ -21,21 +21,26 @@ const firstSource = require('../../../assets/people_plus.png');
 const secondSource = require('../../../assets/calculator.png');
 const thirdSource = require('../../../assets/database.png');
 
-import { setScore, setChip, setEventDate } from '../../store/global';
+import { setScore, setChip, setEventDate, setPlayers, setPlayerList } from '../../store/global';
 import Button from '../../components/Button';
-import { useCreateGameMutation } from '../../api/gameEditApi';
+import { useUpdateGameMutation } from '../../api/gameEditApi';
 import { setAlertModalState } from '../../store/global';
 
-const GameEditScreen : React.FC = () => {
+const ScoreEditScreen : React.FC = () => {
 
-    const { playerlist, scoreRate, chipRate, event_date, alertModalState } = useSelector((state:RootState)=>state.global);
+    const { playerlist, players, scoreRate, chipRate, event_date, alertModalState, currentScore } = useSelector((state:RootState)=>state.global);
     const dispatch = useDispatch();
     const navigation = useNavigation<{[x: string]: any}>();
-    console.log(playerlist, "playerlist");
+
     useEffect(()=>{
-        dispatch(setScore(20));
-        dispatch(setChip(5));
-    },[]);
+
+        dispatch(setPlayerList([]));
+        dispatch(setScore(currentScore.score * 10));
+        dispatch(setChip(currentScore.chip));
+        dispatch(setEventDate(currentScore.event_date));
+        dispatch(setPlayers(currentScore.players));
+
+    }, [currentScore]);
 
     const onScorePickerChange = (value: any) => {
         dispatch(setScore(value));
@@ -50,26 +55,58 @@ const GameEditScreen : React.FC = () => {
         dispatch(setEventDate(formattedDate));
     };
 
-    const [ createGame ] = useCreateGameMutation();
+    const [ updateGame ] = useUpdateGameMutation();
 
-    const createGameList = async () => {
+    const updateGameList = async () => {
 
-        if (playerlist.length > 2) {
+        let playerBody;
+        let playerBodyArray = [];
+
+        if (playerlist) {
+            if (playerlist.length) {
+                playerBody = playerlist.filter((item:any) => item.checked == true);
+                playerBodyArray = playerlist.filter((item:any) => item.checked == true);
+            } else {
+                playerBody = players;
+                playerBodyArray = players;
+            }
+        }
+
+
+        if(playerBodyArray.length != players.length){
+
+            dispatch(setAlertModalState(!alertModalState));
+
+        }else{
+            
+            const newPlayerList = playerlist.map((item:any) => item.checked == false);
+            // dispatch(setPlayerList(newPlayerList));
 
             const body = {
-                'playerlist' : playerlist,
+                'playerlist' : playerBody,
                 'score' : scoreRate,
                 'chip' : chipRate,
                 'event_date' : event_date
             };
 
-            const result = await createGame(body);
+            const param = {
+                'id' : currentScore.id,
+                'body' : body
+            };
 
-            navigation.navigate('HomeScreen');
+            updateGame(param);
 
-        }else{
+            const newCurrentScore = {
+                'id' : currentScore.id,
+                'players' : playerBody,
+                'score' : scoreRate / 10,
+                'chip' : chipRate / 1,
+                'event_date' : event_date
+            };
 
-            dispatch(setAlertModalState(!alertModalState));
+            console.log(newCurrentScore, "newCurrentScore");
+
+            navigation.navigate("ScoreScreen", {item: newCurrentScore});
 
         }
     }
@@ -85,17 +122,9 @@ const GameEditScreen : React.FC = () => {
 
                 <View style={styles.SectionContainer}>
 
-                    {/* <View style={styles.SectionContainerHeader}>
-
-                        <Text>
-                            プレイヤー
-                        </Text>
-
-                    </View> */}
-
                     <View style={styles.SectionContainerContent}>
                         
-                        <CList title={`${playerlist ? playerlist.filter((item)=> item.checked == true).length : 0}人選択中`} source={firstSource} action="PlayerChooseScreen" />
+                        <CList title={`${(playerlist && playerlist.length) ? playerlist.filter((item)=> item.checked == true).length : (players && players.length)}人選択中`} source={firstSource} action="PlayerChooseScreen" />
 
                     </View>
 
@@ -145,14 +174,15 @@ const GameEditScreen : React.FC = () => {
                 
                 <View style={styles.center}>
 
-                    <Button label='保                 存' onPress={createGameList}/>
+                    <Button label='保                 存' onPress={updateGameList}/>
                     
                 </View>
             </View>
 
-            <AlertModal modalState={alertModalState} label={'３人か４人を選択ください。'} />
+            <AlertModal modalState={alertModalState} label={`${players.length}人を選択してください。`} />
+        
         </ScrollView>
     )
 };
 
-export default GameEditScreen;
+export default ScoreEditScreen;

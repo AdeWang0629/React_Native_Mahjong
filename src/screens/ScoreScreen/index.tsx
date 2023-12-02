@@ -1,21 +1,31 @@
 import React, { useState, useEffect, useRef} from 'react'
-import { View, ScrollView, Text, FlatList, TouchableOpacity, TextInput, SafeAreaView } from 'react-native';
+import { 
+    View, 
+    ScrollView, 
+    Text,
+    TouchableOpacity, 
+    TextInput, 
+    Platform,
+    TouchableWithoutFeedback,
+    KeyboardAvoidingView,
+    Keyboard, 
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from './style';
-import { useDispatch } from 'react-redux';
 import COLORS from '../../theme/colors';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import  Icon  from "react-native-vector-icons/Ionicons";
 import { useCreateTotalScoreMutation } from '../../api/scoreEditApi';
 import { useGetTotalScoreQuery } from '../../api/scoreEditApi';
 import { useCreateGameScoreMutation } from '../../api/gameEditApi';
 import { useCreateGameChipMutation } from '../../api/gameEditApi';
-import Spinner from 'react-native-loading-spinner-overlay';
-import { KeyboardAvoidingView } from 'native-base';
+import { setCurrentScore } from '../../store/global'
+import { useDispatch } from 'react-redux';
 
 const ScoreScreen: React.FC<any> = ({route}) => {
-    const {item, refetchAction} = route.params;
+    const {item} = route.params;
+
     const navigation = useNavigation<{[x: string]: any}>();
+    const dispatch = useDispatch();
 
     const [ createTotalScore ] = useCreateTotalScoreMutation();
     const { data: scores, refetch, isLoading, isFetching } = useGetTotalScoreQuery(item.id);
@@ -31,7 +41,17 @@ const ScoreScreen: React.FC<any> = ({route}) => {
     const [ chipNumber, setChipNumber ] = useState<string[]>([]);
     const [ chipMoney, setChipMoney ] = useState<string[]>([]);
 
+    const [gameScore, setGameScore] = useState(item.score < 1 ? item.score : item.score.toFixed(1));
+    const [gameChip, setGameChip] = useState(item.chip.toFixed(1));
+    const [gameTempScore, setGameTempScore] = useState(item.score < 1 ? item.score : item.score.toFixed(1));
+
     const scrollViewRef = useRef<ScrollView>(null);
+
+    useEffect(()=>{
+        setGameScore(item.score < 1 ? item.score : item.score.toFixed(1));
+        setGameChip(item.chip.toFixed(1));
+        dispatch(setCurrentScore(item));
+    },[item]);
 
     useEffect(()=>{
 
@@ -76,13 +96,13 @@ const ScoreScreen: React.FC<any> = ({route}) => {
             const numberScore = parseInt(numericScore, 10);
             newScore.push(numberScore.toLocaleString());
 
-            const numericAmount = (totalScore * 100 * item.score).toString().replace(/[^0-9.-]/g, '');
+            const numericAmount = (totalScore * 100 * gameScore).toString().replace(/[^0-9.-]/g, '');
             const numberAmount = parseInt(numericAmount, 10);
             newConvertedAmount.push(numberAmount.toLocaleString());
 
             if (newChipNumber[i]) {
                 const numericNewChipNumber = parseFloat(newChipNumber[i].replace(/,/g, ''));
-                const numericChipMoney = (totalScore * 100 * item.score + numericNewChipNumber * 100 * item.chip * item.score).toString().replace(/[^0-9.-]/g, '');
+                const numericChipMoney = (totalScore * 100 * gameScore + numericNewChipNumber * 100 * gameChip * gameScore).toString().replace(/[^0-9.-]/g, '');
                 const numberChipMoney = parseInt(numericChipMoney, 10);
                 newChipMoney.push(numberChipMoney.toLocaleString());
             }
@@ -94,18 +114,30 @@ const ScoreScreen: React.FC<any> = ({route}) => {
         setChipNumber(newChipNumber);
         setChipMoney(newChipMoney);
 
-    },[scores]);
+    },[scores, gameScore, gameChip]);
     
+    useEffect(()=>{
+        dispatch(setCurrentScore(item));
+    },[]);
+
     const handleInputChange = (text: string, index: number, id:number) => {
 
-        const regex = /^[-\d]+$/; // regular expression to match only numbers and minus signs
-        const isValid = regex.test(text); // test if randomString matches the regular expression
+        let isValid;
+
+        if (text.length < 4) {
+            const regex = /^[-\d]+$/; // regular expression to match only numbers and minus signs
+            isValid = regex.test(text); // test if randomString matches the regular expression
+        }else{
+            const regex = /^[-\d.,]+$/; // regular expression to match only numbers and minus signs and comma symbol
+            isValid = regex.test(text); // test if randomString matches the regular expression
+        }
+
 
         const numericText = text.replace(/[^0-9.-]/g, '');
         const numberValue = parseInt(numericText, 10);
         // Format the number with commas for values above 1000
         const formattedValue = numberValue.toLocaleString();
-       
+
         const newRows = [...rows];
 
         if (text == '-') {
@@ -205,13 +237,13 @@ const ScoreScreen: React.FC<any> = ({route}) => {
             const numberScore = parseInt(numericScore, 10);
             newScore.push(numberScore.toLocaleString());
 
-            const numericAmount = (totalScore * 100 * item.score).toString().replace(/[^0-9.-]/g, '');
+            const numericAmount = (totalScore * 100 * gameScore).toString().replace(/[^0-9.-]/g, '');
             const numberAmount = parseInt(numericAmount, 10);
             newConvertedAmount.push(numberAmount.toLocaleString());
 
             if (newChipNumber[i]) {
                 const numericNewChipNumber = parseFloat(newChipNumber[i].replace(/,/g, ''));
-                const numericChipMoney = (totalScore * 100 * item.score + numericNewChipNumber * 100 * item.chip * item.score).toString().replace(/[^0-9.-]/g, '');
+                const numericChipMoney = (totalScore * 100 * gameScore + numericNewChipNumber * 100 * gameChip * gameScore).toString().replace(/[^0-9.-]/g, '');
                 const numberChipMoney = parseInt(numericChipMoney, 10);
                 newChipMoney.push(numberChipMoney.toLocaleString());
             }
@@ -259,38 +291,103 @@ const ScoreScreen: React.FC<any> = ({route}) => {
             return null;
         }
 
-        const newChipMoney = [...chipMoney];
-        if(convertedAmount[index]){
-            const numericChipNumberValue = parseFloat(newChipNumber[index].replace(/,/g, ''));
-            const numericAmount = parseFloat(convertedAmount[index].replace(/,/g, ''));
-            
-            const numericMoney = (numericChipNumberValue * 100 * item.score * item.chip + numericAmount).toString().replace(/[^0-9.-]/g, '');
-            const numberMoney = parseInt(numericMoney, 10);
-
-            newChipMoney[index] = numberMoney.toLocaleString();
-
-        }else{
-
-            const numericChipNumberValue = parseFloat(newChipNumber[index].replace(/,/g, ''));
-
-            const numericMoney = (numericChipNumberValue * 100 * item.score * item.chip).toString().replace(/[^0-9.-]/g, '');
-            const numberMoney = parseInt(numericMoney, 10);
-
-            newChipMoney[index] = numberMoney.toLocaleString();
-        }
-        
-        setChipMoney(newChipMoney);
         setChipNumber(newChipNumber);
     };
 
     const handleInputChipChangeSubmit = () => {
 
+        const newChipNumber = [...chipNumber];
+        const newChipMoney = [...chipMoney];
+
+        let valueCount = 0;
+
+        for (let i = 0; i < newChipNumber.length; i++) {
+            if (newChipNumber[i] && typeof newChipNumber[i] !== 'undefined') {
+                valueCount++;
+            }
+        }
+
+        if (valueCount == item.players.length - 1) {
+
+            for (let i = 0; i < item.players.length; i++) {
+                if (newChipNumber[i] == undefined || newChipNumber[i] == '') {
+                    if (newChipNumber.length == item.players.length) {
+                        let sum = 0;
+                        for (let j = 0; j < newChipNumber.length; j++) {
+                            if (j === i) {
+                                continue; // Skip the i-th element
+                            }
+                            const value = parseFloat(newChipNumber[j].replace(/,/g, ''));
+
+                            if (!isNaN(value)) {
+                                sum += value;
+                            }
+                        }
+                        const text = (sum * (-1)).toString();
+                        const numericText = text.replace(/[^0-9.-]/g, '');
+                        const numberValue = parseInt(numericText, 10);
+                        // Format the number with commas for values above 1000
+                        const formattedValue = numberValue.toLocaleString();
+                        newChipNumber[i] = formattedValue;
+                    }
+                }
+            }
+        }
+        
+        if ((item.players.length == 4)) {
+            if (newChipNumber[0] != "" && newChipNumber[1] != "" && newChipNumber[2] != "" &&  newChipNumber.length == 3 && !newChipNumber[3]) {
+                const text = ((parseFloat(newChipNumber[0].replace(/,/g, '')) + parseFloat(newChipNumber[1].replace(/,/g, '')) + parseFloat(newChipNumber[2].replace(/,/g, ''))) * (-1)).toString();
+                const numericText = text.replace(/[^0-9.-]/g, '');
+                const numberValue = parseInt(numericText, 10);
+                // Format the number with commas for values above 1000
+                const formattedValue = numberValue.toLocaleString();
+                newChipNumber[3] = formattedValue;
+            }
+        }
+
+        if ((item.players.length == 3)) {
+            if (newChipNumber[0] != "" && newChipNumber[1] != "" && newChipNumber.length == 2 && !newChipNumber[2]) {
+                const text = ((parseFloat(newChipNumber[0].replace(/,/g, '')) + parseFloat(newChipNumber[1].replace(/,/g, ''))) * (-1)).toString();
+                const numericText = text.replace(/[^0-9.-]/g, '');
+                const numberValue = parseInt(numericText, 10);
+                // Format the number with commas for values above 1000
+                const formattedValue = numberValue.toLocaleString();
+                newChipNumber[2] = formattedValue;
+            }
+        }
+
+
+        newChipNumber.map((data, index) => {
+            
+            if(convertedAmount[index]){
+                const numericChipNumberValue = parseFloat(data.replace(/,/g, ''));
+                const numericAmount = parseFloat(convertedAmount[index].replace(/,/g, ''));
+                
+                const numericMoney = (numericChipNumberValue * 100 * gameScore * gameChip + numericAmount).toString().replace(/[^0-9.-]/g, '');
+                const numberMoney = parseInt(numericMoney, 10);
+    
+                newChipMoney[index] = numberMoney.toLocaleString();
+    
+            }else{
+    
+                const numericChipNumberValue = parseFloat(data.replace(/,/g, ''));
+    
+                const numericMoney = (numericChipNumberValue * 100 * gameScore * gameChip).toString().replace(/[^0-9.-]/g, '');
+                const numberMoney = parseInt(numericMoney, 10);
+    
+                newChipMoney[index] = numberMoney.toLocaleString();
+            }
+        });
+        
+        setChipNumber(newChipNumber);
+        setChipMoney(newChipMoney);
+
         const totalBody = {
             game_id: item.id,
             score: score,
             scoreMoney: convertedAmount,
-            chipNumber: chipNumber,
-            chipMoney: chipMoney,
+            chipNumber: newChipNumber,
+            chipMoney: newChipMoney,
             rows: rows
         };
 
@@ -345,13 +442,13 @@ const ScoreScreen: React.FC<any> = ({route}) => {
                             <View style={[styles.headerBox, flag && {borderRightWidth : 3}, type == "chip_money" && {borderBottomWidth: 3}]} key={data.id}>
                                         
                                     {type == "score" ? (
-                                        <Text style={existMinus(score[index] ? score[index] : '') && {color: 'red'}}>  {score[index]} </Text>
+                                        <Text style={[styles.customText,existMinus(score[index] ? score[index] : '') && {color: 'red'}]}>  {score[index]} </Text>
                                         ) : 
                                         type == "converted_amount" ? (
-                                            <Text style={existMinus(convertedAmount[index] ? convertedAmount[index] : '') && {color: 'red'}}>  {convertedAmount[index]} </Text>
+                                            <Text style={[styles.customText,existMinus(score[index] ? score[index] : '') && {color: 'red'}]}>  {convertedAmount[index]} </Text>
                                             ) : 
                                             type == "chip_money" ? (
-                                                <Text style={existMinus(chipMoney[index] ? chipMoney[index] : '') && {color: 'red'}}>  {chipMoney[index]} </Text>
+                                                <Text style={[styles.customText,existMinus(score[index] ? score[index] : '') && {color: 'red'}]}>  {chipMoney[index]} </Text>
                                             ) : ''}                                
                             </View>
 
@@ -362,168 +459,165 @@ const ScoreScreen: React.FC<any> = ({route}) => {
         )
     }
 
-        
     const existMinus = (str:string) => {
         return str.indexOf('-') !== -1;
     }
 
     return (
         <KeyboardAvoidingView
-            behavior='padding'
-            keyboardVerticalOffset={100} // adjust this value as needed
-        >
-            <ScrollView>
-            
-                <View style={{alignItems: 'center', backgroundColor: COLORS.WHITE, paddingTop: 10, paddingBottom: 20, height: hp(92)}}>
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={80}
+        style={{flex:1}}>
 
-                    {/* ==================================================================================================================================== */}
-                    {/* Begin Score and Chip Information Part */}
-                    
-                    <View style={styles.rowContainer}>
-                        <View style={[styles.smallBox, {borderTopWidth: 3, borderLeftWidth: 3}]}>
-                            <Text style={styles.normalText}>{ ("レート") }</Text>
-                        </View>
+            <View style={{alignItems: 'center', backgroundColor: COLORS.WHITE, paddingTop: 10, paddingBottom: 20, height: hp(92), flex: 1,justifyContent: 'space-around',}}>
 
-                        {
-                            item.players.length == 3 ?
-                            (
-                                <View style={[styles.desBox, {width: wp(22.5), borderTopWidth: 3}]}>
-                                    <Text style={styles.numberText}>{item.score < 1 ? item.score : item.score.toFixed(1)}</Text>
-                                    {/* <TextInput value={gameScore} onChangeText={(text) => handleInputScoreChange(text)} onBlur={handleInputScoreChangeSubmit} keyboardType = 'numeric' style={{textAlign: 'center'}} /> */}
-                                </View>
-                            ) : (
-                                <View style={[styles.desBox, {width: wp(32.5), borderTopWidth: 3}]}>
-                                    <Text style={styles.numberText}>{item.score < 1 ? item.score : item.score.toFixed(1)}</Text>
-                                    {/* <TextInput value={gameScore} onChangeText={(text) => handleInputScoreChange(text)} onBlur={handleInputScoreChangeSubmit} keyboardType = 'numeric' style={{textAlign: 'center'}} /> */}
-                                </View>
-                            )
-                        }
-
-                        <View style={[styles.smallBox, {borderTopWidth: 3}]}>
-                            <Text style={styles.normalText}>{ ("チップ") }</Text>
-                        </View>
-                        
-                        {
-                            item.players.length == 3 ?
-                            (
-                                <View style={[styles.desBox, {width: wp(22.5), borderTopWidth: 3, borderRightWidth: 3}]}>
-                                    <Text>{item.chip.toFixed(1)}</Text>
-                                    {/* <TextInput value={gameChip} onChangeText={(text) => handleInputGameChipChange(text)} keyboardType = 'numeric' style={{textAlign: 'center'}} /> */}
-                                </View>
-                            ) : (
-                                <View style={[styles.desBox, {width: wp(32.5), borderTopWidth: 3, borderRightWidth: 3}]}>
-                                    <Text>{item.chip.toFixed(1)}</Text>
-                                    {/* <TextInput value={gameChip} onChangeText={(text) => handleInputGameChipChange(text)} keyboardType = 'numeric' style={{textAlign: 'center'}} /> */}
-                                </View>
-                            )
-                        }
+                {/* ==================================================================================================================================== */}
+                {/* Begin Score and Chip Information Part */}
+                
+                <View style={styles.rowContainer}>
+                    <View style={[styles.smallBox, {borderTopWidth: 3, borderLeftWidth: 3}]}>
+                        <Text style={styles.normalText}>{ ("レート") }</Text>
                     </View>
 
-                    <RenderHeader />
+                    {
+                        item.players.length == 3 ?
+                        (
+                            <View style={[styles.desBox, {width: wp(22.5), borderTopWidth: 3}]}>
+                                <Text style={styles.numberText}>{gameScore}</Text>
+                                {/* <TextInput value={gameTempScore} onChangeText={(text) => handleInputScoreChange(text)} onBlur={handleInputScoreChangeSubmit} keyboardType = 'numeric' style={{textAlign: 'center', width: '100%'}} /> */}
+                            </View>
+                        ) : (
+                            <View style={[styles.desBox, {width: wp(32.5), borderTopWidth: 3}]}>
+                                <Text style={styles.numberText}>{gameScore}</Text>
+                                {/* <TextInput value={gameTempScore} onChangeText={(text) => handleInputScoreChange(text)} onBlur={handleInputScoreChangeSubmit} keyboardType = 'numeric' style={{textAlign: 'center', width: '100%'}} /> */}
+                            </View>
+                        )
+                    }
 
-                    {/* End Score and Chip Information Part */}
-                    {/* ==================================================================================================================================== */}
-
-                    {/* ==================================================================================================================================== */}
-                    {/* Begin Score Table Part */}
-
-                    <ScrollView style={{flex:1, height: hp(60)}} nestedScrollEnabled={true} ref={scrollViewRef}>
-
-                        {rows.map((row: string[], index: number) => {
-
-                            return (
-
-                                <View style={styles.rowContainer} key={index}>
-
-                                    <View style={[styles.smallBox, {borderLeftWidth: 3}]}>
-                                        <Text style={styles.numberText}>{index + 1}</Text>
-                                    </View>
-
-                                    {
-                                        item.players.map((data: any, id:number) => {
-
-                                            let flag = id == item.players.length - 1 ? true : false;
-
-                                            return (
-                                                <View style={[styles.bigBox, flag && {borderRightWidth: 3}]} key={id}>
-                                                    <TextInput
-                                                        value={row[id] ? row[id].toString() : ''}
-                                                        onChangeText={(text) => handleInputChange(text, index, id)}
-                                                        onBlur={handleInputChangeSubmit}
-                                                        keyboardType='numbers-and-punctuation'
-                                                        style={[styles.customTextInput, existMinus(row[id] ? row[id] : '') && {color: 'red'}]}
-                                                    />
-                                                </View>
-                                            )
-                                        })
-                                    }
-                                    
-                                </View>
-
-                            )
-                            
-                        })}
-                        
-                    </ScrollView>
-                    
-                    {/* END Score Table Part */}
-                    {/* ==================================================================================================================================== */}
-
-                    {/* ==================================================================================================================================== */}
-                    {/* Begin Additional Button Part */}
+                    <View style={[styles.smallBox, {borderTopWidth: 3}]}>
+                        <Text style={styles.normalText}>{ ("チップ") }</Text>
+                    </View>
                     
                     {
                         item.players.length == 3 ?
                         (
-                            <TouchableOpacity style={[styles.addButton, {width: wp(75), borderRadius: 0}]} onPress={handleAddRow}>
-                                <Text style={[styles.numberText, {color: COLORS.WHITE}]}>追                            加</Text>
-                            </TouchableOpacity>
+                            <View style={[styles.desBox, {width: wp(22.5), borderTopWidth: 3, borderRightWidth: 3}]}>
+                                <Text>{gameChip}</Text>
+                                {/* <TextInput value={gameChip} onChangeText={(text) => handleInputGameChipChange(text)} keyboardType = 'numeric' style={{textAlign: 'center'}} /> */}
+                            </View>
                         ) : (
-                            <TouchableOpacity style={[styles.addButton, {width: wp(95), borderRadius: 0}]} onPress={handleAddRow}>
-                                <Text style={[styles.numberText, {color: COLORS.WHITE}]}>追                                     加</Text>
-                            </TouchableOpacity>
+                            <View style={[styles.desBox, {width: wp(32.5), borderTopWidth: 3, borderRightWidth: 3}]}>
+                                <Text>{gameChip}</Text>
+                                {/* <TextInput value={gameChip} onChangeText={(text) => handleInputGameChipChange(text)} keyboardType = 'numeric' style={{textAlign: 'center'}} /> */}
+                            </View>
                         )
                     }
-
-                    {/* End Additional Button Part */}
-                    {/* ==================================================================================================================================== */}
-
-                    <RenderFooter title={"素点"} type={"score"} />
-
-                    <RenderFooter title={"素点金額"} type={"converted_amount"} />
-                    
-                    {/* ==================================================================================================================================== */}
-                    {/* Begin Input ChipNumber Part */}
-
-                    <View style={styles.rowContainer}>
-
-                        <View style={[styles.smallBox, {borderLeftWidth: 3}]}>
-                            <Text style={styles.normalText}>{"チップ"}</Text>
-                        </View>
-
-                        {
-                            item.players.map((data:any, index:any)=>{
-                            
-                            const flag = index == item.players.length - 1? true : false; 
-
-                            return (
-                                <View style={[styles.headerBox, flag && {borderRightWidth: 3}]} key={data.id}>
-                                    <TextInput value={chipNumber[index]} onChangeText={(text) => handleInputChipChange(text, index)} onBlur={handleInputChipChangeSubmit} keyboardType = 'numbers-and-punctuation' style={[styles.customTextInput, existMinus(chipNumber[index] ? chipNumber[index] : '') && {color: 'red'}]} />
-                                </View>
-                                )
-                            })
-                        }
-
-                    </View>
-                    
-                    {/* End Input ChipNumber Part */}
-                    {/* ==================================================================================================================================== */}
-
-                    <RenderFooter title={"合計"} type={"chip_money"} />
-
                 </View>
 
-            </ScrollView>
+                <RenderHeader />
+
+                {/* End Score and Chip Information Part */}
+                {/* ==================================================================================================================================== */}
+
+                {/* ==================================================================================================================================== */}
+                {/* Begin Score Table Part */}
+
+                <ScrollView style={{flex:1, height: hp(30)}} nestedScrollEnabled={true} ref={scrollViewRef}>
+
+                    {rows.map((row: string[], index: number) => {
+
+                        return (
+
+                            <View style={styles.rowContainer} key={index}>
+
+                                <View style={[styles.smallBox, {borderLeftWidth: 3}]}>
+                                    <Text style={styles.numberText}>{index + 1}</Text>
+                                </View>
+
+                                {
+                                    item.players.map((data: any, id:number) => {
+
+                                        let flag = id == item.players.length - 1 ? true : false;
+
+                                        return (
+                                            <View style={[styles.bigBox, flag && {borderRightWidth: 3}]} key={id}>
+                                                <TextInput
+                                                    value={row[id] ? row[id].toString() : ''}
+                                                    onChangeText={(text) => handleInputChange(text, index, id)}
+                                                    onBlur={handleInputChangeSubmit}
+                                                    keyboardType='numbers-and-punctuation'
+                                                    style={[styles.customTextInput, existMinus(row[id] ? row[id] : '') && {color: 'red'}]}
+                                                />
+                                            </View>
+                                        )
+                                    })
+                                }
+                                
+                            </View>
+
+                        )
+                        
+                    })}
+                    
+                </ScrollView>
+                
+                {/* END Score Table Part */}
+                {/* ==================================================================================================================================== */}
+
+                {/* ==================================================================================================================================== */}
+                {/* Begin Additional Button Part */}
+                
+                {
+                    item.players.length == 3 ?
+                    (
+                        <TouchableOpacity style={[styles.addButton, {width: wp(75), borderRadius: 0}]} onPress={handleAddRow}>
+                            <Text style={[styles.numberText, {color: COLORS.WHITE}]}>追                            加</Text>
+                        </TouchableOpacity>
+                    ) : (
+                        <TouchableOpacity style={[styles.addButton, {width: wp(95), borderRadius: 0}]} onPress={handleAddRow}>
+                            <Text style={[styles.numberText, {color: COLORS.WHITE}]}>追                                     加</Text>
+                        </TouchableOpacity>
+                    )
+                }
+
+                {/* End Additional Button Part */}
+                {/* ==================================================================================================================================== */}
+
+                <RenderFooter title={"素点"} type={"score"} />
+
+                <RenderFooter title={"素点金額"} type={"converted_amount"} />
+                
+                {/* ==================================================================================================================================== */}
+                {/* Begin Input ChipNumber Part */}
+
+                <View style={styles.rowContainer}>
+
+                    <View style={[styles.smallBox, {borderLeftWidth: 3}]}>
+                        <Text style={styles.normalText}>{"チップ"}</Text>
+                    </View>
+
+                    {
+                        item.players.map((data:any, index:any)=>{
+                        
+                        const flag = index == item.players.length - 1? true : false; 
+
+                        return (
+                            <View style={[styles.headerBox, flag && {borderRightWidth: 3}]} key={data.id}>
+                                <TextInput value={chipNumber[index]} onChangeText={(text) => handleInputChipChange(text, index)} onBlur={handleInputChipChangeSubmit} keyboardType = 'numbers-and-punctuation' style={[styles.customTextInput, existMinus(chipNumber[index] ? chipNumber[index] : '') && {color: 'red'}]} />
+                            </View>
+                            )
+                        })
+                    }
+
+                </View>
+                
+                {/* End Input ChipNumber Part */}
+                {/* ==================================================================================================================================== */}
+
+                <RenderFooter title={"合計"} type={"chip_money"} />
+
+            </View>
+
         </KeyboardAvoidingView>
     )
 };

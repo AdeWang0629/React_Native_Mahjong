@@ -39,11 +39,6 @@ const HomeScreen: React.FC = () => {
 
     const showSpinner = isLoading || isFetching;
     
-    const refetchAction = () => {
-
-        refetch();
-    }
-
     const onPress = (item : any) => {
 
         // if (item.status) {
@@ -52,7 +47,7 @@ const HomeScreen: React.FC = () => {
         //     navigation.navigate('ScoreScreen', {item: item, refetchAction: refetchAction});
         // }
 
-        navigation.navigate('ScoreScreen', {item: item, refetchAction: refetchAction});
+        navigation.navigate('ScoreScreen', {item: item});
 
         setPage(page + 1);
     }
@@ -78,6 +73,7 @@ const HomeScreen: React.FC = () => {
                             data={gameList && gameList}
                             renderRightItem={(data, index) => (
                                 <TouchableOpacity onPress={()=> onPress(data)}>
+
                                     <View key={index} style={[styles.container, index == 0 && ({borderTopWidth: 1.2})]}>
 
                                         <Text style={{fontSize: 18}}>
@@ -86,6 +82,7 @@ const HomeScreen: React.FC = () => {
                                             &nbsp;
 
                                         </Text>
+                                        
                                         <Text> {'['} </Text>
                                             
                                         {data.players.map((item : any, number : any)=>(
@@ -99,6 +96,7 @@ const HomeScreen: React.FC = () => {
                                         <Text> {']'} </Text>
               
                                     </View>
+
                                 </TouchableOpacity>
                             )}
                             renderHiddenItem={(data, index) => (

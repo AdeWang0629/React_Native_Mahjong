@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderWidth: .6, 
         borderColor: 'grey',
-        backgroundColor: COLORS.WEAKGREY2
+        backgroundColor: COLORS.WEAKGREY2,
     },
     desBox: {
         height: hp(4),
@@ -67,14 +67,18 @@ const styles = StyleSheet.create({
         fontWeight: '700'
     },
     numberText: {
-        fontSize: 14.5,
+        fontSize: 14,
     },
     customTextInput: {
         textAlign: 'center', 
         width: '100%',
         height: '100%',
         fontSize: 14.5
-    }
+    },
+    customText: {
+        textAlign: 'center', 
+        fontSize: 14.5
+    },
 })
 
 export default styles;

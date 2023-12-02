@@ -21,6 +21,14 @@ export const gameEditApi = createApi({
             }),
             invalidatesTags: ['Game']
         }),
+        updateGame: builder.mutation({
+            query: ({ id, body }) => ({
+                url: `game/${id}`,
+                method: 'PUT',
+                body: { body },
+            }),
+            invalidatesTags: ['Game'],
+        }),
         deleteGame: builder.mutation({
             query: (id) => {
                 return {
@@ -49,4 +57,4 @@ export const gameEditApi = createApi({
     })
 });
 
-export const { useGetGameQuery, useCreateGameMutation, useDeleteGameMutation, useCreateGameScoreMutation, useCreateGameChipMutation } = gameEditApi;
+export const { useGetGameQuery, useCreateGameMutation, useDeleteGameMutation, useCreateGameScoreMutation, useCreateGameChipMutation, useUpdateGameMutation, } = gameEditApi;

@@ -18,20 +18,14 @@ import GameEditScreen from '../screens/GameEditScreen';
 import PlayerChooseScreen from "../screens/PlayerChooseScreen";
 import PlayerEditScreen from "../screens/PlayerEditScreen/index";
 import ScoreScreen from "../screens/ScoreScreen";
-import ScoreViewScreen from "../screens/ScoreScreen/view";
+import ScoreEditScreen from "../screens/ScoreScreen/edit";
 import { RootState } from '../store';
 import { useDispatch, useSelector } from 'react-redux';
 import { setModalState, setAlertModalState } from '../store/global';
 import { useUpdatePlayerMutation } from '../api/playerEditApi';
-import { setPlayerList } from '../store/global';
+import { setPlayerList, setPlayers } from '../store/global';
 
 const AppStack = () => {
-
-  //ホーム画面のヘッダー画像
-  const crown = require("../../assets/6.png");
-
-  //ゲーム編集画面のヘッダー画像
-  const heart = require("../../assets/heart.png");
 
   //プレイヤー選択画面のヘッダー画像
   const setting = require("../../assets/setting.png");
@@ -198,23 +192,33 @@ const AppStack = () => {
                 },
                 headerLeft: ()=>(
                   <TouchableOpacity
-                    onPress={() => navigation.goBack()}
+                    onPress={() => {
+                      dispatch(setPlayers([]));
+                      navigation.goBack();
+                    }}
                   >
                     <View style={styles.leftSide}>
                       <Icon name="chevron-back-outline" size={30} style={MARGIN.marginLeft5}/>
                       <Text style={{fontSize: 18}}>一覧</Text>
                     </View>
                   </TouchableOpacity>
+                ),
+                headerRight: ()=>(
+                  <TouchableOpacity
+                    onPress={() => navigation.push('ScoreEditScreen')}
+                  >
+                    <Image source={setting} style={[styles.avatarImage_setting, {marginRight: 10}]} />
+                  </TouchableOpacity>
                 )
             })}
           />
 
-          {/* スコアビュー画面 */}
+          {/* スコア編集画面 */}
           <Stack.Screen 
-            name="ScoreViewScreen" 
-            component={ScoreViewScreen} 
+            name="ScoreEditScreen" 
+            component={ScoreEditScreen} 
             options={({navigation})=>({
-                headerTitle: "スコアビュー",
+                headerTitle: "スコア編集",
                 headerTitleAlign: 'center',
                 headerTitleStyle: {
                   fontWeight: 'bold',
@@ -224,11 +228,11 @@ const AppStack = () => {
                 },
                 headerLeft: ()=>(
                   <TouchableOpacity
-                    onPress={() => navigation.navigete('HomeScreen')}
+                    onPress={() => navigation.goBack()}
                   >
                     <View style={styles.leftSide}>
-                      <Icon name="chevron-back-outline" size={30} style={MARGIN.marginLeft5}/>
-                      <Text style={{fontSize: 18}}>一覧</Text>
+                      <Icon name="chevron-back-outline" size={30}/>
+                      <Text style={{fontSize: 18}}>戻る</Text>
                     </View>
                   </TouchableOpacity>
                 )

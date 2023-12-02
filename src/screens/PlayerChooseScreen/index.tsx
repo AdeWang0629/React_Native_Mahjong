@@ -14,11 +14,39 @@ import AlertModal from '../../components/AlertModal';
 
 const PlayerChooseScreen: React.FC = () => {
     const { data: getPlayer, isLoading, isFetching } = useGetPlayerQuery(1);
-    const {playerlist, alertModalState} = useSelector((state:RootState) => state.global);
+    const {playerlist, alertModalState, players} = useSelector((state:RootState) => state.global);
     const dispatch = useDispatch();
 
     useEffect(()=>{
-        dispatch(setPlayerList(getPlayer));
+        if (players) {
+            if (players.length) {
+                if (getPlayer !== undefined) {
+                    let newGetPlayer: any[] = [];
+
+                    const newGetPlayerData = getPlayer.map((item:any)=>{
+                        item.checked = false;
+                        return item;
+                    });
+
+                    newGetPlayerData.forEach((_item:any) => {
+
+                        players.forEach((__item:any)=>{
+
+                            if (_item.id == __item.id) {
+                                _item.checked = true;
+                            }
+                        })
+
+                        newGetPlayer.push(_item);
+                    });
+
+                    dispatch(setPlayerList(newGetPlayer));
+                }
+            }else {
+
+                dispatch(setPlayerList(getPlayer));
+            }
+        }
     },[getPlayer]);
 
     if (isLoading || isFetching) {

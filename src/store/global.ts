@@ -2,10 +2,6 @@ import { createSlice, PayloadAction, createAction, AnyAction } from '@reduxjs/to
 import { IListItem } from '../interface/ListItem';
 import moment from 'moment';
 
-const Cdate = new Date();
-const options = { timeZone: 'Asia/Tokyo' };
-const japaneseTime = Cdate.toLocaleString('ja-JP', options);
-
 const golbalSlice = createSlice({
   name: 'global',
   initialState: {
@@ -13,8 +9,9 @@ const golbalSlice = createSlice({
     alertModalState: false,
 
     playerlist: [] as IListItem[],
-    score: 5,
-    chip: 5,
+    players: [] as IListItem[],
+    scoreRate: 20,
+    chipRate: 5,
     event_date: moment(new Date()).format('YYYY/MM/DD'),
 
     gameList: [],
@@ -23,7 +20,9 @@ const golbalSlice = createSlice({
     Gtotal_score: [],
     GconvertedAmount: [],
     GchipNumber: [],
-    GchipMoney: []
+    GchipMoney: [],
+
+    currentScore: {chip:0,score:0,event_date: '',players:[],id:0,},
   },
   reducers: {
     setModalState(state, action: PayloadAction<boolean>) {
@@ -37,10 +36,10 @@ const golbalSlice = createSlice({
     },
 
     setScore(state, action:PayloadAction<number>){
-      state.score = action.payload;
+      state.scoreRate = action.payload;
     },
     setChip(state, action:PayloadAction<number>){
-      state.chip = action.payload;
+      state.chipRate = action.payload;
     },
     setEventDate(state, action:PayloadAction<string>){
       state.event_date = action.payload;
@@ -64,6 +63,14 @@ const golbalSlice = createSlice({
     setChipMoney(state, action){
       state.GchipMoney = action.payload
     },
+
+    setCurrentScore(state, action){
+      state.currentScore = action.payload
+    },
+    setPlayers(state, action: PayloadAction<IListItem[]>){
+      state.players = action.payload;
+    },
+
   }
 });
 
@@ -79,13 +86,9 @@ export const {
   setTotalScore,
   setConvertedAmount,
   setChipNumber,
-  setChipMoney
+  setChipMoney,
+  setCurrentScore,
+  setPlayers
 } = golbalSlice.actions;
 
 export default golbalSlice.reducer;
-
-// export const setRows = createAction<any>('setTotalScore');
-// export const setTotalScore = createAction<any>('setTotalScore');
-// export const setConvertedAmount = createAction<any>('setConvertedAmount');
-// export const setChipNumber = createAction<any>('setChipNumber');
-// export const setChipMoney = createAction<any>('setChipMoney');

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect} from 'react';
 import {View} from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import { INumberPiecker } from '../interface/NumberPicker';
@@ -66,6 +66,10 @@ const NumberPicker : React.FC<INumberPiecker> = ({onPickerChange, score, initial
         setValue(i);
         onPickerChange(i);
     }
+
+    useEffect(()=>{
+        console.log("===================================");
+    }, []);
 
     return (
         <View style={{borderTopWidth: .3}}>
