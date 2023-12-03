@@ -73,6 +73,7 @@ const styles = StyleSheet.create({
         textAlign: 'center', 
         width: '100%',
         height: '100%',
+        marginLeft: wp(1),
         fontSize: 14.5
     },
     customText: {

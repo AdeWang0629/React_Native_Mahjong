@@ -36,8 +36,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingLeft: wp(6),
         paddingRight: wp(3),
-        fontSize: 20,
-        height: hp(6.5),
+        height: hp(7),
     }
 })
 

@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
         borderRightColor: COLORS.BLACK,
     },
     rightAction: {
-        paddingVertical: hp(2),
+        paddingVertical: hp(2.5),
         alignItems: 'center',
         flex: 1,
         justifyContent: 'center',
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
         // marginVertical: hp(.5),
     },
     deleteText: {
-        fontSize: 17,
+        fontSize: 18,
         color: COLORS.WHITE
     }
 })

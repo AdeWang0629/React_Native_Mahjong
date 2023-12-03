@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import Spinner from 'react-native-loading-spinner-overlay';
 import AlertModal from '../../components/AlertModal';
+import { heightPercentageToDP } from 'react-native-responsive-screen';
 
 const PlayerChooseScreen: React.FC = () => {
     const { data: getPlayer, isLoading, isFetching } = useGetPlayerQuery(1);
@@ -77,6 +78,7 @@ const PlayerChooseScreen: React.FC = () => {
                         isChecked={Boolean(item.checked)}
                         checkedImage={<Icon name="checkmark-outline" size={30} style={{color: '#1168d7'}}/>}
                         unCheckedImage={<Text></Text>}
+                        leftTextStyle={{fontSize: 18}}
                         leftText={`${item.name}`}
                         uncheckedCheckBoxColor={'white'}
                     />

@@ -20,6 +20,7 @@ import { useCreateGameScoreMutation } from '../../api/gameEditApi';
 import { useCreateGameChipMutation } from '../../api/gameEditApi';
 import { setCurrentScore } from '../../store/global'
 import { useDispatch } from 'react-redux';
+import { convertAbsoluteToRem } from 'native-base/lib/typescript/theme/tools';
 
 const ScoreScreen: React.FC<any> = ({route}) => {
     const {item} = route.params;
@@ -52,24 +53,25 @@ const ScoreScreen: React.FC<any> = ({route}) => {
         setGameChip(item.chip.toFixed(1));
         dispatch(setCurrentScore(item));
     },[item]);
-
+    
     useEffect(()=>{
-
+        
         const newRows = [...rows];
         const newChipNumber = [...chipNumber];
         const newScore: string[] = [];
         const newConvertedAmount: string[] = [];
         const newChipMoney: string[] = [];
-        
+                
         scores && scores.map((row: any, index: number) => {
 
             row['normal_scores'].map((data: any, id:number) => {
             
                 newRows[id][index] = data['score'].toString();
+                console.log(data['score'].toString(), "asd");
             })
 
-        })
-        
+        });
+        console.log(newRows, 'hello234567890-');
         scores && scores.map((data:any, index:any)=>{
             // 
             if (!data['total_scores']) {
@@ -107,15 +109,65 @@ const ScoreScreen: React.FC<any> = ({route}) => {
                 newChipMoney.push(numberChipMoney.toLocaleString());
             }
         }
-
+        console.log(newRows, "234567890");
         setRows(newRows);
         setScore(newScore);
         setConvertedAmount(newConvertedAmount);
         setChipNumber(newChipNumber);
         setChipMoney(newChipMoney);
 
-    },[scores, gameScore, gameChip]);
-    
+    },[]);
+
+    useEffect(()=>{
+        
+        const newChipNumber = [...chipNumber];
+        const newConvertedAmount: string[] = [];
+        const newChipMoney: string[] = [];
+                
+        scores && scores.map((data:any, index:any)=>{
+            // 
+            if (!data['total_scores']) {
+                return null;
+            }else{
+                newChipNumber[index] = data['total_scores']['chip_number'].toString()
+            }
+        })
+
+        for (let i = 0; i < item.players.length; i++) {
+
+            let totalScore = 0;
+            for (let j = 0; j < rows.length; j++) {
+                // totalScore += parseInt(rows[j][i]) || 0;
+                if (rows[j][i] && rows[j][i].length / 3 >= 1) {
+                    const stringWithDots = rows[j][i];
+                    const numericValue = parseFloat(stringWithDots.replace(/,/g, ''));
+                    totalScore += numericValue;
+                }else{
+                    totalScore += parseInt(rows[j][i]) || 0;
+                }
+            }
+            const numericScore = totalScore.toString().replace(/[^0-9.-]/g, '');
+            const numberScore = parseInt(numericScore, 10);
+
+            const numericAmount = (totalScore * 100 * gameScore).toString().replace(/[^0-9.-]/g, '');
+            const numberAmount = parseInt(numericAmount, 10);
+            newConvertedAmount.push(numberAmount.toLocaleString());
+
+            if (newChipNumber[i]) {
+                const numericNewChipNumber = parseFloat(newChipNumber[i].replace(/,/g, ''));
+                const numericChipMoney = (totalScore * 100 * gameScore + numericNewChipNumber * 100 * gameChip * gameScore).toString().replace(/[^0-9.-]/g, '');
+                const numberChipMoney = parseInt(numericChipMoney, 10);
+                newChipMoney.push(numberChipMoney.toLocaleString());
+            }
+        }
+
+        setConvertedAmount(newConvertedAmount);
+        setChipNumber(newChipNumber);
+        setChipMoney(newChipMoney);
+
+    },[gameScore, gameChip]);
+
+
     useEffect(()=>{
         dispatch(setCurrentScore(item));
     },[]);
@@ -253,8 +305,7 @@ const ScoreScreen: React.FC<any> = ({route}) => {
         setScore(newScore);
         setConvertedAmount(newConvertedAmount);
         setChipMoney(newChipMoney);
-        
-        
+
         const totalBody = {
             game_id: item.id,
             score: newScore,
@@ -265,7 +316,7 @@ const ScoreScreen: React.FC<any> = ({route}) => {
         };
 
         const result = createTotalScore(totalBody);
-        refetch();
+        // refetch();
         
     }
     
@@ -358,10 +409,21 @@ const ScoreScreen: React.FC<any> = ({route}) => {
 
 
         newChipNumber.map((data, index) => {
-            
+            let numericChipNumberValue;
+
+            // if (data) {
+
+            //     numericChipNumberValue = parseFloat(data.replace(/,/g, ''));
+                
+            // }else{
+
+            //     numericChipNumberValue = 0;
+            // }
+
             if(convertedAmount[index]){
-                const numericChipNumberValue = parseFloat(data.replace(/,/g, ''));
+                
                 const numericAmount = parseFloat(convertedAmount[index].replace(/,/g, ''));
+                numericChipNumberValue = parseFloat(data.replace(/,/g, ''));
                 
                 const numericMoney = (numericChipNumberValue * 100 * gameScore * gameChip + numericAmount).toString().replace(/[^0-9.-]/g, '');
                 const numberMoney = parseInt(numericMoney, 10);
@@ -369,9 +431,7 @@ const ScoreScreen: React.FC<any> = ({route}) => {
                 newChipMoney[index] = numberMoney.toLocaleString();
     
             }else{
-    
-                const numericChipNumberValue = parseFloat(data.replace(/,/g, ''));
-    
+                numericChipNumberValue = parseFloat(data.replace(/,/g, ''));
                 const numericMoney = (numericChipNumberValue * 100 * gameScore * gameChip).toString().replace(/[^0-9.-]/g, '');
                 const numberMoney = parseInt(numericMoney, 10);
     
@@ -392,7 +452,7 @@ const ScoreScreen: React.FC<any> = ({route}) => {
         };
 
         createTotalScore(totalBody);
-        refetch();
+        // refetch();
     }
 
     const handleAddRow = async () => {
@@ -445,10 +505,10 @@ const ScoreScreen: React.FC<any> = ({route}) => {
                                         <Text style={[styles.customText,existMinus(score[index] ? score[index] : '') && {color: 'red'}]}>  {score[index]} </Text>
                                         ) : 
                                         type == "converted_amount" ? (
-                                            <Text style={[styles.customText,existMinus(score[index] ? score[index] : '') && {color: 'red'}]}>  {convertedAmount[index]} </Text>
+                                            <Text style={[styles.customText,existMinus(convertedAmount[index] ? convertedAmount[index] : '') && {color: 'red'}]}>  {convertedAmount[index]} </Text>
                                             ) : 
                                             type == "chip_money" ? (
-                                                <Text style={[styles.customText,existMinus(score[index] ? score[index] : '') && {color: 'red'}]}>  {chipMoney[index]} </Text>
+                                                <Text style={[styles.customText,existMinus(chipMoney[index] ? chipMoney[index] : '') && {color: 'red'}]}>  {chipMoney[index]} </Text>
                                             ) : ''}                                
                             </View>
 
@@ -468,8 +528,8 @@ const ScoreScreen: React.FC<any> = ({route}) => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={80}
         style={{flex:1}}>
-
-            <View style={{alignItems: 'center', backgroundColor: COLORS.WHITE, paddingTop: 10, paddingBottom: 20, height: hp(92), flex: 1,justifyContent: 'space-around',}}>
+        <ScrollView>
+            <View style={{alignItems: 'center', backgroundColor: COLORS.WHITE, paddingTop: 10, paddingBottom: 30, height: hp(88), flex: 1,justifyContent: 'space-around',}}>
 
                 {/* ==================================================================================================================================== */}
                 {/* Begin Score and Chip Information Part */}
@@ -617,7 +677,7 @@ const ScoreScreen: React.FC<any> = ({route}) => {
                 <RenderFooter title={"合計"} type={"chip_money"} />
 
             </View>
-
+        </ScrollView>
         </KeyboardAvoidingView>
     )
 };

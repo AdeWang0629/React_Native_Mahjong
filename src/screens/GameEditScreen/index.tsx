@@ -10,8 +10,8 @@ import CList from '../../components/CList';
 import Accordion from '../../components/Accordion';
 import RateAccordion from './RateAccordion';
 import ChipAccordion from './ChipAccordion';
-import NumberPicker from '../../components/NumberPicker';
-// import NumberPicker from '../../components/NumberPicker(IOS)';
+// import NumberPicker from '../../components/NumberPicker';
+import NumberPicker from '../../components/NumberPicker(IOS)';
 import {CDatePicker} from '../../components/CDatePicker';
 
 import moment from 'moment';

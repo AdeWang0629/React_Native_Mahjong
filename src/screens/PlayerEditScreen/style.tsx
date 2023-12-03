@@ -26,8 +26,8 @@ const styles = StyleSheet.create({
         borderBottomColor: COLORS.WEAKGREY,
         flexDirection: 'row',
         alignItems: 'center',
-        paddingVertical: wp(3.8),
         paddingLeft: wp(6),
+        height: hp(8),
     },
     // container: {
     //     height: hp(8),
@@ -59,7 +59,8 @@ const styles = StyleSheet.create({
         shadowRadius: 3.84,
         elevation: 5,
         // marginVertical: hp(.5),
-        textAlign: 'center'
+        textAlign: 'center',
+        height: hp(8),
     },
     deleteText: {
         color: COLORS.WHITE
