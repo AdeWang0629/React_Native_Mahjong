@@ -322,8 +322,15 @@ const ScoreScreen: React.FC<any> = ({route}) => {
     
     const handleInputChipChange = (text: string, index: number) => {
 
-        const regex = /^[-\d]+$/; // regular expression to match only numbers and minus signs
-        const isValid = regex.test(text); // test if randomString matches the regular expression
+        let isValid;
+
+        if (text.length < 4) {
+            const regex = /^[-\d]+$/; // regular expression to match only numbers and minus signs
+            isValid = regex.test(text); // test if randomString matches the regular expression
+        }else{
+            const regex = /^[-\d.,]+$/; // regular expression to match only numbers and minus signs and comma symbol
+            isValid = regex.test(text); // test if randomString matches the regular expression
+        }
 
         const numericText = text.replace(/[^0-9.-]/g, '');
         const numberValue = parseInt(numericText, 10);

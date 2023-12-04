@@ -10,6 +10,7 @@ import {
 import { IAlertModal } from '../interface/AlertModal'
 import { useDispatch } from 'react-redux'
 import { setAlertModalState } from '../store/global'
+import NormalButton from './NormalButton'
 
 const AlertModal : React.FC<IAlertModal> = ({modalState, label}) => {
     const dispatch = useDispatch();
@@ -36,8 +37,8 @@ const AlertModal : React.FC<IAlertModal> = ({modalState, label}) => {
                             <Text style={styles.text}>   {label}   </Text>
                         </View>
 
-                        <View style={{marginVertical: 10}}>
-                            <Button title='OK' onPress={toggleModal} color={COLORS.PINK}/>
+                        <View style={{marginVertical: 10, margin: 'auto'}}>
+                            <NormalButton label='OK' onPress={toggleModal} bgColor={COLORS.PINK} />
                         </View>
                     </View>
                 </View>
@@ -63,14 +64,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 8,
-        paddingHorizontal: 10
+        paddingHorizontal: wp(4),
     },
     normalText: {
         fontSize: 20,
         paddingBottom: 5,
     },
     text: {
-        fontSize: 13,
+        fontSize: 15,
         paddingVertical: 5
     }
 })

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import { StyleSheet, View, Text, TextInput, Button, Image } from 'react-native'
+import { StyleSheet, View, Text, TextInput, Image } from 'react-native'
 import Modal from 'react-native-modal'
 import { setModalState } from '../store/global'
 // import { useDispatch } from 'react-redux'
@@ -12,6 +12,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { useCreatePlayerMutation } from '../api/playerEditApi'
 import { IEditModal } from '../interface/EditModal'
+import NormalButton from './NormalButton'
 
 const EditModal : React.FC<IEditModal> = ({modalState}) => {
     const [modalVisible, setModalVisible] = React.useState(modalState);
@@ -56,10 +57,10 @@ const EditModal : React.FC<IEditModal> = ({modalState}) => {
                             value={text}
                         />
                         <View style={{marginBottom: 10}}>
-                            <Button title='OK' onPress={editPlayer} color={COLORS.BLACK}/>
+                            <NormalButton label='OK' onPress={editPlayer} bgColor={COLORS.BLACK}/>
                         </View>
                         <View>
-                            <Button title='キャンセル' onPress={toggleModal} color={COLORS.BLACK}/>
+                            <NormalButton label='キャンセル' onPress={toggleModal} bgColor={COLORS.BLACK}/>
                         </View>
                     </View>
                 </View>
@@ -78,7 +79,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     modalContent: {
-        height: hp(31), 
+        height: hp(35), 
         width: wp(60), 
         backgroundColor: COLORS.WHITE,
         alignItems: 'center',

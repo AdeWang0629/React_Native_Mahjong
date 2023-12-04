@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         paddingLeft: wp(6),
-        height: hp(8),
+        height: hp(7),
     },
     // container: {
     //     height: hp(8),
@@ -58,11 +58,11 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
-        // marginVertical: hp(.5),
         textAlign: 'center',
-        height: hp(8),
+        height: hp(7),
     },
     deleteText: {
+        fontSize: 18,
         color: COLORS.WHITE
     }
 })

@@ -67,7 +67,7 @@ const PlayerEditScreen : React.FC = () => {
                             renderRightItem={(data, index) => (
                                 <View key={index} style={[styles.container, index == 0 && ({borderTopWidth: 1, borderTopColor: 'grey'}),]}>
 
-                                    <Text>
+                                    <Text style={{fontSize: 18}}>
                                         {data.name}
                                     </Text>
 

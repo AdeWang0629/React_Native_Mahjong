@@ -7,10 +7,10 @@ import {
 } from 'react-native-responsive-screen'
 import { IButtonProps } from '../interface/Button';
 
-const Button : React.FC<IButtonProps> = ({ label, onPress, disabled, }) => {
+const NormalButton : React.FC<IButtonProps> = ({ label, onPress, disabled, bgColor }) => {
     return (
         <TouchableOpacity
-            style={styles.button}
+            style={[styles.button, {backgroundColor: bgColor && `${bgColor}`}]}
             onPress={onPress ? onPress : () => alert("clicked")}
         >
             <Text style={styles.label}>{label ? label : "Button"}</Text>
@@ -21,14 +21,12 @@ const Button : React.FC<IButtonProps> = ({ label, onPress, disabled, }) => {
 const styles = StyleSheet.create({
     button: {
         backgroundColor: COLORS.BLACK,
-        borderRadius: 40,
-        height: 50,
-        width: wp(70),
-        paddingVertical: 5,
+        height: hp(5),
+        width: wp(53),
+        paddingVertical: 1,
         zIndex: 100,
         alignItems: 'center', 
         justifyContent: 'center',
-        marginTop: hp(3),
     },
     label: {
         color: COLORS.WHITE,
@@ -38,4 +36,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Button;
+export default NormalButton;

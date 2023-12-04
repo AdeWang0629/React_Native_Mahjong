@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: wp(.8),
     },
     C_container: {
-        height: hp(8),
+        height: hp(7),
         marginVertical: hp(1.2),
         backgroundColor: '#ffffff',
         // justifyContent: 'center',
@@ -75,12 +75,11 @@ const styles = StyleSheet.create({
         borderColor: COLORS.WEAKGREY,
         flexDirection: 'row',
         alignItems: 'center',
-        paddingVertical: wp(3.8),
         paddingLeft: wp(6),
         borderRightColor: COLORS.BLACK,
+        height: hp(7)
     },
     rightAction: {
-        paddingVertical: hp(2.5),
         alignItems: 'center',
         flex: 1,
         justifyContent: 'center',
@@ -93,7 +92,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
-        // marginVertical: hp(.5),
+        height: hp(7)
     },
     deleteText: {
         fontSize: 18,
