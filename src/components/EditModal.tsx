@@ -23,13 +23,13 @@ const EditModal : React.FC<IEditModal> = ({modalState}) => {
 
     const toggleModal = () => {
         setModalVisible(!modalVisible);
-        dispatch(setModalState(!setModalVisible));
+        dispatch(setModalState(false));
     }
 
     const editPlayer = () => {
         setModalVisible(!modalVisible);
         const result = createPlayer(text);
-        dispatch(setModalState(!setModalVisible));
+        dispatch(setModalState(false));
         onChangeText('');
     }
 

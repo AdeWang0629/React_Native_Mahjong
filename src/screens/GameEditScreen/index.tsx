@@ -31,7 +31,7 @@ const GameEditScreen : React.FC = () => {
     const { playerlist, scoreRate, chipRate, event_date, alertModalState } = useSelector((state:RootState)=>state.global);
     const dispatch = useDispatch();
     const navigation = useNavigation<{[x: string]: any}>();
-    console.log(playerlist, "playerlist");
+
     useEffect(()=>{
         dispatch(setScore(20));
         dispatch(setChip(5));
@@ -145,7 +145,7 @@ const GameEditScreen : React.FC = () => {
                 
                 <View style={styles.center}>
 
-                    <Button label='保                 存' onPress={createGameList}/>
+                    <Button label='保                 存' onPress={createGameList} bgColor={''}/>
                     
                 </View>
             </View>

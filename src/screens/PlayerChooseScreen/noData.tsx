@@ -20,7 +20,7 @@ const NoData : React.FC = () => {
 
             <Text style={styles.TextHeader}>Please register players.</Text>
 
-            <Button label={"プレイヤーを登録する"} onPress={handlePress} />
+            <Button label={"プレイヤーを登録する"} onPress={handlePress} bgColor={''} />
         </View>
     )
 }

@@ -20,7 +20,7 @@ import { useCreateGameScoreMutation } from '../../api/gameEditApi';
 import { useCreateGameChipMutation } from '../../api/gameEditApi';
 import { setCurrentScore } from '../../store/global'
 import { useDispatch } from 'react-redux';
-import { convertAbsoluteToRem } from 'native-base/lib/typescript/theme/tools';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 const ScoreScreen: React.FC<any> = ({route}) => {
     const {item} = route.params;
@@ -67,11 +67,11 @@ const ScoreScreen: React.FC<any> = ({route}) => {
             row['normal_scores'].map((data: any, id:number) => {
             
                 newRows[id][index] = data['score'].toString();
-                console.log(data['score'].toString(), "asd");
+
             })
 
         });
-        console.log(newRows, 'hello234567890-');
+
         scores && scores.map((data:any, index:any)=>{
             // 
             if (!data['total_scores']) {
@@ -109,14 +109,14 @@ const ScoreScreen: React.FC<any> = ({route}) => {
                 newChipMoney.push(numberChipMoney.toLocaleString());
             }
         }
-        console.log(newRows, "234567890");
+
         setRows(newRows);
         setScore(newScore);
         setConvertedAmount(newConvertedAmount);
         setChipNumber(newChipNumber);
         setChipMoney(newChipMoney);
 
-    },[]);
+    },[scores]);
 
     useEffect(()=>{
         
@@ -531,11 +531,11 @@ const ScoreScreen: React.FC<any> = ({route}) => {
     }
 
     return (
-        <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={80}
-        style={{flex:1}}>
-        <ScrollView>
+        // <KeyboardAvoidingView
+        // behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        // keyboardVerticalOffset={80}
+        // style={{flex:1}}>
+        <KeyboardAwareScrollView>
             <View style={{alignItems: 'center', backgroundColor: COLORS.WHITE, paddingTop: 10, paddingBottom: 30, height: hp(88), flex: 1,justifyContent: 'space-around',}}>
 
                 {/* ==================================================================================================================================== */}
@@ -684,8 +684,8 @@ const ScoreScreen: React.FC<any> = ({route}) => {
                 <RenderFooter title={"合計"} type={"chip_money"} />
 
             </View>
-        </ScrollView>
-        </KeyboardAvoidingView>
+        </KeyboardAwareScrollView>
+        // </KeyboardAvoidingView>
     )
 };
 

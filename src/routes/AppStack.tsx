@@ -23,7 +23,7 @@ import { RootState } from '../store';
 import { useDispatch, useSelector } from 'react-redux';
 import { setModalState, setAlertModalState } from '../store/global';
 import { useUpdatePlayerMutation } from '../api/playerEditApi';
-import { setPlayerList, setPlayers } from '../store/global';
+import { setPlayerList, setPlayers, setCurrentScore } from '../store/global';
 
 const AppStack = () => {
 
@@ -61,12 +61,12 @@ const AppStack = () => {
               headerRight: () => (
                 <>
                   <TouchableOpacity
-                  onPress={() => {
+                    onPress={() => {
                       dispatch(setPlayerList([]));
                       navigation.navigate('GameEditScreen');
                     }
                   }>
-                    <Icon name="add-outline" size={30}/>
+                    <Icon name="add" size={33}/>
                   </TouchableOpacity>
                 </>
               ),
@@ -169,7 +169,7 @@ const AppStack = () => {
                         dispatch(setModalState(true));
                       }}
                     >
-                      <Icon name="add" size={33}></Icon>
+                      <Icon name="add" size={33} />
                     </TouchableOpacity>
                   </View>
                 ),
@@ -194,6 +194,8 @@ const AppStack = () => {
                   <TouchableOpacity
                     onPress={() => {
                       dispatch(setPlayers([]));
+                      dispatch(setCurrentScore({chip:0,score:0,event_date: '',players:[],id:0,}));
+                      dispatch(setPlayerList([]));
                       navigation.goBack();
                     }}
                   >

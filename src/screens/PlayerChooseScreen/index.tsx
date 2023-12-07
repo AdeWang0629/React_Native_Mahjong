@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList, Text, View, TouchableOpacity } from 'react-native';
 import CheckBox from 'react-native-check-box';
 import { useGetPlayerQuery } from '../../api/playerEditApi';
@@ -21,32 +21,37 @@ const PlayerChooseScreen: React.FC = () => {
     useEffect(()=>{
         if (players) {
             if (players.length) {
+
                 if (getPlayer !== undefined) {
-                    let newGetPlayer: any[] = [];
 
                     const newGetPlayerData = getPlayer.map((item:any)=>{
-                        item.checked = false;
-                        return item;
+
+                        return {...item, 'checked': false}
+
+                    });                       
+
+                    const newGetPlayer = newGetPlayerData.map((_item:any) => {
+                        
+                        return {..._item, 'checked': players.filter((__item:any)=>_item.id == __item.id).length > 0}
+
                     });
-
-                    newGetPlayerData.forEach((_item:any) => {
-
-                        players.forEach((__item:any)=>{
-
-                            if (_item.id == __item.id) {
-                                _item.checked = true;
-                            }
-                        })
-
-                        newGetPlayer.push(_item);
-                    });
-
+                    
                     dispatch(setPlayerList(newGetPlayer));
                 }
             }else {
 
                 dispatch(setPlayerList(getPlayer));
+                
             }
+            // }else if (!playerlist.length) {
+
+            //     if (getPlayer !== undefined) {
+
+            //         dispatch(setPlayerList(getPlayer));
+
+            //     }
+
+            // }
         }
     },[getPlayer]);
 

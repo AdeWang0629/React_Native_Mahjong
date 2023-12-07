@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
         paddingBottom: 5,
     },
     text: {
-        fontSize: 15,
+        fontSize: 14.5,
         paddingVertical: 5
     }
 })

@@ -67,10 +67,6 @@ const NumberPicker : React.FC<INumberPiecker> = ({onPickerChange, score, initial
         onPickerChange(i);
     }
 
-    useEffect(()=>{
-        console.log("===================================");
-    }, []);
-
     return (
         <View style={{borderTopWidth: .3}}>
             <Picker

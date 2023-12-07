@@ -104,8 +104,6 @@ const ScoreEditScreen : React.FC = () => {
                 'event_date' : event_date
             };
 
-            console.log(newCurrentScore, "newCurrentScore");
-
             navigation.navigate("ScoreScreen", {item: newCurrentScore});
 
         }
@@ -174,7 +172,7 @@ const ScoreEditScreen : React.FC = () => {
                 
                 <View style={styles.center}>
 
-                    <Button label='保                 存' onPress={updateGameList}/>
+                    <Button label='保                 存' onPress={updateGameList} bgColor={''}/>
                     
                 </View>
             </View>
