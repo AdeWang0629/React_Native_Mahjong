@@ -32,16 +32,34 @@ export const playerEditApi = createApi({
         }),
         deletePlayer: builder.mutation({
             query: (id) => {
-                return {url: `player/${id}`,
-                method: 'DELETE'}
+                return {
+                    url: `player/${id}`,
+                    method: 'DELETE'
+                }
             },
             invalidatesTags: ['Player']
+        }),
+        getPlayerClass: builder.mutation({
+            query: (data) => ({
+                url: 'player/get-player-class',
+                method: 'POST',
+                body: data
+            }),
+        }),
+        getPlayerMember: builder.mutation({
+            query: (data) => ({
+                url: `player/get-player-member`,
+                method: 'POST',
+                body: data
+            }),
         }),
     })
 });
 
 export const { 
     useGetPlayerQuery, 
+    useGetPlayerMemberMutation, 
+    useGetPlayerClassMutation, 
     useCreatePlayerMutation, 
     useUpdatePlayerMutation,
     useDeletePlayerMutation 

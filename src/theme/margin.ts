@@ -15,6 +15,9 @@ const globalMarginStyles = StyleSheet.create({
     },
     marginRight3: {
         marginRight: 3
+    },
+    marginTop20: {
+        marginTop: 20,
     }
 })
 

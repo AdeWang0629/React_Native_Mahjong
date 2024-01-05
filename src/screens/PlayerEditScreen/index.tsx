@@ -49,7 +49,7 @@ const PlayerEditScreen : React.FC = () => {
           </View>
         )
     }
-
+    
     return (
         <ScrollView>
             <View style={styles.ContentViewContainer}>
@@ -63,7 +63,7 @@ const PlayerEditScreen : React.FC = () => {
                     &&
                     (
                         <Swipelist
-                            data={listState}
+                            data={listState !==undefined ? listState : []}
                             renderRightItem={(data, index) => (
                                 <View key={index} style={[styles.container, index == 0 && ({borderTopWidth: 1, borderTopColor: 'grey'}),]}>
 

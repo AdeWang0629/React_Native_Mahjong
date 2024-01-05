@@ -19,6 +19,8 @@ import PlayerChooseScreen from "../screens/PlayerChooseScreen";
 import PlayerEditScreen from "../screens/PlayerEditScreen/index";
 import ScoreScreen from "../screens/ScoreScreen";
 import ScoreEditScreen from "../screens/ScoreScreen/edit";
+import GradeScreen from '../screens/GradeScreen';
+
 import { RootState } from '../store';
 import { useDispatch, useSelector } from 'react-redux';
 import { setModalState, setAlertModalState } from '../store/global';
@@ -29,7 +31,8 @@ const AppStack = () => {
 
   //プレイヤー選択画面のヘッダー画像
   const setting = require("../../assets/setting.png");
-  
+  const championship = require("../../assets/championship.png");
+
   const { playerlist, modalState } = useSelector((state: RootState) => state.global);
   const dispatch = useDispatch();
   const [ updatePlayer ] = useUpdatePlayerMutation();
@@ -67,6 +70,11 @@ const AppStack = () => {
                     }
                   }>
                     <Icon name="add" size={33}/>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('GradeScreen')
+                  }>
+                    <Image source={championship} style={[styles.avatarImage_setting_, MARGIN.marginLeft10]} />
                   </TouchableOpacity>
                 </>
               ),
@@ -241,6 +249,31 @@ const AppStack = () => {
             })}
           />
 
+          {/* 成績管理画面 */}
+          <Stack.Screen 
+            name="GradeScreen" 
+            component={GradeScreen} 
+            options={({navigation})=>({
+                headerTitle: "成績管理",
+                headerTitleAlign: 'center',
+                headerTitleStyle: {
+                  fontWeight: 'bold',
+                },
+                headerStyle: {
+                  backgroundColor: COLORS.WHITE
+                },
+                headerLeft: ()=>(
+                  <TouchableOpacity
+                    onPress={() => navigation.goBack()}
+                  >
+                    <View style={styles.leftSide}>
+                      <Icon name="chevron-back-outline" size={30}/>
+                      <Text style={{fontSize: 18}}>戻る</Text>
+                    </View>
+                  </TouchableOpacity>
+                )
+            })}
+          />
         </Stack.Navigator>
     </NavigationContainer>
   );
@@ -266,6 +299,11 @@ const styles = StyleSheet.create({
   },
   avatarImage_setting: {
     width: 25,
+    height: 25,
+    paddingBottom: 3
+  },
+  avatarImage_setting_: {
+    width: 30,
     height: 25,
     paddingBottom: 3
   },

@@ -70,7 +70,7 @@ const HomeScreen: React.FC = () => {
 
                         </View>
                         <Swipelist
-                            data={gameList && gameList}
+                            data={gameList !== undefined ? gameList : []}
                             renderRightItem={(data, index) => (
                                 <TouchableOpacity onPress={()=> onPress(data)}>
 

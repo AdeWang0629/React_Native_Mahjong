@@ -531,13 +531,13 @@ const ScoreScreen: React.FC<any> = ({route}) => {
     }
 
     return (
-        // <KeyboardAvoidingView
-        // behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        // keyboardVerticalOffset={80}
-        // style={{flex:1}}>
-        <KeyboardAwareScrollView>
-            <View style={{alignItems: 'center', backgroundColor: COLORS.WHITE, paddingTop: 10, paddingBottom: 30, height: hp(88), flex: 1,justifyContent: 'space-around',}}>
-
+        <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={20}
+        style={{flex:1}}>
+        {/* <KeyboardAwareScrollView> */}
+            {/* <View style={{alignItems: 'center', backgroundColor: COLORS.WHITE, paddingTop: 10, paddingBottom: 30, height: hp(88), flex: 1,justifyContent: 'space-around',}}> */}
+            <View style={{alignItems: 'center', backgroundColor: COLORS.WHITE, paddingTop: 10, paddingBottom: 30, flex: 1,justifyContent: 'space-around',}}>
                 {/* ==================================================================================================================================== */}
                 {/* Begin Score and Chip Information Part */}
                 
@@ -684,8 +684,8 @@ const ScoreScreen: React.FC<any> = ({route}) => {
                 <RenderFooter title={"合計"} type={"chip_money"} />
 
             </View>
-        </KeyboardAwareScrollView>
-        // </KeyboardAvoidingView>
+        {/* </KeyboardAwareScrollView> */}
+        </KeyboardAvoidingView>
     )
 };
 
