@@ -17,7 +17,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.final.mahjong.app",
-      "buildNumber": "12.0.0"
+      "buildNumber": "14.0.0"
     },
     "android": {
       "adaptiveIcon": {
