@@ -318,9 +318,7 @@ const ScoreScreen: React.FC<any> = ({route}) => {
             rows: newRows
         };
 
-        const result = createTotalScore(totalBody);
-        // refetch();
-        
+        const result = createTotalScore(totalBody); 
     }
     
     const handleInputChipChange = (text: string, index: number) => {
@@ -518,7 +516,7 @@ const ScoreScreen: React.FC<any> = ({route}) => {
                                             <Text style={[styles.customText,existMinus(convertedAmount[index] ? convertedAmount[index] : '') && {color: 'red'}]}>  {convertedAmount[index]} </Text>
                                             ) : 
                                             type == "chip_money" ? (
-                                                <Text style={[styles.customText,existMinus(chipMoney[index] ? chipMoney[index] : '') && {color: 'red'}]}>  {chipMoney[index]} </Text>
+                                                <Text style={[styles.customText,existMinus(chipMoney[index] ? chipMoney[index] : '') && {color: 'red'}]}>  {chipMoney[index] != "NaN" ? chipMoney[index] : ''} </Text>
                                             ) : ''}                                
                             </View>
 
@@ -670,7 +668,7 @@ const ScoreScreen: React.FC<any> = ({route}) => {
                         item.players.map((data:any, index:any)=>{
                         
                         const flag = index == item.players.length - 1? true : false; 
-
+                        console.log(typeof(chipNumber[index]));
                         return (
                             <View style={[styles.headerBox, flag && {borderRightWidth: 3}]} key={data.id}>
                                 <TextInput value={chipNumber[index]} onChangeText={(text) => handleInputChipChange(text, index)} onBlur={handleInputChipChangeSubmit} keyboardType = 'numbers-and-punctuation' style={[styles.customTextInput, existMinus(chipNumber[index] ? chipNumber[index] : '') && {color: 'red'}]} />

@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
         shadowRadius: 3.84,
         elevation: 5,
         flexDirection: 'row',
-        verticalAlign: 'center',
+        textAlignVertical: 'center',
         alignItems: 'center',
     },
     container: {
