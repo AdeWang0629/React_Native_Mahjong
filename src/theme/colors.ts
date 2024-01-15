@@ -7,7 +7,8 @@ const COLORS = {
     WEAKGREY2: '#cccccc',
     BLACK: '#5c5c5c',
     PINK: '#a428ff',
-    GREEN: '#e5ffe4'
+    GREEN: '#e5ffe4',
+    SORREL: "#fca311"
 };
 
 export default COLORS;

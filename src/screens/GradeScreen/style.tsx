@@ -8,7 +8,7 @@ import COLORS from "../../theme/colors";
 const styles = StyleSheet.create({
     rowContainer: {
         flexDirection: 'row',
-        height: hp(6),
+        // height: hp(6),
         alignItems: 'center'
     },
     container: {
@@ -38,6 +38,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 2,
         width: wp(45),
         alignItems: 'center',
+        paddingVertical: 5,
     },
     selectBoxContent: {
         backgroundColor: COLORS.BLACK,
@@ -54,7 +55,7 @@ const styles = StyleSheet.create({
     playerItem: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingVertical: 5,
+        paddingVertical: 10,
     },
     middle_width: {
         width: wp(18),
