@@ -17,7 +17,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.final.mahjong.app",
-      "buildNumber": "15.0.0"
+      "buildNumber": "20.0.1"
     },
     "android": {
       "adaptiveIcon": {
@@ -31,7 +31,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "11ffe582-7722-4b7a-b1ca-ad86c75b9835"
+        "projectId": "df9d2e29-90e9-46d3-a10c-6aba3f5c22fb"
       }
     }
   }

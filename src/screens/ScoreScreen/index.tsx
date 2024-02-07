@@ -9,17 +9,13 @@ import {
     KeyboardAvoidingView,
     SafeAreaView, 
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import styles from './style';
 import COLORS from '../../theme/colors';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useCreateTotalScoreMutation } from '../../api/scoreEditApi';
 import { useGetTotalScoreQuery } from '../../api/scoreEditApi';
-import { useCreateGameScoreMutation } from '../../api/gameEditApi';
-import { useCreateGameChipMutation } from '../../api/gameEditApi';
 import { setCurrentScore } from '../../store/global'
 import { useDispatch } from 'react-redux';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 const ScoreScreen: React.FC<any> = ({route}) => {
     const {item} = route.params;
@@ -101,6 +97,8 @@ const ScoreScreen: React.FC<any> = ({route}) => {
                 const numericChipMoney = (totalScore * 100 * gameScore + numericNewChipNumber * 100 * gameChip * gameScore).toString().replace(/[^0-9.-]/g, '');
                 const numberChipMoney = parseInt(numericChipMoney, 10);
                 newChipMoney.push(numberChipMoney.toLocaleString());
+            }else{
+                newChipMoney.push(numberAmount.toLocaleString());
             }
         }
 
@@ -150,6 +148,8 @@ const ScoreScreen: React.FC<any> = ({route}) => {
                 const numericChipMoney = (totalScore * 100 * gameScore + numericNewChipNumber * 100 * gameChip * gameScore).toString().replace(/[^0-9.-]/g, '');
                 const numberChipMoney = parseInt(numericChipMoney, 10);
                 newChipMoney.push(numberChipMoney.toLocaleString());
+            }else{
+                newChipMoney.push(numberAmount.toLocaleString());
             }
         }
 
@@ -290,9 +290,11 @@ const ScoreScreen: React.FC<any> = ({route}) => {
                 const numericChipMoney = (totalScore * 100 * gameScore + numericNewChipNumber * 100 * gameChip * gameScore).toString().replace(/[^0-9.-]/g, '');
                 const numberChipMoney = parseInt(numericChipMoney, 10);
                 newChipMoney.push(numberChipMoney.toLocaleString());
+            }else{
+                newChipMoney.push(numberAmount.toLocaleString());
             }
         }
-
+        
         setRows(newRows);
         setScore(newScore);
         setConvertedAmount(newConvertedAmount);
@@ -307,9 +309,7 @@ const ScoreScreen: React.FC<any> = ({route}) => {
             rows: newRows
         };
 
-        const result = createTotalScore(totalBody);
-        // refetch();
-        
+        createTotalScore(totalBody);     
     }
     
     const handleInputChipChange = (text: string, index: number) => {
@@ -410,18 +410,21 @@ const ScoreScreen: React.FC<any> = ({route}) => {
         newChipNumber.map((data, index) => {
             let numericChipNumberValue;
 
+            if(data.length){
+                numericChipNumberValue = parseFloat(data.replace(/,/g, ''));
+            }else{
+                numericChipNumberValue = 0;
+            }
+
             if(convertedAmount[index]){
                 
                 const numericAmount = parseFloat(convertedAmount[index].replace(/,/g, ''));
-                numericChipNumberValue = parseFloat(data.replace(/,/g, ''));
                 
                 const numericMoney = (numericChipNumberValue * 100 * gameScore * gameChip + numericAmount).toString().replace(/[^0-9.-]/g, '');
                 const numberMoney = parseInt(numericMoney, 10);
     
                 newChipMoney[index] = numberMoney.toLocaleString();
-    
             }else{
-                numericChipNumberValue = parseFloat(data.replace(/,/g, ''));
                 const numericMoney = (numericChipNumberValue * 100 * gameScore * gameChip).toString().replace(/[^0-9.-]/g, '');
                 const numberMoney = parseInt(numericMoney, 10);
     
@@ -431,7 +434,7 @@ const ScoreScreen: React.FC<any> = ({route}) => {
         
         setChipNumber(newChipNumber);
         setChipMoney(newChipMoney);
-
+        
         const totalBody = {
             game_id: item.id,
             score: score,
@@ -517,7 +520,6 @@ const ScoreScreen: React.FC<any> = ({route}) => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={hp(11)}
         style={{flex:1}}>
-        {/* <KeyboardAwareScrollView>  */}
 
             <SafeAreaView style={{alignItems: 'center', backgroundColor: COLORS.WHITE,flex: 1,justifyContent: 'space-around', height: hp(88)}}>
 
@@ -534,12 +536,10 @@ const ScoreScreen: React.FC<any> = ({route}) => {
                         (
                             <View style={[styles.desBox, {width: wp(22.5), borderTopWidth: 3}]}>
                                 <Text style={styles.numberText}>{gameScore}</Text>
-                                {/* <TextInput value={gameTempScore} onChangeText={(text) => handleInputScoreChange(text)} onBlur={handleInputScoreChangeSubmit} keyboardType = 'numeric' style={{textAlign: 'center', width: '100%'}} /> */}
                             </View>
                         ) : (
                             <View style={[styles.desBox, {width: wp(32.5), borderTopWidth: 3}]}>
                                 <Text style={styles.numberText}>{gameScore}</Text>
-                                {/* <TextInput value={gameTempScore} onChangeText={(text) => handleInputScoreChange(text)} onBlur={handleInputScoreChangeSubmit} keyboardType = 'numeric' style={{textAlign: 'center', width: '100%'}} /> */}
                             </View>
                         )
                     }
@@ -553,12 +553,10 @@ const ScoreScreen: React.FC<any> = ({route}) => {
                         (
                             <View style={[styles.desBox, {width: wp(22.5), borderTopWidth: 3, borderRightWidth: 3}]}>
                                 <Text>{gameChip}</Text>
-                                {/* <TextInput value={gameChip} onChangeText={(text) => handleInputGameChipChange(text)} keyboardType = 'numeric' style={{textAlign: 'center'}} /> */}
                             </View>
                         ) : (
                             <View style={[styles.desBox, {width: wp(32.5), borderTopWidth: 3, borderRightWidth: 3}]}>
                                 <Text>{gameChip}</Text>
-                                {/* <TextInput value={gameChip} onChangeText={(text) => handleInputGameChipChange(text)} keyboardType = 'numeric' style={{textAlign: 'center'}} /> */}
                             </View>
                         )
                     }
@@ -667,7 +665,6 @@ const ScoreScreen: React.FC<any> = ({route}) => {
                 <RenderFooter title={"合計"} type={"chip_money"} />
 
             </SafeAreaView>
-            {/* </KeyboardAwareScrollView> */}
             
         </KeyboardAvoidingView>
     )

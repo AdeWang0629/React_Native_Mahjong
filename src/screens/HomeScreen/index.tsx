@@ -83,7 +83,7 @@ const HomeScreen: React.FC = () => {
 
                                         </Text>
                                         
-                                        <Text> {'['} </Text>
+                                        <Text> {'【'} </Text>
                                             
                                         {data.players.map((item : any, number : any)=>(
                                             <View style={styles.playerName} key={number}>
@@ -93,7 +93,7 @@ const HomeScreen: React.FC = () => {
                                             </View>
                                         ))}
                                             
-                                        <Text> {']'} </Text>
+                                        <Text> {'】'} </Text>
               
                                     </View>
 

@@ -8,7 +8,6 @@ import COLORS from "../../theme/colors";
 const styles = StyleSheet.create({
     rowContainer: {
         flexDirection: 'row',
-        // height: hp(6),
         alignItems: 'center'
     },
     container: {
@@ -22,9 +21,11 @@ const styles = StyleSheet.create({
         borderBottomWidth: 2,
         width: wp(50),
         alignItems: 'center',
+        paddingVertical: hp(1.5)
     },
-    normalFontSize: {
-        fontSize: 20,
+    bigFontSize: {
+        fontSize: 22,
+        fontWeight: "900",
         color: COLORS.WHITE
     },
     selectBoxContaier: {
@@ -36,26 +37,25 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.BLACK,
         borderWidth: 1,
         borderBottomWidth: 2,
-        width: wp(45),
+        width: wp(85),
         alignItems: 'center',
-        paddingVertical: 5,
     },
     selectBoxContent: {
         backgroundColor: COLORS.BLACK,
         borderWidth: 1,
         borderBottomWidth: 2,
-        width: wp(45),
-        paddingHorizontal: wp(5)
+        width: wp(85),
+        paddingHorizontal: wp(5),
     },
     smallFontSize: {
-        fontSize: 16,
+        fontSize: 20,
         color: COLORS.WHITE,
-        marginHorizontal: 5
+        marginHorizontal: hp(.8)
     },
     playerItem: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingVertical: 10,
+        paddingVertical: hp(1.5),
     },
     middle_width: {
         width: wp(18),
@@ -64,6 +64,9 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: COLORS.WHITE,
     },
+    customHeight: {
+        height: hp(65),
+    }
 })
 
 export default styles;

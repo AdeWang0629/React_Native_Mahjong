@@ -1,9 +1,8 @@
 import React, {useEffect, useState} from "react";
-import { ScrollView, View, Text, TouchableOpacity } from "react-native";
+import { ScrollView, View, Text, TouchableOpacity, SafeAreaView } from "react-native";
 import styles from "./style";
 import { useGetPlayerQuery, useGetPlayerClassMutation, useGetPlayerMemberMutation } from "../../api/playerEditApi";
 import  Icon  from "react-native-vector-icons/Ionicons";
-import { CheckBox } from "react-native-btr";
 import globalMarginStyles from "../../theme/margin";
 import Spinner from 'react-native-loading-spinner-overlay';
 import { existMinus } from "../../util/global";
@@ -49,46 +48,49 @@ const Player : React.FC = () => {
     }
 
     if (resultsMember.data !== undefined) {
-        console.log(existMinus(resultsMember.data.grade_data_player_sum.toLocaleString()));
+        console.log(resultsMember.data.grade_data_player_sum, "grade_data_player_sum");
+        // console.log(existMinus(resultsMember.data.grade_data_player_sum.toLocaleString()));
         console.log(resultsMember.data.grade_data_player, "grade_data_player");
         console.log(resultsMember.data.grade_data_player_sum, "grade_data_player_sum");
     }
 
     return (
-        <ScrollView>
+        <View>
             <View style={styles.container}>
                 <View style={styles.selectBoxContaier}>
                     
                     <TouchableOpacity onPress={handleSelectBox}>
                         <View style={styles.selectBox}>
-                            <View style={{flexDirection: 'row'}}>
+                            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
                                 <Text style={styles.smallFontSize}>
                                     {
                                         selectPlayer && selectPlayer
                                     }
                                 </Text>
-                                <Icon name="caret-down-outline" size={23}/>
+                                <Icon name="caret-down-outline" size={38} style={{marginTop: 2}} />
                             </View>
                         </View>
                     </TouchableOpacity>
 
                     {
                         selecetBoxState ? (
-                            <View style={styles.selectBoxContent}>
-                                {
-                                    player && player.map((item:any) => {
-                                        return (
-                                            <TouchableOpacity key={item.id} onPress={()=>toggle(item.id, item.name)}>
-                                                <View style={styles.playerItem}>
-                                                    <Text style={styles.smallFontSize}>{item.name}</Text>
-                                                </View>
-                                            </TouchableOpacity>
-                                        )
-                                    })
-                                }
-                            </View>
+                            <SafeAreaView style={styles.customHeight}>
+                                <ScrollView style={styles.selectBoxContent}>
+                                    {
+                                        player && player.map((item:any) => {
+                                            return (
+                                                <TouchableOpacity key={item.id} onPress={()=>toggle(item.id, item.name)}>
+                                                    <View style={styles.playerItem}>
+                                                        <Text style={styles.smallFontSize}>{item.name}</Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                            )
+                                        })
+                                    }
+                                </ScrollView>
+                            </SafeAreaView>
                         ) : (
-                            <View style={[globalMarginStyles.marginTop20]}>
+                            <ScrollView style={[globalMarginStyles.marginTop20]}>
                                 {
                                     resultsMember.data !== undefined ? (
                                         resultsMember.data.dataState ? (
@@ -119,13 +121,13 @@ const Player : React.FC = () => {
                                         ''
                                     )
                                 }
-                            </View>
+                            </ScrollView>
                         )
                     }
                 </View>
         
             </View>
-        </ScrollView>
+        </View>
     )
 }
 

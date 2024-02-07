@@ -15,13 +15,13 @@ const GradeScreen : React.FC = () => {
 
                 <TouchableOpacity onPress={()=>setSelecteTap(0)}>
                     <View style={[styles.headerTap, selectTap == 0 && {backgroundColor: COLORS.SORREL}]}>
-                        <Text style={styles.normalFontSize}>メンバー成績</Text>
+                        <Text style={styles.bigFontSize}>メンバー成績</Text>
                     </View>
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={()=>setSelecteTap(1)}>
                     <View style={[styles.headerTap, selectTap == 1 && {backgroundColor: COLORS.SORREL}]}>
-                        <Text style={styles.normalFontSize}>プレイヤーの成績</Text>
+                        <Text style={styles.bigFontSize}>プレイヤー成績</Text>
                     </View>
                 </TouchableOpacity>
 

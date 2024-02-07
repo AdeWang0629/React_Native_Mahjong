@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import { ScrollView, View, Text, TouchableOpacity } from "react-native";
+import { ScrollView, View, Text, TouchableOpacity, SafeAreaView } from "react-native";
 import styles from "./style";
 import { useGetPlayerQuery, useGetPlayerClassMutation } from "../../api/playerEditApi";
 import  Icon  from "react-native-vector-icons/Ionicons";
@@ -60,42 +60,44 @@ const Member : React.FC = () => {
         console.log(results.data.grade_data_month, "grade_data_month");
         console.log(results.data.grade_data_month_sum, "grade_data_month_sum");
     }
-    console.log(player, "player");
+
     return (
-        <ScrollView>
+        <View>
             <View style={styles.container}>
                 <View style={styles.selectBoxContaier}>
                     
                     <TouchableOpacity onPress={handleSelectBox}>
                         <View style={styles.selectBox}>
-                            <View style={{flexDirection: 'row'}}>
+                            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
                                 <Text style={styles.smallFontSize}>3~4人を選択</Text>
-                                <Icon name="caret-down-outline" size={21 }/>
+                                <Icon name="caret-down-outline" size={38} style={{marginTop: 1}} />
                             </View>
                         </View>
                     </TouchableOpacity>
 
                     {
                         selecetBoxState ? (
-                            <View style={styles.selectBoxContent}>
-                                {
-                                    player && player.map((item:any) => {
-                                        return (
-                                            <TouchableOpacity key={item.id} onPress={()=>toggle(item.id)}>
-                                                <View style={styles.playerItem}>
-                                                    <Text style={styles.smallFontSize}>{item.name}</Text>
-                                                    <CheckBox 
-                                                        checked = {item.checked}
-                                                        onPress={() => toggle(item.id)}
-                                                    />
-                                                </View>
-                                            </TouchableOpacity>
-                                        )
-                                    })
-                                }
-                            </View>
+                            <SafeAreaView style={styles.customHeight}>
+                                <ScrollView style={styles.selectBoxContent}>
+                                    {
+                                        player && player.map((item:any) => {
+                                            return (
+                                                <TouchableOpacity key={item.id} onPress={()=>toggle(item.id)}>
+                                                    <View style={styles.playerItem}>
+                                                        <Text style={styles.smallFontSize}>{item.name}</Text>
+                                                        <CheckBox 
+                                                            checked = {item.checked}
+                                                            onPress={() => toggle(item.id)}
+                                                        />
+                                                    </View>
+                                                </TouchableOpacity>
+                                            )
+                                        })
+                                    }
+                                </ScrollView>
+                            </SafeAreaView>
                         ) : (
-                            <View style={[globalMarginStyles.marginTop20]}>
+                            <ScrollView style={[globalMarginStyles.marginTop20]}>
                                 {
                                     results.data !== undefined ? (
                                         results.data.selectGameIds.length ? (
@@ -154,13 +156,13 @@ const Member : React.FC = () => {
                                         ''
                                     )
                                 }
-                            </View>
+                            </ScrollView>
                         )
                     }
                 </View>
         
             </View>
-        </ScrollView>
+        </View>
     )
 }
 
